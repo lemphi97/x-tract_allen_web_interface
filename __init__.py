@@ -18,7 +18,7 @@ def interface():
 
 @app.route("/experiments/")
 def experiments():
-    return flask.render_template("experiments.html")
+    return flask.render_template("allenBrain.html")
 
 @app.route("/aboutWebsite/")
 def aboutWebsite():

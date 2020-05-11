@@ -19,7 +19,7 @@
 <body class="bg-secondary">
     <!-- navigation bar -->
     <nav class="navbar navbar-expand-sm navbar-light bg-light">
-        <a class="navbar-brand text-dark" href="{{ url_for('home') }}">xtract</a>
+        <a class="navbar-brand text-dark" href="{{ url_for('home') }}">X-Tract</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -33,10 +33,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-secondary" href="{{ url_for('experiments') }}">Experiments</a>
+                    <a class="nav-link text-secondary" href="{{ url_for('experiments') }}">Allen Brain</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-secondary" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle text-secondary" href="#" id="navbarDropdownMenuLink"
+                       role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         About
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -46,6 +47,7 @@
                 </li>
             </ul>
             <!-- search input -->
+            <!--
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <form class="form-inline" action="#" method="get">
@@ -63,11 +65,12 @@
                     </form>
                 </li>
             </ul>
+            -->
         </div>
     </nav>
 
     <div class="content">
-        <h2>{{ self.title() }}</h2>
+        <h1 class="text-white">{{ self.title() }}</h1>
         <p>{{varTest}}</p>
         {% block content %}
         {% endblock %}
@@ -85,5 +88,7 @@
           integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
           crossorigin="anonymous">
     </script>
+    {% block dependenciesScripts %}
+    {% endblock %}
 </body>
 </html>

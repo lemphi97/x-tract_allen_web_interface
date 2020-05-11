@@ -1,0 +1,57 @@
+{% extends "display/base.html" %}
+
+{% block title %}
+    Allen Brain
+{% endblock %}
+
+{% block dependencies %}
+    <link rel="stylesheet" type="text/css"
+          href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
+{% endblock %}
+
+{% block content %}
+    <p>These are the experiments for mouse brain connectivity from AllenSDK</p>
+    <div class="bg-light table">
+        <table id="experiments" class="datatable" width="100%">
+            <thead>
+                <th>experiment id</th>
+                <th>hemisphere id</th>
+                <th>name</th>
+                <th>acronym</th>
+                <th>link</th>
+            </thead>
+
+            <tbody>
+                <!-- for each experiments -->
+                <tr>
+                    <td>
+                        <!-- get experiment id -->
+                    </td>
+                    <td>
+                        <!-- get hemisphere id -->
+                    </td>
+                    <td>
+                        <!-- get name -->
+                    </td>
+                    <td>
+                        <!-- get acronym for name -->
+                    </td>
+                    <td>
+                        <!-- reference new page -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block dependenciesScripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <!-- activate datatable -->
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#experiments').DataTable();
+        } );
+    </script>
+{% endblock %}
