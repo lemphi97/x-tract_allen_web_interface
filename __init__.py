@@ -1,8 +1,17 @@
+# Dependencies
 import flask
+from allensdk.core.mouse_connectivity_cache import MouseConnectivityCache
 
+# Init website
 app = flask.Flask(__name__)
 app.static_folder = 'static'
 app.template_folder = 'templates'
+
+# Interactions with allensdk
+mcc = MouseConnectivityCache()
+
+def getStruct():
+    return mcc.get_structure_tree()
 
 @app.route("/")
 def default():
@@ -18,7 +27,7 @@ def interface():
 
 @app.route("/experiments/")
 def experiments():
-    return flask.render_template("allenBrain.html")
+    return flask.render_template("allenBrain.html", struct=getStruct())
 
 @app.route("/aboutWebsite/")
 def aboutWebsite():
