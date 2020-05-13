@@ -5,8 +5,13 @@
 .content h1,
 .content h2,
 .content p,
-.content li {
+.content li,
+.content a {
     color: white;
+}
+
+.content a {
+    font-weight: bold;
 }
 
 .table {
