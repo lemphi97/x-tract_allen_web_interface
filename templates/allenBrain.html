@@ -5,15 +5,84 @@
 {% endblock %}
 
 {% block dependencies %}
+    <link rel="stylesheet" type="text/css"
+          href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
 {% endblock %}
 
 {% block content %}
     <p>
-        We can use <a href="https://connectivity.brain-map.org/projection">
+        We can also use <a href="https://connectivity.brain-map.org/projection">
         Allen Brain Atlas website</a> to get the data for experiments. Format
         <em>.xml</em> (experiment) or <em>.csv</em> (experiments container).
     </p>
+    <div class="bg-light table table-sm">
+        <table id="experiments" class="datatable" width="100%">
+            <!-- https://datatables.net/examples/api/show_hide.html -->
+            <thead>
+                <th>experiment id</th>
+                <th>hemisphere name</th>
+                <th>product id</th>
+                <th>injection vol.</th>
+                <th>injection (x,y,z)</th>
+                <th>transgenic line</th>
+                <th>gender</th>
+                <th>specimen name</th>
+            </thead>
+
+            <tbody>
+                <!-- for each experiments -->
+                {% for i in range(0, nb_exp) %}
+                <tr>
+                    <td>
+                        <!-- get experiment id -->
+                        {{ all_exp.iloc[i]['id'] }}
+                    </td>
+                    <td>
+                        <!-- get hemisphere name -->
+                        {{ all_exp.iloc[i]['structure_name'] }}
+                        ({{ all_exp.iloc[i]['structure_abbrev'] }})
+                    </td>
+                    <td>
+                        <!-- get product id -->
+                        {{ all_exp.iloc[i]['product_id'] }}
+                    </td>
+                    <td>
+                        <!-- get injection volume -->
+                        {{ all_exp.iloc[i]['injection_volume'] }}
+                    </td>
+                    <td>
+                        <!-- get injection coordinates -->
+                        ({{ all_exp.iloc[i]['injection_x'] }},
+                        {{ all_exp.iloc[i]['injection_y'] }},
+                        {{ all_exp.iloc[i]['injection_z'] }})
+                    </td>
+                    <td>
+                        <!-- get specimen name -->
+                        {{ all_exp.iloc[i]['transgenic_line'] }}
+                    </td>
+                    <td>
+                        <!-- get specimen gender -->
+                        {{ all_exp.iloc[i]['gender'] }}
+                    </td>
+                    <td>
+                        <!-- get specimen name -->
+                        {{ all_exp.iloc[i]['specimen_name'] }}
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
 
 {% block dependenciesScripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <!-- activate datatable -->
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#experiments').DataTable();
+        } );
+    </script>
 {% endblock %}

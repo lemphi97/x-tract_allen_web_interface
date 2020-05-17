@@ -1,6 +1,10 @@
 # Dependencies
 import flask
+import imageio
+import pandas as pd
 from allensdk.core.mouse_connectivity_cache import MouseConnectivityCache
+from allensdk.api.queries.image_download_api import ImageDownloadApi
+from allensdk.api.queries.ontologies_api import OntologiesApi
 
 # Init website
 app = flask.Flask(__name__)
@@ -9,6 +13,15 @@ app.template_folder = 'templates'
 
 # Interactions with allensdk
 mcc = MouseConnectivityCache()
+all_exp = mcc.get_experiments(dataframe=True)
+nb_exp = len(all_exp)
+
+def get_all_id(experiences):
+    all_id = []
+    # This loop can iterate over all our experiments
+    for i in range(0, len(experiences)):
+        all_id.append(experiences.iloc[i]['id'])
+    return all_id
 
 def getStruct():
     return mcc.get_structure_tree()
@@ -19,15 +32,15 @@ def default():
 
 @app.route("/home/")
 def home():
-    return flask.render_template("index.html", varTest="Test variable")
+    return flask.render_template("index.html")
 
 @app.route("/interface/")
 def interface():
-    return flask.render_template("interface.html")
+    return flask.render_template("interface.html", mcc=mcc)
 
 @app.route("/experiments/")
 def experiments():
-    return flask.render_template("allenBrain.html", struct=getStruct())
+    return flask.render_template("allenBrain.html", all_exp=all_exp, nb_exp=nb_exp)
 
 @app.route("/aboutWebsite/")
 def aboutWebsite():

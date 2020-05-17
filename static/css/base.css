@@ -15,5 +15,6 @@
 }
 
 .table {
-    padding: 3px 3px 3px 3px;
+    padding: 5px 5px 5px 5px;
+    border-radius: 10px;
 }
