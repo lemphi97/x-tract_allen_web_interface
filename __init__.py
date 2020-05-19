@@ -13,6 +13,8 @@ app.template_folder = 'templates'
 
 # Interactions with allensdk
 mcc = MouseConnectivityCache()
+st_tree = mcc.get_structure_tree()
+
 all_exp = mcc.get_experiments(dataframe=True)
 nb_exp = len(all_exp)
 
@@ -22,9 +24,6 @@ def get_all_id(experiences):
     for i in range(0, len(experiences)):
         all_id.append(experiences.iloc[i]['id'])
     return all_id
-
-def getStruct():
-    return mcc.get_structure_tree()
 
 @app.route("/")
 def default():

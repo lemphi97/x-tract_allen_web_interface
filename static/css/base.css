@@ -18,3 +18,11 @@
     padding: 5px 5px 5px 5px;
     border-radius: 10px;
 }
+
+.columns-vis {
+    color: black
+}
+
+.columns-vis>ul>li {
+    color: black
+}

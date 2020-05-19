@@ -15,8 +15,55 @@
         Allen Brain Atlas website</a> to get the data for experiments. Format
         <em>.xml</em> (experiment) or <em>.csv</em> (experiments container).
     </p>
+
     <div class="bg-light table table-sm">
-        <table id="experiments" class="datatable" width="100%">
+        <h3>Columns visibility</h3>
+        <div class="columns-vis">
+            <div class="form-check form-check-inline">
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="0"
+                       id="experiment-id" value="experiment-id" autocomplete="off" checked/>
+                <label class="form-check-label" for="experiment-id">experiment id</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="1"
+                       id="hemisphere-name" value="hemisphere-name" checked/>
+                <label class="form-check-label" for="hemisphere-name">hemisphere name</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="2"
+                       id="product-id" value="product-id" checked/>
+                <label class="form-check-label" for="product-id">product id</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="3"
+                       id="injection-vol" value="injection-vol" checked/>
+                <label class="form-check-label" for="injection-vol">injection vol.</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="4"
+                       id="injection-xyz" value="injection-xyz" checked/>
+                <label class="form-check-label" for="injection-xyz">injection (x,y,z)</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="5"
+                       id="transgenic-line" value="transgenic-line" checked/>
+                <label class="form-check-label" for="transgenic-line">transgenic line</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="6"
+                       id="gender" value="gender" checked/>
+                <label class="form-check-label" for="gender">gender </label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="7"
+                       id="specimen-name" value="specimen-name" checked/>
+                <label class="form-check-label" for="specimen-name">specimen name</label>
+            </div>
+        </div>
+
+        <hr style="border: 1px solid black"/>
+
+        <table id="experiments" class="datatable" cellspacing="0" width="100%">
             <!-- https://datatables.net/examples/api/show_hide.html -->
             <thead>
                 <th>experiment id</th>
@@ -28,6 +75,17 @@
                 <th>gender</th>
                 <th>specimen name</th>
             </thead>
+
+            <tfoot>
+                <th>experiment id</th>
+                <th>hemisphere name</th>
+                <th>product id</th>
+                <th>injection vol.</th>
+                <th>injection (x,y,z)</th>
+                <th>transgenic line</th>
+                <th>gender</th>
+                <th>specimen name</th>
+            </tfoot>
 
             <tbody>
                 <!-- for each experiments -->
@@ -77,12 +135,23 @@
 {% endblock %}
 
 {% block dependenciesScripts %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
     <!-- activate datatable -->
     <script type="text/javascript">
         $(document).ready( function () {
-            $('#experiments').DataTable();
+            var table = $('#experiments').DataTable({
+                "scrollX": true
+            });
+
+            $('.toggle-vis').on( 'click', function (e) {
+                // Get the column API object
+                var column = table.column( $(this).attr('data-column') );
+
+                // Toggle the visibility
+                column.visible( ! column.visible() );
+            } );
         } );
     </script>
 {% endblock %}
