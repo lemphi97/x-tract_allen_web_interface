@@ -17,17 +17,64 @@
     </p>
 
     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-      <label class="btn btn-light btn-outline-info active">
-        <input type="radio" name="all-exp" id="all-exp" autocomplete="off" checked> All experiments
-      </label>
-      <label class="btn btn-light btn-outline-info">
-        <input type="radio" name="form-exp" id="form-exp" autocomplete="off"> Search
-      </label>
+        <label class="btn btn-light btn-outline-info active">
+            <input type="radio" name="all-exp" id="all-exp" autocomplete="off" checked>
+            All experiments
+        </label>
+        <label class="btn btn-light btn-outline-info">
+            <input type="radio" name="form-exp" id="form-exp" autocomplete="off">
+            Search
+        </label>
     </div>
 
     <br/><br/>
 
     <div class="table table-sm bg-light">
+        <div class="filter-exp">
+            <h3>Experiments filters</h3>
+            <button class="btn btn-info" data-toggle="collapse" data-target="#hemisphere">
+                hemisphere
+            </button>
+            <div id="hemisphere" class="collapse">
+                <h4>name</h4>
+                <label class="form-check-label" for="name">search</label>
+                <input type="text" id="name" name="name"/>
+                <label class="form-check-label" for="acron">acronym</label>
+                <input type="text" id="acron" name="acron" aria-describedby="acron-help"/>
+                <small id="acron-help" class="text-muted">must be exact</small>
+                <hr/>
+            </div>
+            <button class="btn btn-info" data-toggle="collapse" data-target="#injection">
+                injection
+            </button>
+            <div id="injection" class="collapse">
+                <h4>volume</h4>
+                <label class="form-check-label" for="min-vol">min</label>
+                <input type="text" id="min-vol" name="min-vol"/>
+                <label class="form-check-label" for="max-vol">max</label>
+                <input type="text" id="max-vol" name="max-vol"/>
+                <h4><em>'x'</em> coordinate</h4>
+                <label class="form-check-label" for="min-x">min</label>
+                <input type="text" id="min-x" name="min-x"/>
+                <label class="form-check-label" for="max-x">max</label>
+                <input type="text" id="max-x" name="max-x"/>
+                <h4><em>'y'</em> coordinate</h4>
+                <label class="form-check-label" for="min-y">min</label>
+                <input type="text" id="min-y" name="min-y"/>
+                <label class="form-check-label" for="max-y">max</label>
+                <input type="text" id="max-y" name="max-y"/>
+                <h4><em>'z'</em> coordinate</h4>
+                <label class="form-check-label" for="min-z">min</label>
+                <input type="text" id="min-z" name="min-z"/>
+                <label class="form-check-label" for="max-z">max</label>
+                <input type="text" id="max-z" name="max-z"/>
+                <hr/>
+            </div>
+
+        </div>
+
+        <hr style="border: 1px solid black"/>
+
         <h3>Columns visibility</h3>
         <div class="columns-vis">
             <div class="form-check form-check-inline">
@@ -143,50 +190,15 @@
             </tbody>
         </table>
     </div>
-
-    <div class="form-exp bg-light">
-        <h3>Experiments criteria</h3>
-        <form action="#" method="post">
-            <div class="form-group">
-                <label for="structures">Structures names or acronyms</label>
-                <input type="text" class="form-control" id="structures" name="structure[]" placeholder="Enter structures">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-            </div>
-            <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-            </div>
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Check me out</label>
-            </div>
-            <button type="submit" class="btn btn-success">Submit</button>
-        </form>
-    </div>
 {% endblock %}
 
 {% block dependenciesScripts %}
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
 
     <script type="text/javascript">
-        // show form and hide table
-        $("#form-exp").click(function(){
-            $('.table').hide()
-            $('.form-exp').show()
-        });
-
-        // show table and hide form
-        $("#all-exp").click(function(){
-            $('.form-exp').hide()
-            $('.table').show()
-        });
-
-        $(document).ready( function () {
+        $(document).ready(function () {
             // hide table with experiments
             $('.form-exp').hide()
 
@@ -196,13 +208,76 @@
             });
 
             // columns visibilty in datatable
-            $('.toggle-vis').on( 'click', function (e) {
+            $('.toggle-vis').on('click', function(e) {
                 // Get the column API object
-                var column = table.column( $(this).attr('data-column') );
+                var column = table.column( $(this).attr('data-column'));
 
                 // Toggle the visibility
-                column.visible( ! column.visible() );
-            } );
-        } );
+                column.visible(! column.visible());
+            });
+
+            // Event listener to the two range filtering inputs to redraw on input
+            $('#min-vol, #max-vol,
+               #min-x, #max-x,
+               #min-y, #max-y,
+               #min-z, #max-z').keyup(function() {
+                table.draw();
+            });
+        });
+
+        /* Custom filtering function which will search data each columns */
+        $.fn.dataTable.ext.search.push(
+            function(settings, data, dataIndex) {
+
+                // injection volume
+                var minVol = parseFloat($('#min-vol').val(), 10);
+                var maxVol = parseFloat($('#max-vol').val(), 10);
+                var volume = parseFloat(data[3] ) || 0;
+
+                // injection location
+                var minX = parseInt($('#min-x').val(), 10);
+                var maxX = parseInt($('#max-x').val(), 10);
+                var minY = parseInt($('#min-x').val(), 10);
+                var maxY = parseInt($('#max-x').val(), 10);
+                var minZ = parseInt($('#min-x').val(), 10);
+                var maxZ = parseInt($('#max-x').val(), 10);
+                var location = parseParenthesesToArray(data[4]);
+                var x = parseInt(location[0]);
+                var y = parseInt(location[0]);
+                var z = parseInt(location[0]);
+
+                if ((
+                        (isNaN(minVol) && isNaN(maxVol)) ||
+                        (isNaN(minVol) && volume <= maxVol) ||
+                        (minVol <= volume && isNaN(maxVol)) ||
+                        (minVol <= volume && volume <= maxVol)
+                    )
+                    &&
+                    (
+                        (isNaN(minX) && isNaN(maxX)) ||
+                        (isNaN(minX) && x <= maxX) ||
+                        (minX <= x && isNaN(maxX)) ||
+                        (minX <= x && x <= maxX)
+                    )
+                    &&
+                    (
+                        (isNaN(minY) && isNaN(maxY)) ||
+                        (isNaN(minY) && y <= maxY) ||
+                        (minY <= y && isNaN(maxY)) ||
+                        (minY <= y && y <= maxY)
+                    )
+                    &&
+                    (
+                        (isNaN(minZ) && isNaN(maxZ)) ||
+                        (isNaN(minZ) && z <= maxZ) ||
+                        (minZ <= z && isNaN(maxZ)) ||
+                        (minZ <= z && z <= maxZ)
+                    ))
+                {
+                    return true;
+                }
+                return false;
+            }
+        );
     </script>
 {% endblock %}
