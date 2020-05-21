@@ -16,7 +16,18 @@
         <em>.xml</em> (experiment) or <em>.csv</em> (experiments container).
     </p>
 
-    <div class="bg-light table table-sm">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+      <label class="btn btn-light btn-outline-info active">
+        <input type="radio" name="all-exp" id="all-exp" autocomplete="off" checked> All experiments
+      </label>
+      <label class="btn btn-light btn-outline-info">
+        <input type="radio" name="form-exp" id="form-exp" autocomplete="off"> Search
+      </label>
+    </div>
+
+    <br/><br/>
+
+    <div class="table table-sm bg-light">
         <h3>Columns visibility</h3>
         <div class="columns-vis">
             <div class="form-check form-check-inline">
@@ -132,19 +143,59 @@
             </tbody>
         </table>
     </div>
+
+    <div class="form-exp bg-light">
+        <h3>Experiments criteria</h3>
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="structures">Structures names or acronyms</label>
+                <input type="text" class="form-control" id="structures" name="structure[]" placeholder="Enter structures">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div>
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
 {% endblock %}
 
 {% block dependenciesScripts %}
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 
-    <!-- activate datatable -->
     <script type="text/javascript">
+        // show form and hide table
+        $("#form-exp").click(function(){
+            $('.table').hide()
+            $('.form-exp').show()
+        });
+
+        // show table and hide form
+        $("#all-exp").click(function(){
+            $('.form-exp').hide()
+            $('.table').show()
+        });
+
         $(document).ready( function () {
+            // hide table with experiments
+            $('.form-exp').hide()
+
+            // activate datatable
             var table = $('#experiments').DataTable({
                 "scrollX": true
             });
 
+            // columns visibilty in datatable
             $('.toggle-vis').on( 'click', function (e) {
                 // Get the column API object
                 var column = table.column( $(this).attr('data-column') );

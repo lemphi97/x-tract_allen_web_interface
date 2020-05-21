@@ -35,7 +35,7 @@ def home():
 
 @app.route("/interface/")
 def interface():
-    return flask.render_template("interface.html", mcc=mcc)
+    return flask.render_template("interface.html")
 
 @app.route("/experiments/")
 def experiments():
