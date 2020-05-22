@@ -33,9 +33,10 @@
                 <input type="text" id="name" name="name[]" aria-describedby="name-help"/>
                 <small id="name-help" class="text-muted">must be exact</small>
                 <br/>
-                <label class="form-check-label" for="acron"><strong>acronym: </strong></label>
-                <input type="text" id="acron" name="acron[]" aria-describedby="acron-help"/>
-                <small id="acron-help" class="text-muted">must be exact</small>
+                <div class="autocomplete">
+                    <label class="form-check-label" for="acron"><strong>acronym: </strong></label>
+                    <input id="acron" type="text" name="acron[]" placeholder="acronym_1, acronym_2, ...">
+                </div>
                 <hr/>
             </div>
             <button class="btn btn-info" data-toggle="collapse" data-target="#product">
@@ -214,6 +215,11 @@
     <script type="text/javascript">
         $(document).ready(function ()
         {
+            // activate datatable
+            var table = $('#experiments').DataTable({
+                "scrollX": true
+            });
+
             // columns visibilty in datatable
             $('.toggle-vis').on('click', function(e)
             {
@@ -225,7 +231,7 @@
             });
 
             // Event listener to the two range filtering inputs to redraw on input
-            $('#name, #acron' +
+            $('#name, #acron,' +
               '#min-vol, #max-vol,' +
               '#min-x, #max-x,' +
               '#min-y, #max-y,' +
@@ -234,6 +240,8 @@
                 table.draw();
             });
         });
+
+        autocomplete(document.getElementById("acron"), ["test1", "test2"]);
 
         /* Custom filtering function which will search data each columns */
         $.fn.dataTable.ext.search.push(
