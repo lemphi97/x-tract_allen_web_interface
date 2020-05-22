@@ -1,32 +1,3 @@
-function parseParenthesesToArray(str)
-{
-    var noParentheses = str.substring(str.indexOf("(") + 1, str.indexOf(")"));
-    var trimWhiteSpace = noParentheses.replace(", ", ",");
-    return trimWhiteSpace.split(",");
-}
-
-function validateMinMax(value, min, max)
-{
-    return (isNaN(min) && isNaN(max)) ||
-           (isNaN(min) && value <= max) ||
-           (min <= value && isNaN(max)) ||
-           (min <= value && value <= max);
-}
-
-function validateNames(str, arrayName)
-{
-    // TODO
-    var valid = true;
-    return true;
-}
-
-function validateAcronyms(str, arrayAcron)
-{
-    // TODO
-    var valid = true;
-    return valid;
-}
-
 // from: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_autocomplete
 function autocomplete(inp, arr)
 {
@@ -146,3 +117,104 @@ function autocomplete(inp, arr)
         closeAllLists(e.target);
     });
 }
+
+function parseParenthesesToArray(str)
+{
+    var noParentheses = str.substring(str.indexOf("(") + 1, str.indexOf(")"));
+    var trimWhiteSpace = noParentheses.replace(", ", ",");
+    return trimWhiteSpace.split(",");
+}
+
+function validateMinMax(value, min, max)
+{
+    return (isNaN(min) && isNaN(max)) ||
+           (isNaN(min) && value <= max) ||
+           (min <= value && isNaN(max)) ||
+           (min <= value && value <= max);
+}
+
+function validateNames(str, arrayName)
+{
+    // TODO
+    var valid = true;
+    return true;
+}
+
+function validateAcronyms(str, arrayAcron)
+{
+    // TODO
+    var valid = true;
+    return valid;
+}
+
+$(document).ready(function ()
+{
+    // activate datatable
+    var table = $('#experiments').DataTable({
+        "scrollX": true
+    });
+
+    // columns visibilty in datatable
+    $('.toggle-vis').on('click', function(e)
+    {
+        // Get the column API object
+        var column = table.column($(this).attr('data-column'));
+
+        // Toggle the visibility
+        column.visible(! column.visible());
+    });
+
+    // Event listener to the two range filtering inputs to redraw on input
+    $('#name, #acron,' +
+      '#min-vol, #max-vol,' +
+      '#min-x, #max-x,' +
+      '#min-y, #max-y,' +
+      '#min-z, #max-z').keyup(function()
+    {
+        table.draw();
+    });
+});
+
+/* Custom filtering function which will search data each columns */
+$.fn.dataTable.ext.search.push(
+    function(settings, data, dataIndex)
+    {
+        // hemisphere section (add array)
+        var names = $('#name').val();
+        var acronyms = $('#acron').val();
+        var hemisphere = data[2];
+
+        // injection volume
+        var minVol = parseFloat($('#min-vol').val(), 10);
+        var maxVol = parseFloat($('#max-vol').val(), 10);
+        var volume = parseFloat(data[3]) || 0;
+
+        // injection location
+        var minX = parseInt($('#min-x').val(), 10);
+        var maxX = parseInt($('#max-x').val(), 10);
+        var minY = parseInt($('#min-y').val(), 10);
+        var maxY = parseInt($('#max-y').val(), 10);
+        var minZ = parseInt($('#min-z').val(), 10);
+        var maxZ = parseInt($('#max-z').val(), 10);
+        var location = parseParenthesesToArray(data[4]);
+        var x = parseInt(location[0]);
+        var y = parseInt(location[1]);
+        var z = parseInt(location[2]);
+
+        if
+        (
+            (validateNames(hemisphere, names)) &&
+            (validateAcronyms(hemisphere, acronyms)) &&
+            (validateMinMax(volume, minVol, maxVol)) &&
+            (validateMinMax(x, minX, maxX)) &&
+            (validateMinMax(y, minY, maxY)) &&
+            (validateMinMax(z, minZ, maxZ))
+        )
+        {
+            return true;
+        }
+        return false;
+    }
+);
+
+autocomplete(document.getElementById("acron"), ["test1", "test2"]);
