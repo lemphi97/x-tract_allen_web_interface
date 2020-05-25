@@ -47,6 +47,7 @@ function autocomplete(inp, arr)
             }
         }
     });
+
     /*execute a function presses a key on the keyboard:*/
     inp.addEventListener("keydown", function(e)
     {
@@ -79,6 +80,7 @@ function autocomplete(inp, arr)
             }
         }
     });
+
     function addActive(x)
     {
         /*a function to classify an item as "active":*/
@@ -90,6 +92,7 @@ function autocomplete(inp, arr)
         /*add class "autocomplete-active":*/
         x[currentFocus].classList.add("autocomplete-active");
     }
+
     function removeActive(x)
     {
         /*a function to remove the "active" class from all autocomplete items:*/
@@ -98,6 +101,7 @@ function autocomplete(inp, arr)
             x[i].classList.remove("autocomplete-active");
         }
     }
+
     function closeAllLists(elmnt)
     {
         /*close all autocomplete lists in the document,
@@ -111,6 +115,7 @@ function autocomplete(inp, arr)
             }
         }
     }
+
     /*execute a function when someone clicks in the document:*/
     document.addEventListener("click", function (e)
     {
@@ -133,18 +138,73 @@ function validateMinMax(value, min, max)
            (min <= value && value <= max);
 }
 
-function validateNames(str, arrayName)
+function validateNames(names, str)
 {
     // TODO
     var valid = true;
     return true;
 }
 
-function validateAcronyms(str, arrayAcron)
+function caseInsensitiveArrayInclude(array, str)
 {
-    // TODO
+    var included = false;
+    for (i = 0; i < array.length; i++)
+    {
+        if (array[i].trim().toUpperCase().localeCompare(str.toUpperCase()) == 0)
+        {
+            included = true;
+            break;
+        }
+    }
+    return included;
+}
+
+function validateAcronyms(acronyms, str)
+{
     var valid = true;
+    var acronym = getAcronym(str);
+    if (acronyms[0] != "" && ! caseInsensitiveArrayInclude(acronyms, acronym))
+    {
+        valid = false;
+    }
     return valid;
+}
+
+function getHemisphere(str)
+{
+    var indexBeforeAcron = str.lastIndexOf("(");
+    return str.substring(0, indexBeforeAcron).trim();
+}
+
+function getHemispheres(column)
+{
+    var array = new Array(column.length);
+    for (i = 0; i < column.length; i++)
+    {
+        array[i] = getHemisphere(column[i]);
+    }
+    return array;
+}
+
+function getAcronym(str)
+{
+    var indexAcronStarts = str.lastIndexOf("(") + 1;
+    var indexAcronEnds = str.lastIndexOf(")");
+    if (indexAcronStarts <= indexAcronEnds)
+    {
+        return str.substring(indexAcronStarts, indexAcronEnds).trim();
+    }
+    return "";
+}
+
+function getAcronyms(column)
+{
+    var array = new Array(column.length);
+    for (i = 0; i < column.length; i++)
+    {
+        array[i] = getAcronym(column[i]);
+    }
+    return array;
 }
 
 $(document).ready(function ()
@@ -153,6 +213,9 @@ $(document).ready(function ()
     var table = $('#experiments').DataTable({
         "scrollX": true
     });
+
+    var hemispheres = getHemispheres(table.column(1).data().unique());
+    var hemispheresAcronyms = getAcronyms(table.column(1).data().unique());
 
     // columns visibilty in datatable
     $('.toggle-vis').on('click', function(e)
@@ -173,48 +236,48 @@ $(document).ready(function ()
     {
         table.draw();
     });
-});
 
-/* Custom filtering function which will search data each columns */
-$.fn.dataTable.ext.search.push(
-    function(settings, data, dataIndex)
-    {
-        // hemisphere section (add array)
-        var names = $('#name').val();
-        var acronyms = $('#acron').val();
-        var hemisphere = data[2];
-
-        // injection volume
-        var minVol = parseFloat($('#min-vol').val(), 10);
-        var maxVol = parseFloat($('#max-vol').val(), 10);
-        var volume = parseFloat(data[3]) || 0;
-
-        // injection location
-        var minX = parseInt($('#min-x').val(), 10);
-        var maxX = parseInt($('#max-x').val(), 10);
-        var minY = parseInt($('#min-y').val(), 10);
-        var maxY = parseInt($('#max-y').val(), 10);
-        var minZ = parseInt($('#min-z').val(), 10);
-        var maxZ = parseInt($('#max-z').val(), 10);
-        var location = parseParenthesesToArray(data[4]);
-        var x = parseInt(location[0]);
-        var y = parseInt(location[1]);
-        var z = parseInt(location[2]);
-
-        if
-        (
-            (validateNames(hemisphere, names)) &&
-            (validateAcronyms(hemisphere, acronyms)) &&
-            (validateMinMax(volume, minVol, maxVol)) &&
-            (validateMinMax(x, minX, maxX)) &&
-            (validateMinMax(y, minY, maxY)) &&
-            (validateMinMax(z, minZ, maxZ))
-        )
+    /* Custom filtering function which will search data each columns */
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex)
         {
-            return true;
-        }
-        return false;
-    }
-);
+            // hemisphere section (add array)
+            var names = $('#name').val();
+            var acronyms = $('#acron').val().split(";");
+            var hemi = data[1];
 
-autocomplete(document.getElementById("acron"), ["test1", "test2"]);
+            // injection volume
+            var minVol = parseFloat($('#min-vol').val(), 10);
+            var maxVol = parseFloat($('#max-vol').val(), 10);
+            var volume = parseFloat(data[3]) || 0;
+
+            // injection location
+            var minX = parseInt($('#min-x').val(), 10);
+            var maxX = parseInt($('#max-x').val(), 10);
+            var minY = parseInt($('#min-y').val(), 10);
+            var maxY = parseInt($('#max-y').val(), 10);
+            var minZ = parseInt($('#min-z').val(), 10);
+            var maxZ = parseInt($('#max-z').val(), 10);
+            var location = parseParenthesesToArray(data[4]);
+            var x = parseInt(location[0]);
+            var y = parseInt(location[1]);
+            var z = parseInt(location[2]);
+
+            if
+            (
+                (validateNames(names, hemi)) &&
+                (validateAcronyms(acronyms, hemi)) &&
+                (validateMinMax(volume, minVol, maxVol)) &&
+                (validateMinMax(x, minX, maxX)) &&
+                (validateMinMax(y, minY, maxY)) &&
+                (validateMinMax(z, minZ, maxZ))
+            )
+            {
+                return true;
+            }
+            return false;
+        }
+    );
+
+    autocomplete(document.getElementById("acron"), hemispheresAcronyms);
+});

@@ -23,19 +23,15 @@
                 hemisphere
             </button>
             <div id="hemisphere" class="collapse">
-                <!--
-                //https://datatables.net/reference/api/unique()
-                //https://www.w3schools.com/TAGS/tryit.asp?filename=tryhtml_select_multiple
-                //https://www.w3schools.com/howto/howto_js_autocomplete.asp
-                -->
                 <hr/>
-                <label class="form-check-label" for="name"><strong>name: </strong></label>
-                <input type="text" id="name" name="name[]" aria-describedby="name-help"/>
+                <label class="form-check-label" for="name"><strong>name(s): </strong></label>
+                <input type="text" id="name" name="name[]" aria-describedby="name-help"
+                    placeholder="name_1; name_2; ..."/>
                 <small id="name-help" class="text-muted">must be exact</small>
                 <br/>
                 <div class="autocomplete">
-                    <label class="form-check-label" for="acron"><strong>acronym: </strong></label>
-                    <input id="acron" type="text" name="acron[]" placeholder="acronym_1, acronym_2, ...">
+                    <label class="form-check-label" for="acron"><strong>acronym(s): </strong></label>
+                    <input id="acron" type="text" name="acron[]" placeholder="acronym_1; acronym_2; ...">
                 </div>
                 <hr/>
             </div>
@@ -43,10 +39,6 @@
                 product
             </button>
             <div id="product" class="collapse">
-                <!--
-                //https://datatables.net/reference/api/unique()
-                //https://www.w3schools.com/TAGS/tryit.asp?filename=tryhtml_select_multiple
-                -->
                 <hr/>
                 <label class="form-check-label" for="prod"><strong>id: </strong></label>
                 <select id="prod" name="product[]">
@@ -137,7 +129,6 @@
         <hr style="border: 1px solid black"/>
 
         <table id="experiments" class="datatable" cellspacing="0" width="100%">
-            <!-- https://datatables.net/examples/api/show_hide.html -->
             <thead>
                 <th>experiment id</th>
                 <th>hemisphere name</th>
@@ -164,42 +155,41 @@
                 <!-- for each experiments -->
                 {% for i in range(0, nb_exp) %}
                 <tr>
+                    <!-- experiment id -->
                     <td>
-                        <!-- get experiment id -->
                         {{ all_exp.iloc[i]['id'] }}
                     </td>
+                    <!-- hemisphere name -->
                     <td>
-                        <!-- get hemisphere name -->
                         {{ all_exp.iloc[i]['structure_name'] }}
                         ({{ all_exp.iloc[i]['structure_abbrev'] }})
                     </td>
+                    <!-- product id -->
                     <td>
-                        <!-- get product id -->
                         {{ all_exp.iloc[i]['product_id'] }}
                     </td>
+                    <!-- injection volume -->
                     <td>
-                        <!-- get injection volume -->
                         {{ all_exp.iloc[i]['injection_volume'] }}
                     </td>
+                    <!-- injection coordinates -->
                     <td>
-                        <!-- get injection coordinates -->
                         ({{ all_exp.iloc[i]['injection_x'] }},
                         {{ all_exp.iloc[i]['injection_y'] }},
                         {{ all_exp.iloc[i]['injection_z'] }})
                     </td>
+                    <!-- specimen name -->
                     <td>
-                        <!-- get specimen name -->
                         {{ all_exp.iloc[i]['transgenic_line'] }}
                     </td>
+                    <!-- specimen gender -->
                     <td>
-                        <!-- get specimen gender -->
                         {{ all_exp.iloc[i]['gender'] }}
                     </td>
+                    <!-- specimen name -->
                     <td>
-                        <!-- get specimen name -->
                         {{ all_exp.iloc[i]['specimen_name'] }}
                     </td>
-
                 </tr>
                 {% endfor %}
             </tbody>
