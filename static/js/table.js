@@ -1,4 +1,4 @@
-// from: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_autocomplete
+// based on: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_autocomplete
 function autocomplete(inp, arr)
 {
     /*the autocomplete function takes two arguments,
@@ -8,9 +8,10 @@ function autocomplete(inp, arr)
     inp.addEventListener("input", function(e)
     {
         var a, b, i, val = this.value;
+        var lastVal = val.substring(this.value.lastIndexOf(";") + 1, this.value.length).trim();
         /*close any already open lists of autocompleted values*/
         closeAllLists();
-        if (!val)
+        if (!lastVal)
         {
             return false;
         }
@@ -25,20 +26,31 @@ function autocomplete(inp, arr)
         for (i = 0; i < arr.length; i++)
         {
             /*check if the item starts with the same letters as the text field value:*/
-            if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase())
+            if (arr[i].substr(0, lastVal.length).toUpperCase() == lastVal.toUpperCase())
             {
                 /*create a DIV element for each matching element:*/
                 b = document.createElement("DIV");
                 /*make the matching letters bold:*/
-                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-                b.innerHTML += arr[i].substr(val.length);
+                b.innerHTML = "<strong>" + arr[i].substr(0, lastVal.length) + "</strong>";
+                b.innerHTML += arr[i].substr(lastVal.length, arr[i].length);
                 /*insert a input field that will hold the current array item's value:*/
                 b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
                 /*execute a function when someone clicks on the item value (DIV element):*/
                 b.addEventListener("click", function(e)
                 {
                     /*insert the value for the autocomplete text field:*/
-                    inp.value = this.getElementsByTagName("input")[0].value;
+                    var addedVal = this.getElementsByTagName("input")[0].value;
+                    var lastSeparation = val.lastIndexOf(";");
+                    if (lastSeparation < 0)
+                    {
+                        inp.value = addedVal;
+                    }
+                    else
+                    {
+                        var prevVal = val.substring(0, lastSeparation);
+                        inp.value = prevVal + "; " + addedVal;
+                    }
+
                     /*close the list of autocompleted values,
                     (or any other open lists of autocompleted values:*/
                     closeAllLists();
@@ -46,6 +58,12 @@ function autocomplete(inp, arr)
                 a.appendChild(b);
             }
         }
+
+        /* Simulate enter to refresh datatable */
+                    var press = jQuery.Event("keypress");
+                    press.which = 13; //choose the one you want
+                    press.keyCode = 13;
+                    document.getElementById("acron").trigger(press);
     });
 
     /*execute a function presses a key on the keyboard:*/
@@ -163,7 +181,16 @@ function validateAcronyms(acronyms, str)
 {
     var valid = true;
     var acronym = getAcronym(str);
-    if (acronyms[0] != "" && ! caseInsensitiveArrayInclude(acronyms, acronym))
+    var containsFilter = false;
+    for (i = 0; i < acronyms.length; i++)
+    {
+        if (acronyms[i].trim() != "")
+        {
+            containsFilter = true;
+            break;
+        }
+    }
+    if (containsFilter && ! caseInsensitiveArrayInclude(acronyms, acronym))
     {
         valid = false;
     }
@@ -238,7 +265,8 @@ $(document).ready(function ()
     });
 
     /* Custom filtering function which will search data each columns */
-    $.fn.dataTable.ext.search.push(
+    $.fn.dataTable.ext.search.push
+    (
         function(settings, data, dataIndex)
         {
             // hemisphere section (add array)
