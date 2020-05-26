@@ -59,11 +59,12 @@ function autocomplete(inp, arr)
             }
         }
 
+        // DOESNT WORK
         /* Simulate enter to refresh datatable */
-                    var press = jQuery.Event("keypress");
-                    press.which = 13; //choose the one you want
-                    press.keyCode = 13;
-                    document.getElementById("acron").trigger(press);
+        var press = jQuery.Event("keypress");
+        press.which = 13; //choose the one you want
+        press.keyCode = 13;
+        document.getElementById("acron").trigger(press);
     });
 
     /*execute a function presses a key on the keyboard:*/
@@ -141,6 +142,62 @@ function autocomplete(inp, arr)
     });
 }
 
+/*
+ * Gets hemisphere without the acronym from a line in the datatable
+ */
+function getHemisphere(str)
+{
+    var indexBeforeAcron = str.lastIndexOf("(");
+    if (indexBeforeAcron < 0)
+    {
+        return "";
+    }
+    return str.substring(0, indexBeforeAcron).trim();
+}
+
+/*
+ * Gets all the unique hemisphere without the acronym from the column of the datatable
+ */
+function getHemispheres(column)
+{
+    var array = new Array(column.length);
+    for (i = 0; i < column.length; i++)
+    {
+        array[i] = getHemisphere(column[i]);
+    }
+    return array;
+}
+
+/*
+ * Get the acronym from a line in the datatable
+ */
+function getAcronym(str)
+{
+    var indexAcronStarts = str.lastIndexOf("(") + 1;
+    var indexAcronEnds = str.lastIndexOf(")");
+    if (indexAcronStarts <= indexAcronEnds)
+    {
+        return str.substring(indexAcronStarts, indexAcronEnds).trim();
+    }
+    return "";
+}
+
+/*
+ * Gets all the unique acronym from the column of the datatable
+ */
+function getAcronyms(column)
+{
+    var array = new Array(column.length);
+    for (i = 0; i < column.length; i++)
+    {
+        array[i] = getAcronym(column[i]);
+    }
+    return array;
+}
+
+/*
+ * Takes the values separated by ',' between parentheses and return it as an array
+ */
 function parseParenthesesToArray(str)
 {
     var noParentheses = str.substring(str.indexOf("(") + 1, str.indexOf(")"));
@@ -148,21 +205,9 @@ function parseParenthesesToArray(str)
     return trimWhiteSpace.split(",");
 }
 
-function validateMinMax(value, min, max)
-{
-    return (isNaN(min) && isNaN(max)) ||
-           (isNaN(min) && value <= max) ||
-           (min <= value && isNaN(max)) ||
-           (min <= value && value <= max);
-}
-
-function validateNames(names, str)
-{
-    // TODO
-    var valid = true;
-    return true;
-}
-
+/*
+ * Check if array contains str without considering cases
+ */
 function caseInsensitiveArrayInclude(array, str)
 {
     var included = false;
@@ -177,62 +222,43 @@ function caseInsensitiveArrayInclude(array, str)
     return included;
 }
 
-function validateAcronyms(acronyms, str)
+/*
+ * Check if the name str is part of the allowed names
+ */
+function validateNames(names, name)
 {
     var valid = true;
-    var acronym = getAcronym(str);
-    var containsFilter = false;
-    for (i = 0; i < acronyms.length; i++)
-    {
-        if (acronyms[i].trim() != "")
-        {
-            containsFilter = true;
-            break;
-        }
-    }
-    if (containsFilter && ! caseInsensitiveArrayInclude(acronyms, acronym))
+    if (! caseInsensitiveArrayInclude(names, name))
     {
         valid = false;
     }
     return valid;
 }
 
-function getHemisphere(str)
+/*
+ * Check if the acronym str is part of the allowed acronyms
+ */
+function validateAcronyms(acronyms, acronym)
 {
-    var indexBeforeAcron = str.lastIndexOf("(");
-    return str.substring(0, indexBeforeAcron).trim();
+    var valid = true;
+    if (! caseInsensitiveArrayInclude(acronyms, acronym))
+    {
+        valid = false;
+    }
+    return valid;
 }
 
-function getHemispheres(column)
+/*
+ * return true if value is between min and max
+ */
+function validateMinMax(value, min, max)
 {
-    var array = new Array(column.length);
-    for (i = 0; i < column.length; i++)
-    {
-        array[i] = getHemisphere(column[i]);
-    }
-    return array;
+    return (isNaN(min) && isNaN(max)) ||
+           (isNaN(min) && value <= max) ||
+           (min <= value && isNaN(max)) ||
+           (min <= value && value <= max);
 }
 
-function getAcronym(str)
-{
-    var indexAcronStarts = str.lastIndexOf("(") + 1;
-    var indexAcronEnds = str.lastIndexOf(")");
-    if (indexAcronStarts <= indexAcronEnds)
-    {
-        return str.substring(indexAcronStarts, indexAcronEnds).trim();
-    }
-    return "";
-}
-
-function getAcronyms(column)
-{
-    var array = new Array(column.length);
-    for (i = 0; i < column.length; i++)
-    {
-        array[i] = getAcronym(column[i]);
-    }
-    return array;
-}
 
 $(document).ready(function ()
 {
@@ -270,7 +296,7 @@ $(document).ready(function ()
         function(settings, data, dataIndex)
         {
             // hemisphere section (add array)
-            var names = $('#name').val();
+            var names = $('#name').val().split(";");
             var acronyms = $('#acron').val().split(";");
             var hemi = data[1];
 
@@ -293,19 +319,43 @@ $(document).ready(function ()
 
             if
             (
-                (validateNames(names, hemi)) &&
-                (validateAcronyms(acronyms, hemi)) &&
-                (validateMinMax(volume, minVol, maxVol)) &&
-                (validateMinMax(x, minX, maxX)) &&
-                (validateMinMax(y, minY, maxY)) &&
-                (validateMinMax(z, minZ, maxZ))
+                validateMinMax(volume, minVol, maxVol) &&
+                validateMinMax(x, minX, maxX) &&
+                validateMinMax(y, minY, maxY) &&
+                validateMinMax(z, minZ, maxZ)
             )
             {
+                // THIS PART IS EXECUTED FOR EVERYLINE WHILE WE ONLY NEED IT ONCE, to investigate...
+                var containsNameFilter = false;
+                var containsAcronFilter = false;
+                for (i = 0; i < names.length; i++)
+                {
+                    if (names[i].trim() != "")
+                    {
+                        containsNameFilter = true;
+                        break;
+                    }
+                }
+                for (i = 0; i < acronyms.length; i++)
+                {
+                    if (acronyms[i].trim() != "")
+                    {
+                        containsAcronFilter = true;
+                        break;
+                    }
+                }
+                if
+                (
+                    (! containsNameFilter && ! containsAcronFilter) ||
+                    validateNames(names, getHemisphere(hemi)) ||
+                    validateAcronyms(acronyms, getAcronym(hemi))
+                )
                 return true;
             }
             return false;
         }
     );
 
+    autocomplete(document.getElementById("name"), hemispheres);
     autocomplete(document.getElementById("acron"), hemispheresAcronyms);
 });
