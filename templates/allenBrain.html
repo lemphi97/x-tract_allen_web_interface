@@ -37,20 +37,14 @@
                 </div>
                 <hr/>
             </div>
-            <button class="btn btn-info" data-toggle="collapse" data-target="#product">
-                product
-            </button>
-            <div id="product" class="collapse">
-                <hr/>
-                <label class="form-check-label" for="prod-id"><strong>product(s) id: </strong></label>
-                <input id="prod-id" type="text" name="prod-id" placeholder="id_1; id_2; ...">
-                <hr/>
-            </div>
             <button class="btn btn-info" data-toggle="collapse" data-target="#injection">
                 injection
             </button>
             <div id="injection" class="collapse">
                 <hr/>
+                <label class="form-check-label" for="prod-id"><strong>product(s) id: </strong></label>
+                <input id="prod-id" type="text" name="prod-id" placeholder="id_1; id_2; ...">
+                <br/>
                 <strong>volume: </strong>
                 <label class="form-check-label" for="min-vol">min</label>
                 <input type="text" id="min-vol" name="min-vol"/>
@@ -164,7 +158,7 @@
 
             <tbody>
                 <!-- for each experiments -->
-                {% for i in range(0, nb_exp) %}
+                {% for i in range(0, all_exp|length) %}
                 <tr>
                     <!-- experiment id -->
                     <td>

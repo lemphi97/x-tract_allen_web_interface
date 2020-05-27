@@ -243,6 +243,16 @@ function validateAcronyms(acronyms, acronym)
     return valid;
 }
 
+function validateProducts(products, product)
+{
+    var valid = true;
+    if (! caseInsensitiveArrayInclude(products, product))
+    {
+        valid = false;
+    }
+    return valid;
+}
+
 /*
  * return true if value is between min and max
  */
@@ -277,13 +287,12 @@ $(document).ready(function ()
 
     // Event listener to the two range filtering inputs to redraw on input
     $('#name, #acron,' +
-      'prod-id,' +
+      '#prod-id,' +
       '#min-vol, #max-vol,' +
       '#min-x, #max-x,' +
       '#min-y, #max-y,' +
       '#min-z, #max-z').keyup(function()
     {
-
         /* Custom filtering function which will validate each lines */
         $.fn.dataTable.ext.search.push
         (
@@ -295,7 +304,7 @@ $(document).ready(function ()
                 var hemi = data[1];
 
                 // product id
-                var prodInp = $('#prod-id').val().split(";");
+                var products = $('#prod-id').val().split(";");
                 var prod = data[2];
 
                 // injection volume
@@ -343,9 +352,9 @@ $(document).ready(function ()
                             break;
                         }
                     }
-                    for (i = 0; i < prodInp.length; i++)
+                    for (i = 0; i < products.length; i++)
                     {
-                        if (prodInp[i].trim() != "")
+                        if (products[i].trim() != "")
                         {
                             containsProdFilter = true;
                             break;
@@ -353,9 +362,16 @@ $(document).ready(function ()
                     }
                     if
                     (
-                        (! containsNameFilter && ! containsAcronFilter) ||
-                        validateNames(names, getHemisphere(hemi)) ||
-                        validateAcronyms(acronyms, getAcronym(hemi))
+                        (
+                            (! containsNameFilter && ! containsAcronFilter) ||
+                            validateNames(names, getHemisphere(hemi)) ||
+                            validateAcronyms(acronyms, getAcronym(hemi))
+                        )
+                        &&
+                        (
+                            ! containsProdFilter ||
+                            validateProducts(products, prod)
+                        )
                     )
                     return true;
                 }
