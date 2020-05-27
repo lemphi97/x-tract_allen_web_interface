@@ -21,15 +21,15 @@ def get_struct_in_dict(experiences, st_tree):
         index_val = experiences.iloc[i]
         struct_id = index_val['structure_id']
 
-        if str(struct_id) not in st_dict:
+        if struct_id not in st_dict:
             struct_name = index_val['structure_name']
             struct_acron = index_val['structure_abbrev']
-            st_dict[str(struct_id)] = struct_name + " (" + struct_acron + ")"
+            st_dict[struct_id] = struct_name + " (" + struct_acron + ")"
 
         struct_p_i_s = index_val['primary_injection_structure']
-        if struct_p_i_s != struct_id and str(struct_p_i_s) not in st_dict:
+        if struct_p_i_s != struct_id and struct_p_i_s not in st_dict:
             struct_dict = st_tree.get_structures_by_id([struct_p_i_s])[0]
-            st_dict[str(struct_p_i_s)] = struct_dict['name'] + " (" + struct_dict['acronym'] + ")"
+            st_dict[struct_p_i_s] = struct_dict['name'] + " (" + struct_dict['acronym'] + ")"
 
     return st_dict
 

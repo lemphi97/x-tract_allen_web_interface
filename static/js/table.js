@@ -285,6 +285,7 @@ $(document).ready(function ()
         column.visible(! column.visible());
     });
 
+    // TOO SLOW
     // Event listener to the two range filtering inputs to redraw on input
     $('#name, #acron,' +
       '#prod-id,' +
@@ -305,12 +306,12 @@ $(document).ready(function ()
 
                 // product id
                 var products = $('#prod-id').val().split(";");
-                var prod = data[2];
+                var prod = data[3];
 
                 // injection volume
                 var minVol = parseFloat($('#min-vol').val(), 10);
                 var maxVol = parseFloat($('#max-vol').val(), 10);
-                var volume = parseFloat(data[3]) || 0;
+                var volume = parseFloat(data[4]) || 0;
 
                 // injection location
                 var minX = parseInt($('#min-x').val(), 10);
@@ -319,7 +320,7 @@ $(document).ready(function ()
                 var maxY = parseInt($('#max-y').val(), 10);
                 var minZ = parseInt($('#min-z').val(), 10);
                 var maxZ = parseInt($('#max-z').val(), 10);
-                var location = parseParenthesesToArray(data[4]);
+                var location = parseParenthesesToArray(data[5]);
                 var x = parseInt(location[0]);
                 var y = parseInt(location[1]);
                 var z = parseInt(location[2]);

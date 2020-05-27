@@ -25,15 +25,37 @@
             <div id="hemisphere" class="collapse">
                 <hr/>
                 <div class="autocomplete">
-                    <label class="form-check-label" for="name"><strong>name(s): </strong></label>
+                    <label class="form-check-label" for="name">
+                        <strong>name(s): </strong>
+                    </label>
                     <input type="text" id="name" name="name" aria-describedby="name-help"
-                        placeholder="name_1; name_2; ..."/>
+                        placeholder="name_1; name_2; ..." autocomplete="off"/>
                     <small id="name-help" class="text-muted">must be exact</small>
                 </div>
                 <br/>
                 <div class="autocomplete">
-                    <label class="form-check-label" for="acron"><strong>acronym(s): </strong></label>
-                    <input id="acron" type="text" name="acron" placeholder="acronym_1; acronym_2; ...">
+                    <label class="form-check-label" for="acron">
+                        <strong>acronym(s): </strong>
+                    </label>
+                    <input id="acron" type="text" name="acron" placeholder="acronym_1; acronym_2; ..."
+                           autocomplete="off"/>
+                </div>
+                <br>
+                <div class="autocomplete">
+                    <label class="form-check-label" for="prim-name">
+                        <strong>primary injection name(s): </strong>
+                    </label>
+                    <input type="text" id="prim-name" name="prim-name" aria-describedby="prim-name-help"
+                        placeholder="name_1; name_2; ..." autocomplete="off"/>
+                    <small id="prim-name-help" class="text-muted">must be exact</small>
+                </div>
+                <br/>
+                <div class="autocomplete">
+                    <label class="form-check-label" for="prim-acron">
+                        <strong>primary injection acronym(s): </strong>
+                    </label>
+                    <input id="prim-acron" type="text" name="prim-acron"
+                           placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
                 </div>
                 <hr/>
             </div>
@@ -42,32 +64,35 @@
             </button>
             <div id="injection" class="collapse">
                 <hr/>
-                <label class="form-check-label" for="prod-id"><strong>product(s) id: </strong></label>
-                <input id="prod-id" type="text" name="prod-id" placeholder="id_1; id_2; ...">
+                <label class="form-check-label" for="prod-id">
+                    <strong>product(s) id: </strong>
+                </label>
+                <input id="prod-id" type="text" name="prod-id"
+                       placeholder="id_1; id_2; ..." autocomplete="off"/>
                 <br/>
                 <strong>volume: </strong>
                 <label class="form-check-label" for="min-vol">min</label>
-                <input type="text" id="min-vol" name="min-vol"/>
+                <input type="text" id="min-vol" name="min-vol" autocomplete="off"/>
                 <label class="form-check-label" for="max-vol">max</label>
-                <input type="text" id="max-vol" name="max-vol"/>
+                <input type="text" id="max-vol" name="max-vol" autocomplete="off"/>
                 <br/>
                 <strong><em>'x'</em> coordinate: </strong>
                 <label class="form-check-label" for="min-x">min</label>
-                <input type="text" id="min-x" name="min-x"/>
+                <input type="text" id="min-x" name="min-x" autocomplete="off"/>
                 <label class="form-check-label" for="max-x">max</label>
-                <input type="text" id="max-x" name="max-x"/>
+                <input type="text" id="max-x" name="max-x" autocomplete="off"/>
                 <br/>
                 <strong><em>'y'</em> coordinate: </strong>
                 <label class="form-check-label" for="min-y">min</label>
-                <input type="text" id="min-y" name="min-y"/>
+                <input type="text" id="min-y" name="min-y" autocomplete="off"/>
                 <label class="form-check-label" for="max-y">max</label>
                 <input type="text" id="max-y" name="max-y"/>
                 <br/>
                 <strong><em>'z'</em> coordinate: </strong>
                 <label class="form-check-label" for="min-z">min</label>
-                <input type="text" id="min-z" name="min-z"/>
+                <input type="text" id="min-z" name="min-z" autocomplete="off"/>
                 <label class="form-check-label" for="max-z">max</label>
-                <input type="text" id="max-z" name="max-z"/>
+                <input type="text" id="max-z" name="max-z" autocomplete="off"/>
                 <hr/>
             </div>
             <button class="btn btn-info" data-toggle="collapse" data-target="#specimen">
@@ -136,7 +161,8 @@
         <table id="experiments" class="datatable" cellspacing="0" width="100%">
             <thead>
                 <th>experiment id</th>
-                <th>hemisphere name</th>
+                <th>structure</th>
+                <th>primary injection structure</th>
                 <th>product id</th>
                 <th>injection vol.</th>
                 <th>injection (x,y,z)</th>
@@ -147,7 +173,8 @@
 
             <tfoot>
                 <th>experiment id</th>
-                <th>hemisphere name</th>
+                <th>structure</th>
+                <th>primary injection structure</th>
                 <th>product id</th>
                 <th>injection vol.</th>
                 <th>injection (x,y,z)</th>
@@ -164,10 +191,13 @@
                     <td>
                         {{ all_exp.iloc[i]['id'] }}
                     </td>
-                    <!-- hemisphere name -->
+                    <!-- structure name -->
                     <td>
-                        {{ all_exp.iloc[i]['structure_name'] }}
-                        ({{ all_exp.iloc[i]['structure_abbrev'] }})
+                        {{ struct_dict[all_exp.iloc[i]['structure_id']] }}
+                    </td>
+                    <!-- primary injection structure -->
+                    <td>
+                        {{ struct_dict[all_exp.iloc[i]['primary_injection_structure']] }}
                     </td>
                     <!-- product id -->
                     <td>
