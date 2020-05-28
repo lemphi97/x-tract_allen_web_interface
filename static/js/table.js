@@ -1,3 +1,17 @@
+/**
+ * Global variables
+ */
+// For filters:
+var name, acronyms,
+    products,
+    minVol, maxVol,
+    minX, maxX,
+    minY, maxY,
+    minZ, maxZ,
+    containsNameFilter,
+    containsAcronFilter,
+    containsProdFilter;
+
 // based on: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_autocomplete
 function autocomplete(inp, arr)
 {
@@ -264,6 +278,51 @@ function validateMinMax(value, min, max)
            (min <= value && value <= max);
 }
 
+/* Custom filtering function which will validate each lines */
+$.fn.dataTable.ext.search.push
+(
+    function(settings, data, dataIndex)
+    {
+        var hemi = data[1];
+
+        // product id
+        var prod = data[3];
+
+        // injection volume
+        var volume = parseFloat(data[4]) || 0;
+
+        // injection location
+        var location = parseParenthesesToArray(data[5]);
+        var x = parseInt(location[0]);
+        var y = parseInt(location[1]);
+        var z = parseInt(location[2]);
+
+        if
+        (
+            validateMinMax(volume, minVol, maxVol) &&
+            validateMinMax(x, minX, maxX) &&
+            validateMinMax(y, minY, maxY) &&
+            validateMinMax(z, minZ, maxZ)
+        )
+        {
+            if
+            (
+                (
+                    (! containsNameFilter && ! containsAcronFilter) ||
+                    validateNames(names, getHemisphere(hemi)) ||
+                    validateAcronyms(acronyms, getAcronym(hemi))
+                )
+                &&
+                (
+                    ! containsProdFilter ||
+                    validateProducts(products, prod)
+                )
+            )
+            return true;
+        }
+        return false;
+    }
+);
 
 $(document).ready(function ()
 {
@@ -285,7 +344,6 @@ $(document).ready(function ()
         column.visible(! column.visible());
     });
 
-    // TOO SLOW
     // Event listener to the two range filtering inputs to redraw on input
     $('#name, #acron,' +
       '#prod-id,' +
@@ -294,91 +352,44 @@ $(document).ready(function ()
       '#min-y, #max-y,' +
       '#min-z, #max-z').keyup(function()
     {
-        /* Custom filtering function which will validate each lines */
-        $.fn.dataTable.ext.search.push
-        (
-            function(settings, data, dataIndex)
+        names = $('#name').val().split(";");
+        acronyms = $('#acron').val().split(";");
+        products = $('#prod-id').val().split(";");
+        minVol = parseFloat($('#min-vol').val(), 10);
+        maxVol = parseFloat($('#max-vol').val(), 10);
+        minX = parseInt($('#min-x').val(), 10);
+        maxX = parseInt($('#max-x').val(), 10);
+        minY = parseInt($('#min-y').val(), 10);
+        maxY = parseInt($('#max-y').val(), 10);
+        minZ = parseInt($('#min-z').val(), 10);
+        maxZ = parseInt($('#max-z').val(), 10);
+        containsNameFilter = false;
+        containsAcronFilter = false;
+        containsProdFilter = false;
+        for (i = 0; i < names.length; i++)
+        {
+            if (names[i].trim() != "")
             {
-                // hemisphere section
-                var names = $('#name').val().split(";");
-                var acronyms = $('#acron').val().split(";");
-                var hemi = data[1];
-
-                // product id
-                var products = $('#prod-id').val().split(";");
-                var prod = data[3];
-
-                // injection volume
-                var minVol = parseFloat($('#min-vol').val(), 10);
-                var maxVol = parseFloat($('#max-vol').val(), 10);
-                var volume = parseFloat(data[4]) || 0;
-
-                // injection location
-                var minX = parseInt($('#min-x').val(), 10);
-                var maxX = parseInt($('#max-x').val(), 10);
-                var minY = parseInt($('#min-y').val(), 10);
-                var maxY = parseInt($('#max-y').val(), 10);
-                var minZ = parseInt($('#min-z').val(), 10);
-                var maxZ = parseInt($('#max-z').val(), 10);
-                var location = parseParenthesesToArray(data[5]);
-                var x = parseInt(location[0]);
-                var y = parseInt(location[1]);
-                var z = parseInt(location[2]);
-
-                if
-                (
-                    validateMinMax(volume, minVol, maxVol) &&
-                    validateMinMax(x, minX, maxX) &&
-                    validateMinMax(y, minY, maxY) &&
-                    validateMinMax(z, minZ, maxZ)
-                )
-                {
-                    // THIS PART IS EXECUTED FOR EVERYLINE WHILE WE ONLY NEED IT ONCE, to investigate...
-                    var containsNameFilter = false;
-                    var containsAcronFilter = false;
-                    var containsProdFilter = false;
-                    for (i = 0; i < names.length; i++)
-                    {
-                        if (names[i].trim() != "")
-                        {
-                            containsNameFilter = true;
-                            break;
-                        }
-                    }
-                    for (i = 0; i < acronyms.length; i++)
-                    {
-                        if (acronyms[i].trim() != "")
-                        {
-                            containsAcronFilter = true;
-                            break;
-                        }
-                    }
-                    for (i = 0; i < products.length; i++)
-                    {
-                        if (products[i].trim() != "")
-                        {
-                            containsProdFilter = true;
-                            break;
-                        }
-                    }
-                    if
-                    (
-                        (
-                            (! containsNameFilter && ! containsAcronFilter) ||
-                            validateNames(names, getHemisphere(hemi)) ||
-                            validateAcronyms(acronyms, getAcronym(hemi))
-                        )
-                        &&
-                        (
-                            ! containsProdFilter ||
-                            validateProducts(products, prod)
-                        )
-                    )
-                    return true;
-                }
-                return false;
+                containsNameFilter = true;
+                break;
             }
-        );
+        }
+        for (i = 0; i < acronyms.length; i++)
+        {
+            if (acronyms[i].trim() != "")
+            {
+                containsAcronFilter = true;
+                break;
+            }
+        }
+        for (i = 0; i < products.length; i++)
+        {
+            if (products[i].trim() != "")
+            {
+                containsProdFilter = true;
+                break;
+            }
+        }
 
         table.draw();
     });
