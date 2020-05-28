@@ -4,6 +4,8 @@
 // For filters:
 var name = [""];
 var acronyms = [""];
+var primNames = [""];
+var primAcronyms = [""];
 var products = [""];
 var minVol = "NaN";
 var maxVol = "NaN";
@@ -15,6 +17,8 @@ var minZ = "NaN";
 var maxZ = "NaN";
 var containsNameFilter = false;
 var containsAcronFilter = false;
+var containsPrimNameFilter = false;
+var containsPrimAcronFilter = false;
 var containsProdFilter = false;
 var gender = 'any';
 
@@ -303,11 +307,9 @@ $.fn.dataTable.ext.search.push
     function(settings, data, dataIndex)
     {
         var columnStruct = data[1];
-
+        var columnPrimStruct = data[2];
         var columnProduct = data[3];
-
         var columnVolume = parseFloat(data[4]) || 0;
-
         var location = parseParenthesesToArray(data[5]);
         var x = parseInt(location[0]);
         var y = parseInt(location[1]);
@@ -324,8 +326,14 @@ $.fn.dataTable.ext.search.push
             validateGender(gender, columnGender) &&
             (
                 (! containsNameFilter && ! containsAcronFilter) ||
-                validateNames(names, getstructure(columnStruct)) ||
+                validateNames(names, getStructure(columnStruct)) ||
                 validateAcronyms(acronyms, getAcronym(columnStruct))
+            )
+            &&
+            (
+                (! containsPrimNameFilter && ! containsPrimAcronFilter) ||
+                validateNames(primNames, getStructure(columnPrimStruct)) ||
+                validateAcronyms(primAcronyms, getAcronym(columnPrimStruct))
             )
             &&
             (
@@ -349,6 +357,8 @@ $(document).ready(function ()
 
     var structures = getStructures(table.column(1).data().unique());
     var structuresAcronyms = getAcronyms(table.column(1).data().unique());
+    var primStructures = getStructures(table.column(2).data().unique());
+    var primStructuresAcronyms = getAcronyms(table.column(2).data().unique());
 
     // columns visibilty in datatable
     $('.toggle-vis').on('click', function(e)
@@ -388,6 +398,36 @@ $(document).ready(function ()
             if (acronyms[i].trim() != "")
             {
                 containsAcronFilter = true;
+                break;
+            }
+        }
+        table.draw();
+    });
+
+    $('#prim-name').keyup(function()
+    {
+        primNames = $('#prim-name').val().split(";");
+        containsPrimNameFilter = false;
+        for (i = 0; i < primNames.length; i++)
+        {
+            if (primNames[i].trim() != "")
+            {
+                containsPrimNameFilter = true;
+                break;
+            }
+        }
+        table.draw();
+    });
+
+    $('#prim-acron').keyup(function()
+    {
+        primAcronyms = $('#prim-acron').val().split(";");
+        containsPrimAcronFilter = false;
+        for (i = 0; i < primAcronyms.length; i++)
+        {
+            if (primAcronyms[i].trim() != "")
+            {
+                containsPrimAcronFilter = true;
                 break;
             }
         }
@@ -465,4 +505,6 @@ $(document).ready(function ()
 
     autocomplete(document.getElementById("name"), structures);
     autocomplete(document.getElementById("acron"), structuresAcronyms);
+    autocomplete(document.getElementById("prim-name"), primStructures);
+    autocomplete(document.getElementById("prim-acron"), primStructuresAcronyms);
 });
