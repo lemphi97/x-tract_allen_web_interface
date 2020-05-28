@@ -2,15 +2,21 @@
  * Global variables
  */
 // For filters:
-var name, acronyms,
-    products,
-    minVol, maxVol,
-    minX, maxX,
-    minY, maxY,
-    minZ, maxZ,
-    containsNameFilter,
-    containsAcronFilter,
-    containsProdFilter;
+var name = [""];
+var acronyms = [""];
+var products = [""];
+var minVol = "NaN";
+var maxVol = "NaN";
+var minX = "NaN";
+var maxX = "NaN";
+var minY = "NaN";
+var maxY = "NaN";
+var minZ = "NaN";
+var maxZ = "NaN";
+var containsNameFilter = false;
+var containsAcronFilter = false;
+var containsProdFilter = false;
+var gender = 'any';
 
 // based on: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_autocomplete
 function autocomplete(inp, arr)
@@ -278,6 +284,19 @@ function validateMinMax(value, min, max)
            (min <= value && value <= max);
 }
 
+/*
+ * return true if value match filter
+ */
+function validateGender(allowedGender, value)
+{
+    if (allowedGender.toUpperCase() == "ANY" ||
+        allowedGender.toUpperCase() == value.toUpperCase())
+    {
+        return true;
+    }
+    return false;
+}
+
 /* Custom filtering function which will validate each lines */
 $.fn.dataTable.ext.search.push
 (
@@ -297,27 +316,28 @@ $.fn.dataTable.ext.search.push
         var y = parseInt(location[1]);
         var z = parseInt(location[2]);
 
+        // specimen gender
+        var columnGender = data[7];
+
         if
         (
             validateMinMax(volume, minVol, maxVol) &&
             validateMinMax(x, minX, maxX) &&
             validateMinMax(y, minY, maxY) &&
-            validateMinMax(z, minZ, maxZ)
+            validateMinMax(z, minZ, maxZ) &&
+            validateGender(gender, columnGender) &&
+            (
+                (! containsNameFilter && ! containsAcronFilter) ||
+                validateNames(names, getHemisphere(hemi)) ||
+                validateAcronyms(acronyms, getAcronym(hemi))
+            )
+            &&
+            (
+                ! containsProdFilter ||
+                validateProducts(products, prod)
+            )
         )
         {
-            if
-            (
-                (
-                    (! containsNameFilter && ! containsAcronFilter) ||
-                    validateNames(names, getHemisphere(hemi)) ||
-                    validateAcronyms(acronyms, getAcronym(hemi))
-                )
-                &&
-                (
-                    ! containsProdFilter ||
-                    validateProducts(products, prod)
-                )
-            )
             return true;
         }
         return false;
@@ -344,7 +364,11 @@ $(document).ready(function ()
         column.visible(! column.visible());
     });
 
-    // Event listener to the two range filtering inputs to redraw on input
+    /*
+     * Event listener on input to filter table and re-draw it
+     */
+
+    // TODO Split this event listener
     $('#name, #acron,' +
       '#prod-id,' +
       '#min-vol, #max-vol,' +
@@ -391,6 +415,12 @@ $(document).ready(function ()
             }
         }
 
+        table.draw();
+    });
+
+    $('#gender-select').change(function()
+    {
+        gender = $('#gender-select').val();
         table.draw();
     });
 
