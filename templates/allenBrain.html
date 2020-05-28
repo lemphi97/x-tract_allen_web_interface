@@ -108,6 +108,23 @@
             </button>
             <div id="specimen" class="collapse">
                 <hr/>
+                <div class="autocomplete">
+                    <label class="form-check-label" for="line">
+                        <strong>name(s): </strong>
+                    </label>
+                    <input type="text" id="line" name="line" aria-describedby="line-help"
+                        placeholder="line_1; line_2; ..." autocomplete="off"/>
+                    <small id="line-help" class="text-muted">must be exact</small>
+                </div>
+                <br/>
+                <div class="autocomplete">
+                    <label class="form-check-label" for="spec-name">
+                        <strong>name(s): </strong>
+                    </label>
+                    <input type="text" id="spec-name" name="spec-name"
+                        placeholder="name_1; name_2; ..." autocomplete="off"/>
+                </div>
+                <br/>
                 <label class="form-check-label" for="gender-select"><strong>gender: </strong></label>
                 <select id="gender-select" name="gender-select" autocomplete="off">
                     <!-- options should be generated in javascript where eventlistener will be handled -->
@@ -176,8 +193,8 @@
                 <th>injection vol.</th>
                 <th>injection (x,y,z)</th>
                 <th>transgenic line</th>
-                <th>gender</th>
                 <th>specimen name</th>
+                <th>gender</th>
             </thead>
 
             <tfoot>
@@ -188,8 +205,8 @@
                 <th>injection vol.</th>
                 <th>injection (x,y,z)</th>
                 <th>transgenic line</th>
-                <th>gender</th>
                 <th>specimen name</th>
+                <th>gender</th>
             </tfoot>
 
             <tbody>
@@ -226,13 +243,13 @@
                     <td>
                         {{ all_exp.iloc[i]['transgenic_line'] }}
                     </td>
-                    <!-- specimen gender -->
-                    <td>
-                        {{ all_exp.iloc[i]['gender'] }}
-                    </td>
                     <!-- specimen name -->
                     <td>
                         {{ all_exp.iloc[i]['specimen_name'] }}
+                    </td>
+                    <!-- specimen gender -->
+                    <td>
+                        {{ all_exp.iloc[i]['gender'] }}
                     </td>
                 </tr>
                 {% endfor %}

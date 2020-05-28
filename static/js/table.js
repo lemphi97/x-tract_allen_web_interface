@@ -2,11 +2,13 @@
  * Global variables
  */
 // For filters:
-var name = [""];
+var names = [""];
 var acronyms = [""];
 var primNames = [""];
 var primAcronyms = [""];
 var products = [""];
+var lines = [""];
+var specNames = [""];
 var minVol = "NaN";
 var maxVol = "NaN";
 var minX = "NaN";
@@ -15,12 +17,14 @@ var minY = "NaN";
 var maxY = "NaN";
 var minZ = "NaN";
 var maxZ = "NaN";
+var gender = "ANY";
 var containsNameFilter = false;
 var containsAcronFilter = false;
 var containsPrimNameFilter = false;
 var containsPrimAcronFilter = false;
 var containsProdFilter = false;
-var gender = 'any';
+var containsLineFilter = false;
+var containsSpecNameFilter = false;
 
 // based on: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_autocomplete
 function autocomplete(inp, arr)
@@ -241,26 +245,10 @@ function caseInsensitiveArrayInclude(array, str)
     return included;
 }
 
-/*
- * Check if the name str is part of the allowed names
- */
-function validateNames(names, name)
+function validateText(validTexts, text)
 {
     var valid = true;
-    if (! caseInsensitiveArrayInclude(names, name))
-    {
-        valid = false;
-    }
-    return valid;
-}
-
-/*
- * Check if the acronym str is part of the allowed acronyms
- */
-function validateAcronyms(acronyms, acronym)
-{
-    var valid = true;
-    if (! caseInsensitiveArrayInclude(acronyms, acronym))
+    if (! caseInsensitiveArrayInclude(validTexts, text))
     {
         valid = false;
     }
@@ -314,8 +302,9 @@ $.fn.dataTable.ext.search.push
         var x = parseInt(location[0]);
         var y = parseInt(location[1]);
         var z = parseInt(location[2]);
-
-        var columnGender = data[7];
+        var columnline = data[6];
+        var columnSpecName = data[6];
+        var columnGender = data[8];
 
         if
         (
@@ -326,19 +315,29 @@ $.fn.dataTable.ext.search.push
             validateGender(gender, columnGender) &&
             (
                 (! containsNameFilter && ! containsAcronFilter) ||
-                validateNames(names, getStructure(columnStruct)) ||
-                validateAcronyms(acronyms, getAcronym(columnStruct))
+                validateText(names, getStructure(columnStruct)) ||
+                validateText(acronyms, getAcronym(columnStruct))
             )
             &&
             (
                 (! containsPrimNameFilter && ! containsPrimAcronFilter) ||
-                validateNames(primNames, getStructure(columnPrimStruct)) ||
-                validateAcronyms(primAcronyms, getAcronym(columnPrimStruct))
+                validateText(primNames, getStructure(columnPrimStruct)) ||
+                validateText(primAcronyms, getAcronym(columnPrimStruct))
             )
             &&
             (
                 ! containsProdFilter ||
                 validateProducts(products, columnProduct)
+            )
+            &&
+            (
+                ! containsLineFilter ||
+                validateText(lines, columnline)
+            )
+            &&
+            (
+                ! containsSpecNameFilter ||
+                validateText(specNames, columnSpecName)
             )
         )
         {
@@ -354,11 +353,6 @@ $(document).ready(function ()
     var table = $('#experiments').DataTable({
         "scrollX": true
     });
-
-    var structures = getStructures(table.column(1).data().unique());
-    var structuresAcronyms = getAcronyms(table.column(1).data().unique());
-    var primStructures = getStructures(table.column(2).data().unique());
-    var primStructuresAcronyms = getAcronyms(table.column(2).data().unique());
 
     // columns visibilty in datatable
     $('.toggle-vis').on('click', function(e)
@@ -497,14 +491,51 @@ $(document).ready(function ()
         table.draw();
     })
 
+    $('#line').keyup(function()
+    {
+        lines = $('#line').val().split(";");
+        containsLineFilter = false;
+        for (i = 0; i < lines.length; i++)
+        {
+            if (lines[i].trim() != "")
+            {
+                containsLineFilter = true;
+                break;
+            }
+        }
+        table.draw();
+    });
+
+    $('#spec-name').keyup(function()
+    {
+        specNames = $('#spec-name').val().split(";");
+        containsSpecNameFilter = false;
+        for (i = 0; i < specNames.length; i++)
+        {
+            if (specNames[i].trim() != "")
+            {
+                containsSpecNameFilter = true;
+                break;
+            }
+        }
+        table.draw();
+    });
+
     $('#gender-select').change(function()
     {
         gender = $('#gender-select').val();
         table.draw();
     });
 
+    var structures = getStructures(table.column(1).data().unique());
+    var structuresAcronyms = getAcronyms(table.column(1).data().unique());
+    var primStructures = getStructures(table.column(2).data().unique());
+    var primStructuresAcronyms = getAcronyms(table.column(2).data().unique());
+    var specLines = table.column(6).data().unique();
+
     autocomplete(document.getElementById("name"), structures);
     autocomplete(document.getElementById("acron"), structuresAcronyms);
     autocomplete(document.getElementById("prim-name"), primStructures);
     autocomplete(document.getElementById("prim-acron"), primStructuresAcronyms);
+    autocomplete(document.getElementById("line"), specLines);
 });
