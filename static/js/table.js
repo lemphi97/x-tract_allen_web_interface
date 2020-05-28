@@ -158,9 +158,9 @@ function autocomplete(inp, arr)
 }
 
 /*
- * Gets hemisphere without the acronym from a line in the datatable
+ * Gets structure without the acronym from a line in the datatable
  */
-function getHemisphere(str)
+function getStructure(str)
 {
     var indexBeforeAcron = str.lastIndexOf("(");
     if (indexBeforeAcron < 0)
@@ -171,14 +171,14 @@ function getHemisphere(str)
 }
 
 /*
- * Gets all the unique hemisphere without the acronym from the column of the datatable
+ * Gets all the unique structures without the acronym from the column of the datatable
  */
-function getHemispheres(column)
+function getStructures(column)
 {
     var array = new Array(column.length);
     for (i = 0; i < column.length; i++)
     {
-        array[i] = getHemisphere(column[i]);
+        array[i] = getStructure(column[i]);
     }
     return array;
 }
@@ -302,39 +302,35 @@ $.fn.dataTable.ext.search.push
 (
     function(settings, data, dataIndex)
     {
-        var hemi = data[1];
+        var columnStruct = data[1];
 
-        // product id
-        var prod = data[3];
+        var columnProduct = data[3];
 
-        // injection volume
-        var volume = parseFloat(data[4]) || 0;
+        var columnVolume = parseFloat(data[4]) || 0;
 
-        // injection location
         var location = parseParenthesesToArray(data[5]);
         var x = parseInt(location[0]);
         var y = parseInt(location[1]);
         var z = parseInt(location[2]);
 
-        // specimen gender
         var columnGender = data[7];
 
         if
         (
-            validateMinMax(volume, minVol, maxVol) &&
+            validateMinMax(columnVolume, minVol, maxVol) &&
             validateMinMax(x, minX, maxX) &&
             validateMinMax(y, minY, maxY) &&
             validateMinMax(z, minZ, maxZ) &&
             validateGender(gender, columnGender) &&
             (
                 (! containsNameFilter && ! containsAcronFilter) ||
-                validateNames(names, getHemisphere(hemi)) ||
-                validateAcronyms(acronyms, getAcronym(hemi))
+                validateNames(names, getstructure(columnStruct)) ||
+                validateAcronyms(acronyms, getAcronym(columnStruct))
             )
             &&
             (
                 ! containsProdFilter ||
-                validateProducts(products, prod)
+                validateProducts(products, columnProduct)
             )
         )
         {
@@ -351,8 +347,8 @@ $(document).ready(function ()
         "scrollX": true
     });
 
-    var hemispheres = getHemispheres(table.column(1).data().unique());
-    var hemispheresAcronyms = getAcronyms(table.column(1).data().unique());
+    var structures = getStructures(table.column(1).data().unique());
+    var structuresAcronyms = getAcronyms(table.column(1).data().unique());
 
     // columns visibilty in datatable
     $('.toggle-vis').on('click', function(e)
@@ -368,28 +364,10 @@ $(document).ready(function ()
      * Event listener on input to filter table and re-draw it
      */
 
-    // TODO Split this event listener
-    $('#name, #acron,' +
-      '#prod-id,' +
-      '#min-vol, #max-vol,' +
-      '#min-x, #max-x,' +
-      '#min-y, #max-y,' +
-      '#min-z, #max-z').keyup(function()
+    $('#name').keyup(function()
     {
         names = $('#name').val().split(";");
-        acronyms = $('#acron').val().split(";");
-        products = $('#prod-id').val().split(";");
-        minVol = parseFloat($('#min-vol').val(), 10);
-        maxVol = parseFloat($('#max-vol').val(), 10);
-        minX = parseInt($('#min-x').val(), 10);
-        maxX = parseInt($('#max-x').val(), 10);
-        minY = parseInt($('#min-y').val(), 10);
-        maxY = parseInt($('#max-y').val(), 10);
-        minZ = parseInt($('#min-z').val(), 10);
-        maxZ = parseInt($('#max-z').val(), 10);
         containsNameFilter = false;
-        containsAcronFilter = false;
-        containsProdFilter = false;
         for (i = 0; i < names.length; i++)
         {
             if (names[i].trim() != "")
@@ -398,6 +376,13 @@ $(document).ready(function ()
                 break;
             }
         }
+        table.draw();
+    });
+
+    $('#acron').keyup(function()
+    {
+        acronyms = $('#acron').val().split(";");
+        containsAcronFilter = false;
         for (i = 0; i < acronyms.length; i++)
         {
             if (acronyms[i].trim() != "")
@@ -406,6 +391,13 @@ $(document).ready(function ()
                 break;
             }
         }
+        table.draw();
+    });
+
+    $('#prod-id').keyup(function()
+    {
+        products = $('#prod-id').val().split(";");
+        containsProdFilter = false;
         for (i = 0; i < products.length; i++)
         {
             if (products[i].trim() != "")
@@ -414,9 +406,56 @@ $(document).ready(function ()
                 break;
             }
         }
-
         table.draw();
     });
+
+    $('#min-vol').keyup(function()
+    {
+        minVol = parseFloat($('#min-vol').val(), 10);
+        table.draw();
+    })
+
+    $('#max-vol').keyup(function()
+    {
+        maxVol = parseFloat($('#max-vol').val(), 10);
+        table.draw();
+    })
+
+    $('#min-x').keyup(function()
+    {
+        minX = parseInt($('#min-x').val(), 10);
+        table.draw();
+    })
+
+    $('#max-x').keyup(function()
+    {
+        maxX = parseInt($('#max-x').val(), 10);
+        table.draw();
+    })
+
+    $('#min-y').keyup(function()
+    {
+        minY = parseInt($('#min-y').val(), 10);
+        table.draw();
+    })
+
+    $('#max-y').keyup(function()
+    {
+        maxY = parseInt($('#max-y').val(), 10);
+        table.draw();
+    })
+
+    $('#min-z').keyup(function()
+    {
+        minZ = parseInt($('#min-z').val(), 10);
+        table.draw();
+    })
+
+    $('#max-z').keyup(function()
+    {
+        maxZ = parseInt($('#max-z').val(), 10);
+        table.draw();
+    })
 
     $('#gender-select').change(function()
     {
@@ -424,6 +463,6 @@ $(document).ready(function ()
         table.draw();
     });
 
-    autocomplete(document.getElementById("name"), hemispheres);
-    autocomplete(document.getElementById("acron"), hemispheresAcronyms);
+    autocomplete(document.getElementById("name"), structures);
+    autocomplete(document.getElementById("acron"), structuresAcronyms);
 });
