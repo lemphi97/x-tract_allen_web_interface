@@ -28,6 +28,13 @@ def experiments():
         struct_dict=utils.st_dict
     )
 
+@app.route("/experiments/<id>")
+def experiment(id):
+    return flask.render_template(
+        "experiment.html",
+        id=id
+    )
+
 @app.route("/aboutWebsite/")
 def aboutWebsite():
     return flask.render_template("aboutWebsite.html")
@@ -35,10 +42,6 @@ def aboutWebsite():
 @app.route("/test/")
 def test():
     return "Test page text. Can takes HTML inline (<em>HELLO</em>)"
-
-@app.route("/<name>/")
-def user(name):
-    return f"Hello {name}!"
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -3,7 +3,6 @@
 }
 
 .content h1,
-.content h2,
 .content p,
 .content li,
 .content a {
@@ -19,9 +18,10 @@
     border-radius: 10px;
 }
 
-.table {
+.content-bg {
     padding: 3px 5px 3px 5px;
     border-radius: 10px;
+    background-color: #f8f9fa;
 }
 
 .columns-vis {
