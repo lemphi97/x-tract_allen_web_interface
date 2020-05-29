@@ -4,7 +4,6 @@ from allensdk.core.mouse_connectivity_cache import MouseConnectivityCache
 from allensdk.api.queries.image_download_api import ImageDownloadApi
 from allensdk.api.queries.ontologies_api import OntologiesApi
 
-
 # return all id in an array
 def get_all_id(experiences):
     all_id = []
@@ -35,7 +34,9 @@ def get_struct_in_dict(experiences, st_tree):
 
 mcc = MouseConnectivityCache()
 
-all_exp = mcc.get_experiments(dataframe=True)
+all_exp = mcc.get_experiments(dataframe=True, cre=None)
+cre_neg_exp = mcc.get_experiments(dataframe=True, cre=False)
+cre_pos_exp = mcc.get_experiments(dataframe=True, cre=True)
 nb_exp = len(all_exp)
 
 st_tree = mcc.get_structure_tree()

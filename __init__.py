@@ -21,7 +21,12 @@ def interface():
 
 @app.route("/experiments/")
 def experiments():
-    return flask.render_template("allenBrain.html", all_exp=utils.all_exp, struct_dict=utils.st_dict)
+    return flask.render_template (
+        "allenBrain.html",
+        cre_neg_exp=utils.cre_neg_exp,
+        cre_pos_exp=utils.cre_pos_exp,
+        struct_dict=utils.st_dict
+    )
 
 @app.route("/aboutWebsite/")
 def aboutWebsite():

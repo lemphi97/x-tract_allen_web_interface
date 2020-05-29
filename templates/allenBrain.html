@@ -127,10 +127,18 @@
                 <br/>
                 <label class="form-check-label" for="gender-select"><strong>gender: </strong></label>
                 <select id="gender-select" name="gender-select" autocomplete="off">
-                    <!-- options should be generated in javascript where eventlistener will be handled -->
+                    <!-- TODO options should be generated in javascript where eventlistener will be handled -->
                     <option value="any">ANY</option>
                     <option value="m">M</option>
                     <option value="f">F</option>
+                </select>
+                <br/>
+                <label class="form-check-label" for="cre-select"><strong>cre: </strong></label>
+                <select id="cre-select" name="cre-select" autocomplete="off">
+                    <!-- TODO options should be generated in javascript where eventlistener will be handled -->
+                    <option value="any">ANY</option>
+                    <option value="false">FALSE</option>
+                    <option value="true">TRUE</option>
                 </select>
                 <hr/>
             </div>
@@ -195,6 +203,7 @@
                 <th>transgenic line</th>
                 <th>specimen name</th>
                 <th>gender</th>
+                <th>cre</th>
             </thead>
 
             <tfoot>
@@ -207,49 +216,99 @@
                 <th>transgenic line</th>
                 <th>specimen name</th>
                 <th>gender</th>
+                <th>cre</th>
             </tfoot>
 
             <tbody>
-                <!-- for each experiments -->
-                {% for i in range(0, all_exp|length) %}
+                {% for i in range(0, cre_neg_exp|length) %}
                 <tr>
                     <!-- experiment id -->
                     <td>
-                        {{ all_exp.iloc[i]['id'] }}
+                        {{ cre_neg_exp.iloc[i]['id'] }}
                     </td>
                     <!-- structure name -->
                     <td>
-                        {{ struct_dict[all_exp.iloc[i]['structure_id']] }}
+                        {{ struct_dict[cre_neg_exp.iloc[i]['structure_id']] }}
                     </td>
                     <!-- primary injection structure -->
                     <td>
-                        {{ struct_dict[all_exp.iloc[i]['primary_injection_structure']] }}
+                        {{ struct_dict[cre_neg_exp.iloc[i]['primary_injection_structure']] }}
                     </td>
                     <!-- product id -->
                     <td>
-                        {{ all_exp.iloc[i]['product_id'] }}
+                        {{ cre_neg_exp.iloc[i]['product_id'] }}
                     </td>
                     <!-- injection volume -->
                     <td>
-                        {{ all_exp.iloc[i]['injection_volume'] }}
+                        {{ cre_neg_exp.iloc[i]['injection_volume'] }}
                     </td>
                     <!-- injection coordinates -->
                     <td>
-                        ({{ all_exp.iloc[i]['injection_x'] }},
-                        {{ all_exp.iloc[i]['injection_y'] }},
-                        {{ all_exp.iloc[i]['injection_z'] }})
+                        ({{ cre_neg_exp.iloc[i]['injection_x'] }},
+                        {{ cre_neg_exp.iloc[i]['injection_y'] }},
+                        {{ cre_neg_exp.iloc[i]['injection_z'] }})
                     </td>
                     <!-- specimen name -->
                     <td>
-                        {{ all_exp.iloc[i]['transgenic_line'] }}
+                        {{ cre_neg_exp.iloc[i]['transgenic_line'] }}
                     </td>
                     <!-- specimen name -->
                     <td>
-                        {{ all_exp.iloc[i]['specimen_name'] }}
+                        {{ cre_neg_exp.iloc[i]['specimen_name'] }}
                     </td>
                     <!-- specimen gender -->
                     <td>
-                        {{ all_exp.iloc[i]['gender'] }}
+                        {{ cre_neg_exp.iloc[i]['gender'] }}
+                    </td>
+                    <!-- specimen cre -->
+                    <td>
+                        False
+                    </td>
+                </tr>
+                {% endfor %}
+                {% for i in range(0, cre_pos_exp|length) %}
+                <tr>
+                    <!-- experiment id -->
+                    <td>
+                        {{ cre_pos_exp.iloc[i]['id'] }}
+                    </td>
+                    <!-- structure name -->
+                    <td>
+                        {{ struct_dict[cre_pos_exp.iloc[i]['structure_id']] }}
+                    </td>
+                    <!-- primary injection structure -->
+                    <td>
+                        {{ struct_dict[cre_pos_exp.iloc[i]['primary_injection_structure']] }}
+                    </td>
+                    <!-- product id -->
+                    <td>
+                        {{ cre_pos_exp.iloc[i]['product_id'] }}
+                    </td>
+                    <!-- injection volume -->
+                    <td>
+                        {{ cre_pos_exp.iloc[i]['injection_volume'] }}
+                    </td>
+                    <!-- injection coordinates -->
+                    <td>
+                        ({{ cre_pos_exp.iloc[i]['injection_x'] }},
+                        {{ cre_pos_exp.iloc[i]['injection_y'] }},
+                        {{ cre_pos_exp.iloc[i]['injection_z'] }})
+                    </td>
+                    <!-- specimen name -->
+                    <td>
+                        {{ cre_pos_exp.iloc[i]['transgenic_line'] }}
+                    </td>
+                    <!-- specimen name -->
+                    <td>
+                        {{ cre_pos_exp.iloc[i]['specimen_name'] }}
+                    </td>
+                    <!-- specimen gender -->
+                    <td>
+                        {{ cre_pos_exp.iloc[i]['gender'] }}
+                    </td>
+                    <!-- specimen cre -->
+                    <td>
+                        True
                     </td>
                 </tr>
                 {% endfor %}

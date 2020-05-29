@@ -18,6 +18,7 @@ var maxY = "NaN";
 var minZ = "NaN";
 var maxZ = "NaN";
 var gender = "ANY";
+var cre = "ANY";
 var containsNameFilter = false;
 var containsAcronFilter = false;
 var containsPrimNameFilter = false;
@@ -277,12 +278,12 @@ function validateMinMax(value, min, max)
 }
 
 /*
- * return true if value match filter
+ * return true if value match allowedValue
  */
-function validateGender(allowedGender, value)
+function validateSelect(allowedValue, value)
 {
-    if (allowedGender.toUpperCase() == "ANY" ||
-        allowedGender.toUpperCase() == value.toUpperCase())
+    if (allowedValue.toUpperCase() == "ANY" ||
+        allowedValue.toUpperCase() == value.toUpperCase())
     {
         return true;
     }
@@ -305,6 +306,7 @@ $.fn.dataTable.ext.search.push
         var columnline = data[6];
         var columnSpecName = data[7];
         var columnGender = data[8];
+        var columnCre = data[9];
 
         if
         (
@@ -312,7 +314,8 @@ $.fn.dataTable.ext.search.push
             validateMinMax(x, minX, maxX) &&
             validateMinMax(y, minY, maxY) &&
             validateMinMax(z, minZ, maxZ) &&
-            validateGender(gender, columnGender) &&
+            validateSelect(gender, columnGender) &&
+            validateSelect(cre, columnCre) &&
             (
                 (! containsNameFilter && ! containsAcronFilter) ||
                 validateText(names, getStructure(columnStruct)) ||
@@ -524,6 +527,12 @@ $(document).ready(function ()
     $('#gender-select').change(function()
     {
         gender = $('#gender-select').val();
+        table.draw();
+    });
+
+    $('#cre-select').change(function()
+    {
+        cre = $('#cre-select').val();
         table.draw();
     });
 
