@@ -303,7 +303,7 @@ $.fn.dataTable.ext.search.push
         var y = parseInt(location[1]);
         var z = parseInt(location[2]);
         var columnline = data[6];
-        var columnSpecName = data[6];
+        var columnSpecName = data[7];
         var columnGender = data[8];
 
         if
@@ -531,11 +531,13 @@ $(document).ready(function ()
     var structuresAcronyms = getAcronyms(table.column(1).data().unique());
     var primStructures = getStructures(table.column(2).data().unique());
     var primStructuresAcronyms = getAcronyms(table.column(2).data().unique());
-    var specLines = table.column(6).data().unique();
+    var specimenLines = table.column(6).data().unique();
+    var specimenNames = table.column(7).data().unique();
 
     autocomplete(document.getElementById("name"), structures);
     autocomplete(document.getElementById("acron"), structuresAcronyms);
     autocomplete(document.getElementById("prim-name"), primStructures);
     autocomplete(document.getElementById("prim-acron"), primStructuresAcronyms);
-    autocomplete(document.getElementById("line"), specLines);
+    autocomplete(document.getElementById("line"), specimenLines);
+    autocomplete(document.getElementById("spec-name"), specimenNames);
 });
