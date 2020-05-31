@@ -160,21 +160,26 @@
             </div>
             <div class="form-check form-check-inline">
                 <input class="toggle-vis form-check-input" type="checkbox" data-column="2"
+                       id="primary-inject-struct" value="primary-inject-struct" autocomplete="off" checked/>
+                <label class="form-check-label" for="primary-inject-struct">prim. inj. struct.</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="3"
                        id="product-id" value="product-id" autocomplete="off" checked/>
                 <label class="form-check-label" for="product-id">product id</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="toggle-vis form-check-input" type="checkbox" data-column="3"
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="4"
                        id="injection-vol" value="injection-vol" autocomplete="off" checked/>
                 <label class="form-check-label" for="injection-vol">injection vol.</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="toggle-vis form-check-input" type="checkbox" data-column="4"
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="5"
                        id="injection-xyz" value="injection-xyz" autocomplete="off" checked/>
                 <label class="form-check-label" for="injection-xyz">injection (x,y,z)</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="toggle-vis form-check-input" type="checkbox" data-column="5"
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="6"
                        id="transgenic-line" value="transgenic-line" autocomplete="off" checked/>
                 <label class="form-check-label" for="transgenic-line">transgenic line</label>
             </div>
@@ -184,9 +189,14 @@
                 <label class="form-check-label" for="specimen-name">specimen name</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="toggle-vis form-check-input" type="checkbox" data-column="6"
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="8"
                        id="gender" value="gender" autocomplete="off" checked/>
                 <label class="form-check-label" for="gender">gender </label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="9"
+                       id="cre" value="cre" autocomplete="off" checked/>
+                <label class="form-check-label" for="cre">cre </label>
             </div>
         </div>
 
@@ -222,45 +232,35 @@
             <tbody>
                 {% for i in range(0, cre_neg_exp|length) %}
                 <tr>
-                    <!-- experiment id -->
                     <td>
                         {{ cre_neg_exp.iloc[i]['id'] }}
                     </td>
-                    <!-- structure name -->
                     <td>
                         {{ struct_dict[cre_neg_exp.iloc[i]['structure_id']] }}
                     </td>
-                    <!-- primary injection structure -->
                     <td>
                         {{ struct_dict[cre_neg_exp.iloc[i]['primary_injection_structure']] }}
                     </td>
-                    <!-- product id -->
                     <td>
                         {{ cre_neg_exp.iloc[i]['product_id'] }}
                     </td>
-                    <!-- injection volume -->
                     <td>
                         {{ cre_neg_exp.iloc[i]['injection_volume'] }}
                     </td>
-                    <!-- injection coordinates -->
                     <td>
                         ({{ cre_neg_exp.iloc[i]['injection_x'] }},
                         {{ cre_neg_exp.iloc[i]['injection_y'] }},
                         {{ cre_neg_exp.iloc[i]['injection_z'] }})
                     </td>
-                    <!-- specimen name -->
                     <td>
                         {{ cre_neg_exp.iloc[i]['transgenic_line'] }}
                     </td>
-                    <!-- specimen name -->
                     <td>
                         {{ cre_neg_exp.iloc[i]['specimen_name'] }}
                     </td>
-                    <!-- specimen gender -->
                     <td>
                         {{ cre_neg_exp.iloc[i]['gender'] }}
                     </td>
-                    <!-- specimen cre -->
                     <td>
                         False
                     </td>
@@ -268,45 +268,35 @@
                 {% endfor %}
                 {% for i in range(0, cre_pos_exp|length) %}
                 <tr>
-                    <!-- experiment id -->
                     <td>
                         {{ cre_pos_exp.iloc[i]['id'] }}
                     </td>
-                    <!-- structure name -->
                     <td>
                         {{ struct_dict[cre_pos_exp.iloc[i]['structure_id']] }}
                     </td>
-                    <!-- primary injection structure -->
                     <td>
                         {{ struct_dict[cre_pos_exp.iloc[i]['primary_injection_structure']] }}
                     </td>
-                    <!-- product id -->
                     <td>
                         {{ cre_pos_exp.iloc[i]['product_id'] }}
                     </td>
-                    <!-- injection volume -->
                     <td>
                         {{ cre_pos_exp.iloc[i]['injection_volume'] }}
                     </td>
-                    <!-- injection coordinates -->
                     <td>
                         ({{ cre_pos_exp.iloc[i]['injection_x'] }},
                         {{ cre_pos_exp.iloc[i]['injection_y'] }},
                         {{ cre_pos_exp.iloc[i]['injection_z'] }})
                     </td>
-                    <!-- specimen name -->
                     <td>
                         {{ cre_pos_exp.iloc[i]['transgenic_line'] }}
                     </td>
-                    <!-- specimen name -->
                     <td>
                         {{ cre_pos_exp.iloc[i]['specimen_name'] }}
                     </td>
-                    <!-- specimen gender -->
                     <td>
                         {{ cre_pos_exp.iloc[i]['gender'] }}
                     </td>
-                    <!-- specimen cre -->
                     <td>
                         True
                     </td>
