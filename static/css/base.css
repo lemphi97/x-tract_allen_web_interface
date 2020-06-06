@@ -24,6 +24,10 @@
     background-color: #f8f9fa;
 }
 
+.content-bg a {
+    color: black;
+}
+
 .columns-vis {
     color: black
 }

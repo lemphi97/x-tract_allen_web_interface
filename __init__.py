@@ -28,11 +28,18 @@ def experiments():
         struct_dict=utils.st_dict
     )
 
-@app.route("/experiments/<id>")
+@app.route("/experiments/<id>/")
 def experiment(id):
     return flask.render_template(
         "experiment.html",
-        id=id
+        exp=utils.all_exp.loc[int(id)],
+        struct_dict=utils.st_dict
+    )
+
+@app.route("/volume_viewer/")
+def volume_viewer():
+    return flask.render_template(
+        "volume_viewer.html"
     )
 
 @app.route("/aboutWebsite/")

@@ -1,0 +1,149 @@
+{% extends "display/base.html" %}
+
+{% block title %}
+    Volume viewer
+{% endblock %}
+
+{% block dependencies %}
+{% endblock %}
+
+{% block content %}
+<div id="global-controls" class="volume-viewer-controls">
+    <span class="global-control-group">
+            <span class="control-heading">Panel size:</span>
+    <select id="panel-size">
+              <option value="128">128</option>
+              <option value="256" selected="">256</option>
+              <option value="512">512</option>
+    </select>
+    </span>
+    <input type="checkbox" class="button" id="sync-volumes"/>
+    <label for="sync-volumes">Sync Volumes</label>
+    <span id="screenshot" class="button">Screenshot</span>
+
+    <div id="volume-file" class="file-select">
+        <h3><u>For NIfTI-1 file:</u></h3>
+        <div>
+            <span class="control-heading">NIfTI-1 file: </span><input type="file" name="nifti1-file" id="nifti1-file">
+        </div>
+        <button type="button" id="volume-file-nifti1-submit" onclick="">
+            <span class="button">Load</span>
+        </button>
+    </div>
+    <div class="instructions">
+        <strong>Shift-click (or three-finger touch)</strong> to drag.
+        <strong>Hold ctrl (or touch)</strong> to measure distance.
+    </div>
+</div>
+
+<div id="brainbrowser">
+    <div class="volume-container">
+        <div class="volume-viewer-display">
+            <canvas width="256" height="256" class="slice-display" style="background-color: rgb(0, 0, 0);"></canvas><canvas width="256" height="256" class="slice-display" style="background-color: rgb(0, 0, 0);"></canvas><canvas width="256" height="256" class="slice-display" style="background-color: rgb(0, 0, 0);"></canvas></div>
+        <div class="volume-viewer-controls volume-controls">
+
+            <div class="coords">
+                <div class="control-heading" id="world-coordinates-heading-0">
+                    World Coordinates:
+                </div>
+                <div class="world-coords" data-volume-id="0">
+                    X:<input id="world-x-0" class="control-inputs"/> Y:
+                    <input id="world-y-0" class="control-inputs"/> Z:
+                    <input id="world-z-0" class="control-inputs"/>
+                </div>
+                <div class="control-heading" id="voxel-coordinates-heading-0">
+                    Voxel Coordinates:
+                </div>
+                <div class="voxel-coords" data-volume-id="0">
+                    I:<input id="voxel-i-0" class="control-inputs"/> J:
+                    <input id="voxel-j-0" class="control-inputs"/> K:
+                    <input id="voxel-k-0" class="control-inputs"/>
+                </div>
+            </div>
+
+            <div id="intensity-value-div-0">
+                <span class="control-heading" data-volume-id="0">
+                    Value:
+                </span>
+                <span id="intensity-value-0" class="intensity-value" style="background-color: rgb(17, 17, 17);">20</span>
+            </div>
+
+            <div id="color-map-0">
+                <span class="control-heading" id="color-map-heading-0">
+                    Color Map:
+                </span>
+                <select id="color-map-select">
+                    <option value="color_maps/gray_scale.txt" data-cursor-color="#FF0000">Gray</option>
+                    <option value="color_maps/spectral-brainview.txt" data-cursor-color="#FFFFFF">Spectral</option>
+                    <option value="color_maps/thermal.txt" data-cursor-color="#FFFFFF">Thermal</option>
+                    <option value="color_maps/blue.txt" data-cursor-color="#FFFFFF">Blue</option>
+                    <option value="color_maps/green.txt" data-cursor-color="#FF0000">Green</option>
+                </select>
+            </div>
+
+            <div id="color-map-file-" class="color-map-file-div" data-volume-id="">
+                <span class="control-heading">Color map file: </span>
+                <input type="file" name="color-map-file-" class="color-map-file"/>
+            </div>
+
+            <div class="threshold-div" data-volume-id="0">
+                <div class="control-heading">
+                    Threshold:
+                </div>
+                <div class="thresh-inputs">
+                    <input id="min-threshold-0" class="control-inputs thresh-input-left" value="0"/>
+                    <input id="max-threshold-0" class="control-inputs thresh-input-right" value="255"/>
+                </div>
+                <div class="slider volume-viewer-threshold ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" id="threshold-slider-0">
+                    <div class="ui-slider-range ui-widget-header" style="left: 0%; width: 100%;"></div>
+                    <a href="#" class="ui-slider-handle ui-state-default ui-corner-all" style="left: 0%;"></a>
+                    <a href="#" class="ui-slider-handle ui-state-default ui-corner-all" style="left: 100%;"></a>
+                </div>
+            </div>
+
+            <div id="time-0" class="time-div" data-volume-id="0" style="display:none">
+                <span class="control-heading">Time:</span>
+                <input class="control-inputs" value="0" id="time-val-0"/>
+                <div class="slider volume-viewer-threshold" id="threshold-time-slider-0"></div>
+                <input type="checkbox" class="button" id="play-0"/>
+                <label for="play-0">Play</label>
+            </div>
+
+            <div class="contrast-div" data-volume-id="">
+                <span class="control-heading" id="contrast-heading">Contrast (0.0 to 2.0):</span>
+                <input class="control-inputs" value="1.0" id="contrast-val"/>
+                <div id="contrast-slider" class="slider volume-viewer-contrast ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
+                    <a href="#" class="ui-slider-handle ui-state-default ui-corner-all" style="left: 50%;"></a>
+                </div>
+            </div>
+
+            <div class="brightness-div" data-volume-id="">
+                <span class="control-heading" id="brightness-heading">Brightness (-1 to 1):</span>
+                <input class="control-inputs" value="0" id="brightness-val"/>
+                <div id="brightness-slider" class="slider volume-viewer-brightness ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
+                    <a href="#" class="ui-slider-handle ui-state-default ui-corner-all" style="left: 50%;"></a>
+                </div>
+            </div>
+
+            <div id="slice-series-0" class="slice-series-div" data-volume-id="0">
+                <div class="control-heading" id="slice-series-heading-0">All slices: </div>
+                <span class="slice-series-button button" data-axis="xspace">Sagittal</span>
+                <span class="slice-series-button button" data-axis="yspace">Coronal</span>
+                <span class="slice-series-button button" data-axis="zspace">Transverse</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block dependenciesScripts %}
+    <!--
+    <script type="text/javascript" src="https://brainbrowser.cbrain.mcgill.ca/js/lib/jquery-ui-1.8.10.custom.min.js"></script>
+    <script type="text/javascript" src="https://brainbrowser.cbrain.mcgill.ca/js/ui/common.js"></script>
+    <script type="text/javascript" src="https://brainbrowser.cbrain.mcgill.ca/js/volume-viewer-demo.config.js"></script>
+    <script type="text/javascript" src="https://brainbrowser.cbrain.mcgill.ca/js/volume-viewer-demo.js"></script>
+    -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/lib/brainbrowser-2.5.5/brainbrowser.volume-viewer.min.js') }}"></script>
+    <!-- <script type="text/javascript" src="https://brainbrowser.cbrain.mcgill.ca/js/brainbrowser/brainbrowser.volume-viewer.min.js"></script> -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/volume_viewer.js') }}"></script>
+{% endblock %}
