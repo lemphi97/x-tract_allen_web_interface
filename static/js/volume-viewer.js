@@ -107,7 +107,7 @@ $(function() {
             },
             {
               type: 'nifti1',
-              nii_url: "/static/models/100140756_projection_density_50.nii.gz",
+              nii_url: "/static/models/100140756_projection_density_50.nii",
               template: {
                 element_id: "volume-ui-template",
                 viewer_insert_class: "volume-viewer-display"
