@@ -1,0 +1,15 @@
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    /*align-items: center;*/
+    justify-content: space-around;
+}
+
+.exp-table {
+    width: 40%;
+    min-width: 300px;
+}
+
+.download {
+    width: 40%;
+}
