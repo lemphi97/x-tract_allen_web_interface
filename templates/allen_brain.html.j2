@@ -230,79 +230,41 @@
             </tfoot>
 
             <tbody>
-                {% for i in range(0, cre_neg_exp|length) %}
+                {% for i in range(0, all_exp|length) %}
                 <tr>
                     <td>
-                        <a href="/experiments/{{ cre_neg_exp.iloc[i]['id'] }}">
-                            {{ cre_neg_exp.iloc[i]['id'] }}
+                        <a href="/experiments/{{ all_exp.iloc[i]['id'] }}">
+                            {{ all_exp.iloc[i]['id'] }}
                         </a>
                     </td>
                     <td>
-                        {{ struct_dict[cre_neg_exp.iloc[i]['structure_id']] }}
+                        {{ struct_dict[all_exp.iloc[i]['structure_id']] }}
                     </td>
                     <td>
-                        {{ struct_dict[cre_neg_exp.iloc[i]['primary_injection_structure']] }}
+                        {{ struct_dict[all_exp.iloc[i]['primary_injection_structure']] }}
                     </td>
                     <td>
-                        {{ cre_neg_exp.iloc[i]['product_id'] }}
+                        {{ all_exp.iloc[i]['product_id'] }}
                     </td>
                     <td>
-                        {{ cre_neg_exp.iloc[i]['injection_volume'] }}
+                        {{ all_exp.iloc[i]['injection_volume'] }}
                     </td>
                     <td>
-                        ({{ cre_neg_exp.iloc[i]['injection_x'] }},
-                        {{ cre_neg_exp.iloc[i]['injection_y'] }},
-                        {{ cre_neg_exp.iloc[i]['injection_z'] }})
+                        ({{ all_exp.iloc[i]['injection_x'] }},
+                        {{ all_exp.iloc[i]['injection_y'] }},
+                        {{ all_exp.iloc[i]['injection_z'] }})
                     </td>
                     <td>
-                        {{ cre_neg_exp.iloc[i]['transgenic_line'] }}
+                        {{ all_exp.iloc[i]['transgenic_line'] }}
                     </td>
                     <td>
-                        {{ cre_neg_exp.iloc[i]['specimen_name'] }}
+                        {{ all_exp.iloc[i]['specimen_name'] }}
                     </td>
                     <td>
-                        {{ cre_neg_exp.iloc[i]['gender'] }}
+                        {{ all_exp.iloc[i]['gender'] }}
                     </td>
                     <td>
-                        False
-                    </td>
-                </tr>
-                {% endfor %}
-                {% for i in range(0, cre_pos_exp|length) %}
-                <tr>
-                    <td>
-                        <a href="/experiments/{{ cre_pos_exp.iloc[i]['id'] }}">
-                            {{ cre_pos_exp.iloc[i]['id'] }}
-                        </a>
-                    </td>
-                    <td>
-                        {{ struct_dict[cre_pos_exp.iloc[i]['structure_id']] }}
-                    </td>
-                    <td>
-                        {{ struct_dict[cre_pos_exp.iloc[i]['primary_injection_structure']] }}
-                    </td>
-                    <td>
-                        {{ cre_pos_exp.iloc[i]['product_id'] }}
-                    </td>
-                    <td>
-                        {{ cre_pos_exp.iloc[i]['injection_volume'] }}
-                    </td>
-                    <td>
-                        ({{ cre_pos_exp.iloc[i]['injection_x'] }},
-                        {{ cre_pos_exp.iloc[i]['injection_y'] }},
-                        {{ cre_pos_exp.iloc[i]['injection_z'] }})
-                    </td>
-                    <td>
-                        {{ cre_pos_exp.iloc[i]['transgenic_line'] }}
-                    </td>
-                    <td>
-                        {{ cre_pos_exp.iloc[i]['specimen_name'] }}
-                    </td>
-                    <td>
-                        {{ cre_pos_exp.iloc[i]['gender'] }}
-                    </td>
-                    <td>
-                        True
+                        {{ all_exp.iloc[i]['cre'] }}
                     </td>
                 </tr>
                 {% endfor %}

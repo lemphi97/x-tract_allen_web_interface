@@ -88,7 +88,7 @@
                         cre
                     </th>
                     <td>
-                        TODO
+                        {{ exp['cre'] }}
                     </td>
                 </tr>
             </tbody>
@@ -286,7 +286,7 @@
 {% endblock %}
 
 {% block dependenciesScripts %}
-    <!-- brain browser for volume viewer -->
+    {# brain browser for volume viewer #}
     <script type="text/javascript" src="{{ url_for('static', filename='js/lib/jquery/jquery-ui-1.8.10.custom.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/lib/brainbrowser/brainbrowser.volume-viewer.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/volume-viewer.config.js') }}"></script>

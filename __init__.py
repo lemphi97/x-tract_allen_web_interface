@@ -59,8 +59,7 @@ def experiments():
     if exp_require_update:
         rendered_template = flask.render_template(
             "allen_brain.html.j2",
-            cre_neg_exp=utils.cre_neg_exp,
-            cre_pos_exp=utils.cre_pos_exp,
+            all_exp=utils.all_exp,
             struct_dict=utils.st_dict
         )
         with open(app.static_folder + "/html/rendered_template/allen_brain.html", "w") as f:

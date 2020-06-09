@@ -5,11 +5,13 @@ from allensdk.core.mouse_connectivity_cache import MouseConnectivityCache
 from allensdk.api.queries.image_download_api import ImageDownloadApi
 from allensdk.api.queries.ontologies_api import OntologiesApi
 
-from pathlib import Path
+import pandas as pd
 from allensdk.api.queries import grid_data_api
 import nrrd
 import nibabel as nib
 import numpy as np
+
+mcc = MouseConnectivityCache()
 
 # return all id in an array
 def get_all_id(experiences):
@@ -112,11 +114,16 @@ def exp_get_nifti(exp_id, img=[], res=100, folder="."):
         nifti_path.append(save_file_path)
     return nifti_path
 
-mcc = MouseConnectivityCache()
+def get_all_exp():
+    cre_neg_exp = mcc.get_experiments(dataframe=True, cre=False)
+    cre_neg_exp['cre'] = np.zeros((len(cre_neg_exp), 1), dtype=bool)
 
-all_exp = mcc.get_experiments(dataframe=True, cre=None)
-cre_neg_exp = mcc.get_experiments(dataframe=True, cre=False)
-cre_pos_exp = mcc.get_experiments(dataframe=True, cre=True)
+    cre_pos_exp = mcc.get_experiments(dataframe=True, cre=True)
+    cre_pos_exp['cre'] = np.ones((len(cre_pos_exp), 1), dtype=bool)
+
+    return pd.concat([cre_neg_exp, cre_pos_exp])
+
+all_exp = get_all_exp()
 nb_exp = len(all_exp)
 
 st_tree = mcc.get_structure_tree()
