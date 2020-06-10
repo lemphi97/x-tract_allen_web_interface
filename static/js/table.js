@@ -8,7 +8,6 @@ var primNames = [""];
 var primAcronyms = [""];
 var products = [""];
 var lines = [""];
-var specNames = [""];
 var minVol = "NaN";
 var maxVol = "NaN";
 var minX = "NaN";
@@ -25,7 +24,6 @@ var containsPrimNameFilter = false;
 var containsPrimAcronFilter = false;
 var containsProdFilter = false;
 var containsLineFilter = false;
-var containsSpecNameFilter = false;
 
 // based on: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_autocomplete
 function autocomplete(inp, arr)
@@ -337,11 +335,6 @@ $.fn.dataTable.ext.search.push
                 ! containsLineFilter ||
                 validateText(lines, columnline)
             )
-            &&
-            (
-                ! containsSpecNameFilter ||
-                validateText(specNames, columnSpecName)
-            )
         )
         {
             return true;
@@ -509,21 +502,6 @@ $(document).ready(function ()
         table.draw();
     });
 
-    $('#spec-name').keyup(function()
-    {
-        specNames = $('#spec-name').val().split(";");
-        containsSpecNameFilter = false;
-        for (i = 0; i < specNames.length; i++)
-        {
-            if (specNames[i].trim() != "")
-            {
-                containsSpecNameFilter = true;
-                break;
-            }
-        }
-        table.draw();
-    });
-
     $('#gender-select').change(function()
     {
         gender = $('#gender-select').val();
@@ -548,5 +526,4 @@ $(document).ready(function ()
     autocomplete(document.getElementById("prim-name"), primStructures);
     autocomplete(document.getElementById("prim-acron"), primStructuresAcronyms);
     autocomplete(document.getElementById("line"), specimenLines);
-    autocomplete(document.getElementById("spec-name"), specimenNames);
 });
