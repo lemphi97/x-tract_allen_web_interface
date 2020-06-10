@@ -7,6 +7,8 @@
 {% block dependencies %}
     <link rel="stylesheet" type="text/css"
           href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/autocomplete.css') }}"/>
 {% endblock %}
 
 {% block content %}
@@ -270,5 +272,6 @@
     {# datatable #}
     <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     {# for page skip with datatable https://datatables.net/plug-ins/pagination/input #}
+    <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
     <script src="{{ url_for('static', filename='js/table.js') }}"></script>
 {% endblock %}
