@@ -1,7 +1,8 @@
 # Dependencies
 import flask
-#https://github.com/shengulong/flask-compress
-from flask_compress import Compress
+from flask_socketio import SocketIO
+from flask_compress import Compress #https://github.com/shengulong/flask-compress
+from flask_socketio import emit
 import allensdk_utils as utils
 
 '''
@@ -20,8 +21,16 @@ app.static_folder = 'static'
 app.template_folder = 'templates'
 #app.config['SERVER_NAME'] = 'xtract.com'
 
+socketio = SocketIO(app)
+
 # TODO test compression
 Compress(app)
+
+@socketio.on('req_download')
+def handle_download_request(urls):
+    print('requested files: ' + str(urls))
+    # Setup zip here
+    emit('req_answer', "stop bothering me", broadcast=False)
 
 @app.route("/")
 def default():
@@ -101,9 +110,5 @@ def about_website():
     else:
         return flask.current_app.send_static_file('html/rendered_template/about_website.html')
 
-@app.route("/test/")
-def test():
-    return "Test page text. Can takes HTML inline (<em>HELLO</em>)"
-
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app)

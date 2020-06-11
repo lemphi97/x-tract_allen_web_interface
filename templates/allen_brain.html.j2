@@ -119,7 +119,6 @@
                     <small id="line-help" class="text-muted">must be exact</small>
                 </div>
                 <br/>
-                <br/>
                 <label class="form-check-label" for="gender-select"><strong>gender: </strong></label>
                 <select id="gender-select" name="gender-select" autocomplete="off">
                     {# TODO options should be generated in javascript where eventlistener will be handled #}
@@ -266,6 +265,54 @@
             </tbody>
         </table>
     </div>
+    <hr/>
+    <div class="content-bg">
+        <h2>Downloads</h2>
+        <form>
+            <label for="res-nrrd">resolution:</label>
+            <select id="res-nrrd">
+                <option>100</option>
+                <option>50</option>
+                <option>25</option>
+                <option>10</option>
+            </select>
+        </form>
+        {#
+            available img type:
+                - projection_density
+                - projection_energy
+                - injection_fraction
+                - injection_density
+                - injection_energy
+                - data_mask
+        #}
+        <div class="form-check form-check-inline">
+            <input type="checkbox" id="projection-density"/>
+            <label class="form-check-label" for"projection-density">projection density</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="checkbox" id="projection-energy"/>
+            <label class="form-check-label" for"projection-energy">projection energy</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="checkbox" id="injection-fraction"/>
+            <label class="form-check-label" for"injection-fraction">injection fraction</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="checkbox" id="injection-density"/>
+            <label class="form-check-label" for"injection-density">injection density</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="checkbox" id="injection-energy"/>
+            <label class="form-check-label" for"injection-energy">injection energy</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="checkbox" id="data-mask"/>
+            <label class="form-check-label" for"data-mask">data mask</label>
+        </div>
+        <br/>
+        <button id="download-all-nrrd">Click me</button>
+    </div>
 {% endblock %}
 
 {% block dependenciesScripts %}
@@ -274,4 +321,8 @@
     {# for page skip with datatable https://datatables.net/plug-ins/pagination/input #}
     <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
     <script src="{{ url_for('static', filename='js/table.js') }}"></script>
+
+    {# socket.io #}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/download_zip.js') }}"></script>
 {% endblock %}

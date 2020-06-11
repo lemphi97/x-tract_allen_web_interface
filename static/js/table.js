@@ -24,6 +24,20 @@ var containsPrimNameFilter = false;
 var containsPrimAcronFilter = false;
 var containsProdFilter = false;
 var containsLineFilter = false;
+// table
+var table
+
+function getColumn(datatableVar, columnIndex)
+{
+    array_column_data = [];
+    var i;
+    for (i = 0; i < datatableVar.$('tr', {"filter":"applied"}).length; i++)
+    {
+        var id = datatableVar.$('tr', {"filter":"applied"})[i].cells[columnIndex].innerText;
+        array_column_data.push(id);
+    }
+    return array_column_data;
+}
 
 function getRowColumn(datatableVar, rowIndex, columnIndex)
 {
@@ -212,7 +226,7 @@ $.fn.dataTable.ext.search.push
 $(document).ready(function ()
 {
     // activate datatable
-    var table = $('#experiments').DataTable({
+    table = $('#experiments').DataTable({
         "scrollX": true
     });
 

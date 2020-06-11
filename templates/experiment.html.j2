@@ -1,7 +1,7 @@
 {% extends "display/base.html.j2" %}
 
 {% block title %}
-    Experiment:
+    Experiment
 {% endblock %}
 
 {% block dependencies %}
@@ -112,12 +112,12 @@
                         <option>10</option>
                     </select>
                     <h3>Download links</h3>
-                    <button type="submit" onClick="download_projection_density();">projection density</button>
-                    <button type="submit" onClick="download_projection_energy();">projection energy</button>
-                    <button type="submit" onClick="download_injection_fraction();">injection fraction</button>
-                    <button type="submit" onClick="download_injection_density();">injection density</button>
-                    <button type="submit" onClick="download_injection_energy();">injection energy</button>
-                    <button type="submit" onClick="download_data_mask();">data mask</button>
+                    <button type="submit" class="btn btn-link" onClick="download_projection_density();">projection density</button>
+                    <button type="submit" class="btn btn-link" onClick="download_projection_energy();">projection energy</button>
+                    <button type="submit" class="btn btn-link" onClick="download_injection_fraction();">injection fraction</button>
+                    <button type="submit" class="btn btn-link" onClick="download_injection_density();">injection density</button>
+                    <button type="submit" class="btn btn-link" onClick="download_injection_energy();">injection energy</button>
+                    <button type="submit" class="btn btn-link" onClick="download_data_mask();">data mask</button>
                 </form>
             </div>
             <br/>
