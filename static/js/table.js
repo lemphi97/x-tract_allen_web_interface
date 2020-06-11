@@ -25,7 +25,7 @@ var containsPrimAcronFilter = false;
 var containsProdFilter = false;
 var containsLineFilter = false;
 // table
-var table
+var table;
 
 function getColumn(datatableVar, columnIndex)
 {

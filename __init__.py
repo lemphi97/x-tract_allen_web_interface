@@ -1,8 +1,9 @@
 # Dependencies
 import flask
 from flask_socketio import SocketIO
-from flask_compress import Compress #https://github.com/shengulong/flask-compress
 from flask_socketio import emit
+from flask_cors import CORS
+from flask_compress import Compress #https://github.com/shengulong/flask-compress
 import allensdk_utils as utils
 
 '''
@@ -29,7 +30,7 @@ Compress(app)
 @socketio.on('req_download')
 def handle_download_request(urls):
     print('requested files: ' + str(urls))
-    # Setup zip here
+    # TODO Setup zip here
     emit('req_answer', "stop bothering me", broadcast=False)
 
 @app.route("/")

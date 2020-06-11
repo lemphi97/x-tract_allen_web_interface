@@ -60,13 +60,15 @@ $(document).ready(function ()
 
         if (urls.length != 0)
         {
-            var socket = io.connect('http://127.0.0.1:8000/socket');
+            // For test on localhost, port must be the same as app
+            // Otherwise you'll run into CORS issue
+            var socket = io.connect('http://127.0.0.1:5000/socket');
             socket.emit('req_download', urls);
-            // disable download btn
+            // TODO disable download btn
             socket.on('req_answer', function(url)
             {
                 console.log("download is ready at " + url);
-                // enable download button
+                // TODO enable download button
                 let a = document.createElement('a');
                 a.href = url;
                 document.body.appendChild(a);
