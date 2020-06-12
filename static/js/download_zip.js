@@ -63,8 +63,9 @@ $(document).ready(function ()
             // For test on localhost, port must be the same as app
             // Otherwise you'll run into CORS issue
             var socket = io.connect('http://127.0.0.1:5000/socket');
-            socket.emit('req_download', urls);
+
             // TODO disable download btn
+
             socket.on('req_answer', function(url)
             {
                 console.log("download is ready at " + url);
@@ -75,6 +76,8 @@ $(document).ready(function ()
                 a.click();
                 document.body.removeChild(a);
             });
+
+            socket.emit('req_download', urls);
         }
     });
 });

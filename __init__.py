@@ -1,11 +1,11 @@
 # Dependencies
 import flask
+# flask_socketio recommends eventlet for better performance
 from flask_socketio import SocketIO
 from flask_socketio import emit
-from flask_cors import CORS
 from flask_compress import Compress #https://github.com/shengulong/flask-compress
 import allensdk_utils as utils
-
+import sys
 '''
 If one of the var below is true, it means we have the render the template
 for the section again when we client ask for it.
@@ -20,6 +20,7 @@ about_web_require_update = True
 app = flask.Flask(__name__)
 app.static_folder = 'static'
 app.template_folder = 'templates'
+#app.config["SECRET_KEY"] = "secretencryptionkey"
 #app.config['SERVER_NAME'] = 'xtract.com'
 
 socketio = SocketIO(app)
@@ -27,9 +28,9 @@ socketio = SocketIO(app)
 # TODO test compression
 Compress(app)
 
-@socketio.on('req_download')
+@socketio.on('req_download', namespace="/socket")
 def handle_download_request(urls):
-    print('requested files: ' + str(urls))
+    print('requested files: ' + str(urls), file=sys.stderr)
     # TODO Setup zip here
     emit('req_answer', "stop bothering me", broadcast=False)
 
@@ -112,4 +113,4 @@ def about_website():
         return flask.current_app.send_static_file('html/rendered_template/about_website.html')
 
 if __name__ == "__main__":
-    socketio.run(app)
+    socketio.run(app, debug=True)
