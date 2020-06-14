@@ -6,9 +6,10 @@ from flask_socketio import emit
 from flask_compress import Compress #https://github.com/shengulong/flask-compress
 import allensdk_utils as utils
 
-import zipfile
+from shutil import make_archive
 import io
 import pathlib
+import zipfile
 
 # Init website
 app = flask.Flask(__name__)
@@ -40,20 +41,18 @@ def handle_download_request(req_id, req_img, res):
     for exp_id in req_id:
         utils.exp_save_nrrd(exp_id, req_img, res, tmp_folder)
 
-    # setup zip
-    zip_name = download_id + ".zip"
-    with zipfile.ZipFile(app.static_folder + "/tmp/" + zip_name, mode='w') as z:
-        base_path = pathlib.Path(tmp_folder)
-        for f_name in base_path.iterdir():
-            print(f_name)
-            z.write(f_name)
+    # make zip
+    make_archive(app.static_folder + "/tmp/" + download_id, 'zip', tmp_folder)
+
+    # delete tmp folder
+    #todo
 
     # send zip file
-    flask.current_app.send_static_file("tmp/" + zip_name)
-    emit('zip_ready', "stop bothering me", broadcast=False)
+    #flask.current_app.send_static_file("tmp/" + download_id + "zip")
+    emit('zip_ready', download_id, broadcast=False)
 
-@app.route('/download-zip')
-def request_zip():
+@app.route('/download-zip/<zip_id>')
+def request_zip(zip_id):
     base_path = pathlib.Path('./data/')
     data = io.BytesIO()
     with zipfile.ZipFile(data, mode='w') as z:
@@ -114,11 +113,11 @@ def experiments():
     else:
         return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
 
-@app.route("/experiments/<id>/")
-def experiment(id):
+@app.route("/experiments/<exp_id>/")
+def experiment(exp_id):
     return flask.render_template(
         "experiment.html.j2",
-        exp=all_exp.loc[int(id)],
+        exp=all_exp.loc[int(exp_id)],
         struct_dict=st_dict
     )
 
