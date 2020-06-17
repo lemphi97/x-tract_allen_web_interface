@@ -27,6 +27,26 @@ Compress(app)
 all_exp = utils.get_all_exp()
 st_dict = utils.get_struct_in_dict(all_exp)
 
+# Check for globus SDK instead
+@socketio.on('req_download', namespace="/request_zip")
+def handle_download_request(req_id, req_img, res):
+    download_id = flask.request.sid
+    tmp_folder = app.static_folder + "/tmp/" + download_id
+
+    # download experiments nrrd #todo wayyy to slow
+    for exp_id in req_id:
+        utils.exp_save_nrrd(exp_id, req_img, res, tmp_folder)
+
+    # make zip
+    make_archive(app.static_folder + "/tmp/" + download_id, 'zip', tmp_folder)
+
+    # delete tmp folder
+    #todo
+
+    # send zip file
+    #flask.current_app.send_static_file("tmp/" + download_id + "zip")
+    emit('zip_ready', download_id, broadcast=False)
+
 @app.before_first_request
 def render_templates():
     # home
@@ -58,27 +78,9 @@ def render_templates():
     with open(app.static_folder + "/html/rendered_template/about_website.html", "w") as f:
         f.write(rendered_template)
 
-@socketio.on('req_download', namespace="/request_zip")
-def handle_download_request(req_id, req_img, res):
-    download_id = flask.request.sid
-    tmp_folder = app.static_folder + "/tmp/" + download_id
-
-    # download experiments nrrd #todo wayyy to slow
-    for exp_id in req_id:
-        utils.exp_save_nrrd(exp_id, req_img, res, tmp_folder)
-
-    # make zip
-    make_archive(app.static_folder + "/tmp/" + download_id, 'zip', tmp_folder)
-
-    # delete tmp folder
-    #todo
-
-    # send zip file
-    #flask.current_app.send_static_file("tmp/" + download_id + "zip")
-    emit('zip_ready', download_id, broadcast=False)
-
 @app.route('/download-zip/<zip_id>')
 def request_zip(zip_id):
+    #todo
     base_path = pathlib.Path('./data/')
     data = io.BytesIO()
     with zipfile.ZipFile(data, mode='w') as z:
@@ -113,10 +115,18 @@ def experiments():
 
 @app.route("/experiments/<exp_id>/")
 def experiment(exp_id):
+    exp = all_exp.loc[int(exp_id)]
+    struct = st_dict[exp['structure_id']]
+    prim_inj_struct = st_dict[exp['primary_injection_structure']]
+    sect_id, res, ranges = utils.get_exp_img_sections_info(exp_id)
     return flask.render_template(
         "experiment.html.j2",
-        exp=all_exp.loc[int(exp_id)],
-        struct_dict=st_dict
+        exp=exp,
+        struct=struct,
+        prim_inj_struct=prim_inj_struct,
+        sect_id=sect_id,
+        sect_res=res,
+        sect_ranges=ranges
     )
 
 @app.route("/volume_viewer/")

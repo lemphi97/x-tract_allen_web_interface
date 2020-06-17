@@ -7,100 +7,139 @@
 {% block dependencies %}
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='css/experiment.css') }}"/>
+    <script>
+        sections_id = {{ sect_id }};
+        sections_res = {{ sect_res }};
+        sections_ranges = {{ sect_ranges }};
+        console.log("test");
+    </script>
 {% endblock %}
 
 {% block content %}
     <div class="flex-container">
-        <div class="exp-table content-bg">
-            <table class="table table-bordered">
-                <tbody>
-                    <tr>
-                        <th>
-                            id
-                        </th>
-                        <td id="exp-id">
-                            {{ exp['id'] }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            structure
-                        </th>
-                        <td>
-                            {{ struct_dict[exp['structure_id']] }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            primary injection structure
-                        </th>
-                        <td>
-                            {{ struct_dict[exp['primary_injection_structure']] }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            product
-                        </th>
-                        <td>
-                            {{ exp['product_id'] }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            injection volume
-                        </th>
-                        <td>
-                            {{ exp['injection_volume'] }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            injection (x, y, z)
-                        </th>
-                        <td>
-                            ({{ exp['injection_x'] }},
-                            {{ exp['injection_y'] }},
-                            {{ exp['injection_z'] }})
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            transgenic line
-                        </th>
-                        <td>
-                            {{ exp['transgenic_line'] }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            specimen name
-                        </th>
-                        <td>
-                            {{ exp['specimen_name'] }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            gender
-                        </th>
-                        <td>
-                            {{ exp['gender'] }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            cre
-                        </th>
-                        <td>
-                            {{ exp['cre'] }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="exp-table">
+            <div class="content-bg">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>
+                                id
+                            </th>
+                            <td id="exp-id">
+                                {{ exp['id'] }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                structure
+                            </th>
+                            <td>
+                                {{ struct }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                primary injection structure
+                            </th>
+                            <td>
+                                {{ prim_inj_struct }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                product
+                            </th>
+                            <td>
+                                {{ exp['product_id'] }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                injection volume
+                            </th>
+                            <td>
+                                {{ exp['injection_volume'] }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                injection (x, y, z)
+                            </th>
+                            <td>
+                                ({{ exp['injection_x'] }},
+                                {{ exp['injection_y'] }},
+                                {{ exp['injection_z'] }})
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                transgenic line
+                            </th>
+                            <td>
+                                {{ exp['transgenic_line'] }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                specimen name
+                            </th>
+                            <td>
+                                {{ exp['specimen_name'] }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                gender
+                            </th>
+                            <td>
+                                {{ exp['gender'] }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                cre
+                            </th>
+                            <td>
+                                {{ exp['cre'] }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="download">
+            <div class="content-bg">
+                <h2>Other png</h2>
+                <div class="img-menu flex-container">
+                    <div class="current-img center">
+                        <div id="div-img">
+                            <img id="img" src="#" alt="Error displaying image"/>
+                        </div>
+                        <div id="div-index">
+                            <div class="center input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <button id="prev" type="submit" class="btn btn-info">prev</button>
+                                </div>
+                                <input id="index" type="text" placeholder="0"/>
+                                <div class="input-group-append">
+                                    <button id="next" type="submit" class="btn btn-info">next</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p id="nb-img" class="text-dark"></p>
+                        </div>
+                    </div>
+                </div>
+                <div id="sliders">
+                    {# TODO add sliders for img ranges #}
+                </div>
+                <form onsubmit="myFunction()">
+                    <button type="submit">Download</button>
+                </form>
+            </div>
+            <br/>
             <div class="content-bg">
                 <h2>Grid data (nrrd)</h2>
                 <form>
@@ -118,13 +157,6 @@
                     <button type="submit" class="btn btn-link" onClick="download_injection_density();">injection density</button>
                     <button type="submit" class="btn btn-link" onClick="download_injection_energy();">injection energy</button>
                     <button type="submit" class="btn btn-link" onClick="download_data_mask();">data mask</button>
-                </form>
-            </div>
-            <br/>
-            <div class="content-bg">
-                <h2>Other png</h2>
-                <form onsubmit="myFunction()">
-                    <button type="submit">Download</button>
                 </form>
             </div>
         </div>

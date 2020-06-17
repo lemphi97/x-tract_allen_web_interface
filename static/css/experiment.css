@@ -1,7 +1,6 @@
 .flex-container {
     display: flex;
     flex-wrap: wrap;
-    /*align-items: center;*/
     justify-content: space-around;
 }
 
@@ -12,4 +11,28 @@
 
 .download {
     width: 60%;
+}
+
+.img-menu {
+    justify-content: space-around;
+}
+
+.current-img {
+    display: block;
+}
+
+.center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#img {
+    min-width: 275px;
+    min-height: 215px;
+}
+
+#index {
+    width: 55px;
+    text-align: center;
 }

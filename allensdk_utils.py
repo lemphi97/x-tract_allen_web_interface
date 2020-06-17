@@ -9,31 +9,12 @@ import pandas as pd
 from allensdk.api.queries import grid_data_api
 import numpy as np
 import pathlib
-import nrrd
 
 mcc = MouseConnectivityCache()
 st_tree = mcc.get_structure_tree()
+image_api = ImageDownloadApi()
 
 # return all structure in a dict (key: id, value: name with acronym)
-def get_struct_in_dict(experiences):
-    st_dict = {}
-
-    for i in range(0, len(experiences)):
-        index_val = experiences.iloc[i]
-        struct_id = index_val['structure_id']
-
-        if struct_id not in st_dict:
-            struct_name = index_val['structure_name']
-            struct_acron = index_val['structure_abbrev']
-            st_dict[struct_id] = struct_name + " (" + struct_acron + ")"
-
-        struct_p_i_s = index_val['primary_injection_structure']
-        if struct_p_i_s != struct_id and struct_p_i_s not in st_dict:
-            struct_dict = st_tree.get_structures_by_id([struct_p_i_s])[0]
-            st_dict[struct_p_i_s] = struct_dict['name'] + " (" + struct_dict['acronym'] + ")"
-
-    return st_dict
-
 def exp_save_nrrd(exp_id, img=[], res=100, folder="."):
     '''
     Download in NRRD format.
@@ -69,6 +50,25 @@ def exp_save_nrrd(exp_id, img=[], res=100, folder="."):
         files_path.append(save_file_path)
     return files_path
 
+def get_struct_in_dict(experiences):
+    st_dict = {}
+
+    for i in range(0, len(experiences)):
+        index_val = experiences.iloc[i]
+        struct_id = index_val['structure_id']
+
+        if struct_id not in st_dict:
+            struct_name = index_val['structure_name']
+            struct_acron = index_val['structure_abbrev']
+            st_dict[struct_id] = struct_name + " (" + struct_acron + ")"
+
+        struct_p_i_s = index_val['primary_injection_structure']
+        if struct_p_i_s != struct_id and struct_p_i_s not in st_dict:
+            struct_dict = st_tree.get_structures_by_id([struct_p_i_s])[0]
+            st_dict[struct_p_i_s] = struct_dict['name'] + " (" + struct_dict['acronym'] + ")"
+
+    return st_dict
+
 def get_all_exp():
     cre_neg_exp = mcc.get_experiments(dataframe=True, cre=False)
     cre_neg_exp['cre'] = np.zeros((len(cre_neg_exp), 1), dtype=bool)
@@ -77,3 +77,20 @@ def get_all_exp():
     cre_pos_exp['cre'] = np.ones((len(cre_pos_exp), 1), dtype=bool)
 
     return pd.concat([cre_neg_exp, cre_pos_exp])
+
+def get_exp_img_sections_info(exp_id):
+    # res and ranges don't seem to change from section to section.
+    # To cut down on exec time, I'll assume they never do
+    sections = image_api.section_image_query(exp_id)
+    sections_id = []
+    default_res = sections[0]["resolution"]
+    # image_api.get_section_image_ranges takes about 0.5 sec each calls so use it wisely
+    default_ranges = image_api.get_section_image_ranges([sections[0]["id"]])[0]
+    foo = default_ranges[3]
+    default_ranges[2] = foo
+    default_ranges[3] = foo * 2
+
+    for i in range(0, len(sections)):
+        sections_id.append(sections[i]["id"])
+
+    return sections_id, default_res, default_ranges
