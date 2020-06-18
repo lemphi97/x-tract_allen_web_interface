@@ -34,22 +34,22 @@
     },
     {
       name: "Thermal",
-      url: "static/color-maps/thermal.txt",
+      url: "/static/color-maps/thermal.txt",
       cursor_color: "#FFFFFF"
     },
     {
       name: "Gray",
-      url: "static/color-maps/gray-scale.txt",
+      url: "/static/color-maps/gray-scale.txt",
       cursor_color: "#FF0000"
     },
     {
       name: "Blue",
-      url: "static/color-maps/blue.txt",
+      url: "/static/color-maps/blue.txt",
       cursor_color: "#FFFFFF"
     },
     {
       name: "Green",
-      url: "static/color-maps/green.txt",
+      url: "/static/color-maps/green.txt",
       cursor_color: "#FF0000"
     }
   ]);

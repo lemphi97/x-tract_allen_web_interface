@@ -99,7 +99,7 @@ $(function() {
           volumes: [
             {
               type: "nifti1",
-              nii_url: "/static/models/100140756_projection_density_50.nii",
+              nii_url: "/static/models/functional.nii",
               template: {
                 element_id: "volume-ui-template",
                 viewer_insert_class: "volume-viewer-display"
@@ -107,7 +107,7 @@ $(function() {
             },
             {
               type: 'nifti1',
-              nii_url: "/static/models/100140756_projection_density_50.nii",
+              nii_url: "/static/models/structural.nii",
               template: {
                 element_id: "volume-ui-template",
                 viewer_insert_class: "volume-viewer-display"
@@ -890,16 +890,20 @@ $(function() {
     /////////////////////
     // Load the volumes.
     /////////////////////
+    viewer.loadVolume({
+      type: "nifti1",
+      nii_file: document.getElementById("nifti1-file"),
+      template: {
+        element_id: "volume-ui-template",
+        viewer_insert_class: "volume-viewer-display"
+      }
+    }, function() {
+      $(".slice-display").css("display", "inline");
+      $(".volume-controls").css("width", "auto");
+    });
+    /*
     viewer.loadVolumes({
       volumes: [
-        {
-          type: "nifti1",
-          nii_url: "/static/models/functional.nii",
-          template: {
-            element_id: "volume-ui-template",
-            viewer_insert_class: "volume-viewer-display"
-          }
-        },
         {
           type: 'nifti1',
           nii_url: "/static/models/structural.nii",
@@ -909,18 +913,11 @@ $(function() {
           }
         }
       ],
-      overlay: {
-        template: {
-          element_id: "overlay-ui-template",
-          viewer_insert_class: "overlay-viewer-display"
-        }
-      },
       complete: function() {
         loading_div.hide();
         $("#brainbrowser-wrapper").slideDown({duration: 600});
       }
     });
-
+    */
   });
-
 });
