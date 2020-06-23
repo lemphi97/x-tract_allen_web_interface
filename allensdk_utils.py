@@ -82,6 +82,7 @@ def get_exp_img_sections_info(exp_id):
     # res and ranges don't seem to change from section to section.
     # To cut down on exec time, I'll assume they never do
     sections = image_api.section_image_query(exp_id)
+    sections_dict = {}
     sections_id = []
     default_res = sections[0]["resolution"]
     # image_api.get_section_image_ranges takes about 0.5 sec each calls so use it wisely
@@ -90,7 +91,11 @@ def get_exp_img_sections_info(exp_id):
     default_ranges[2] = foo
     default_ranges[3] = foo * 2
 
+    # section number do not always start from 0 and might not always increment by 1
     for i in range(0, len(sections)):
-        sections_id.append(sections[i]["id"])
+        sections_dict[sections[i]["section_number"]] = sections[i]["id"]
+
+    for key in sorted(sections_dict.keys()):
+        sections_id.append(sections_dict[key])
 
     return sections_id, default_res, default_ranges

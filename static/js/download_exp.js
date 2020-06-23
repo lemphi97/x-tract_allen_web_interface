@@ -52,11 +52,76 @@ function download_data_mask()
     download_grid_data(exp_id, "data_mask", $('#res-nrrd').val());
 }
 
+function download_img()
+{
+    var url = $("#img").attr("src");
+    let a = document.createElement('a');
+    a.href = url;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
 $(document).ready(function ()
 {
     exp_id = $('#exp-id').html().trim();
     var shown_index = 1;
     //$('#index').val(shown_index);
+
+    /*
+     * Ranges sliders
+     */
+    $( "#red-slider-range").slider(
+    {
+        range: true,
+        min: 0,
+        max: 10000,
+        values: [sections_ranges[0], sections_ranges[1]],
+        slide: function(event, ui)
+        {
+            $("#red-range").val(ui.values[0] + " - " + ui.values[1]);
+            $("#index").trigger("input");
+        }
+    });
+
+    $("#red-range").val($("#red-slider-range").slider("values", 0) +
+        " - " + $("#red-slider-range").slider("values", 1));
+
+    $( "#green-slider-range").slider(
+    {
+        range: true,
+        min: 0,
+        max: 10000,
+        values: [sections_ranges[2], sections_ranges[3]],
+        slide: function(event, ui)
+        {
+            $("#green-range").val(ui.values[0] + " - " + ui.values[1]);
+            $("#index").trigger("input");
+        }
+    });
+
+    $("#green-range").val($("#green-slider-range").slider("values", 0) +
+        " - " + $("#green-slider-range").slider("values", 1));
+
+    $( "#blue-slider-range").slider(
+    {
+        range: true,
+        min: 0,
+        max: 10000,
+        values: [sections_ranges[4], sections_ranges[5]],
+        slide: function(event, ui)
+        {
+            $("#blue-range").val(ui.values[0] + " - " + ui.values[1]);
+            $("#index").trigger("input");
+        }
+    });
+
+    $("#blue-range").val($("#blue-slider-range").slider("values", 0) +
+        " - " + $("#blue-slider-range").slider("values", 1));
+
+    /*
+     * Fetching images
+     */
     $('#nb-img').text("1 to " + sections_id.length + " images");
 
     $('#index').on('input', function()
@@ -83,20 +148,17 @@ $(document).ready(function ()
             sections_id[shown_index - 1] +
             "?downsample=10&range=";
 
-        sections_ranges.forEach(function(item, index)
-        {
-            img_url = img_url + item;
-            if (index < sections_ranges.length - 1)
-            {
-                img_url = img_url + ',';
-            }
-        });
+        var tmp_range = $("#red-range").val().split(" - ");
+        img_url = img_url + tmp_range[0] + "," + tmp_range[1] + ",";
+        var tmp_range = $("#green-range").val().split(" - ");
+        img_url = img_url + tmp_range[0] + "," + tmp_range[1] + ",";
+        var tmp_range = $("#blue-range").val().split(" - ");
+        img_url = img_url + tmp_range[0] + "," + tmp_range[1];
 
-        //img_url.concat(".jpg");
         $('#img').attr("src", img_url);
+        // link example:
         // http://api.brain-map.org/api/v2/projection_image_download/180719423?downsample=4&range=0,1321,1861,3722,0,4095
     });
-
 
     $('#prev').on('click', function()
     {

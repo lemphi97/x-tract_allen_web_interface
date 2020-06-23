@@ -7,11 +7,12 @@
 {% block dependencies %}
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='css/experiment.css') }}"/>
+    <link rel="stylesheet" type="text/css"
+          href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script>
         sections_id = {{ sect_id }};
         sections_res = {{ sect_res }};
         sections_ranges = {{ sect_ranges }};
-        console.log("test");
     </script>
 {% endblock %}
 
@@ -131,11 +132,27 @@
                             <p id="nb-img" class="text-dark"></p>
                         </div>
                     </div>
+                    <div id="sliders">
+                        <p>
+                          <label class="text-dark" for="red-range">Red range:</label>
+                          <input type="text" id="red-range" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                        </p>
+                        <div id="red-slider-range"></div>
+                        <hr/>
+                        <p>
+                          <label class="text-dark" for="green-range">Green range:</label>
+                          <input type="text" id="green-range" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                        </p>
+                        <div id="green-slider-range"></div>
+                        <hr/>
+                        <p>
+                          <label class="text-dark" for="blue-range">Blue range:</label>
+                          <input type="text" id="blue-range" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                        </p>
+                        <div id="blue-slider-range"></div>
+                    </div>
                 </div>
-                <div id="sliders">
-                    {# TODO add sliders for img ranges #}
-                </div>
-                <form onsubmit="myFunction()">
+                <form onsubmit="download_img()">
                     <button type="submit">Download</button>
                 </form>
             </div>
@@ -164,5 +181,6 @@
 {% endblock %}
 
 {% block dependenciesScripts %}
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/download_exp.js') }}"></script>
 {% endblock %}

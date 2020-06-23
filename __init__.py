@@ -3,7 +3,7 @@ import flask
 # flask_socketio recommends eventlet for better performance
 from flask_socketio import SocketIO
 from flask_socketio import emit
-from flask_compress import Compress #https://github.com/shengulong/flask-compress
+# from flask_compress import Compress #https://github.com/shengulong/flask-compress
 import allensdk_utils as utils
 
 from shutil import make_archive
@@ -19,9 +19,6 @@ app.template_folder = 'templates'
 #app.config['SERVER_NAME'] = 'xtract.com'
 
 socketio = SocketIO(app)
-
-# TODO test compression
-Compress(app)
 
 # Global variables
 all_exp = utils.get_all_exp()

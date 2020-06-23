@@ -901,23 +901,13 @@ $(function() {
       $(".slice-display").css("display", "inline");
       $(".volume-controls").css("width", "auto");
     });
-    /*
-    viewer.loadVolumes({
-      volumes: [
-        {
-          type: 'nifti1',
-          nii_url: "/static/models/structural.nii",
-          template: {
-            element_id: "volume-ui-template",
-            viewer_insert_class: "volume-viewer-display"
-          }
-        }
-      ],
-      complete: function() {
-        loading_div.hide();
-        $("#brainbrowser-wrapper").slideDown({duration: 600});
-      }
-    });
+
+    /* todo rotate volume
+    $(".slice-display").css("-webkit-transform:", "rotate(90deg)");
+    $(".slice-display").css("-moz-transform", "rotate(90deg)");
+    $(".slice-display").css("-o-transform", "rotate(90deg)");
+    $(".slice-display").css("-ms-transform", "rotate(90deg)");
+    $(".slice-display").css("transform", "rotate(90deg)");
     */
   });
 });

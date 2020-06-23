@@ -36,3 +36,8 @@
     width: 55px;
     text-align: center;
 }
+
+#sliders {
+    width: 50%;
+    min-width: 250px;
+}
