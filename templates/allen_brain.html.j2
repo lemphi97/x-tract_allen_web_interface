@@ -121,7 +121,6 @@
                 <br/>
                 <label class="form-check-label" for="gender-select"><strong>gender: </strong></label>
                 <select id="gender-select" name="gender-select" autocomplete="off">
-                    {# TODO options should be generated in javascript where eventlistener will be handled #}
                     <option value="any">ANY</option>
                     <option value="m">M</option>
                     <option value="f">F</option>
@@ -129,7 +128,6 @@
                 <br/>
                 <label class="form-check-label" for="cre-select"><strong>cre: </strong></label>
                 <select id="cre-select" name="cre-select" autocomplete="off">
-                    {# TODO options should be generated in javascript where eventlistener will be handled #}
                     <option value="any">ANY</option>
                     <option value="false">FALSE</option>
                     <option value="true">TRUE</option>
@@ -137,6 +135,12 @@
                 <hr/>
             </div>
         </div>
+
+        <br/>
+
+        <button id="apply" class="btn btn-success">
+            apply
+        </button>
 
         <hr style="border: 1px solid black"/>
 

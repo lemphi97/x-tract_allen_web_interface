@@ -244,7 +244,7 @@ $(document).ready(function ()
      * Event listener on input to filter table and re-draw it
      */
 
-    $('#name').keyup(function()
+    $('#apply').click(function()
     {
         names = $('#name').val().split(";");
         containsNameFilter = false;
@@ -256,11 +256,7 @@ $(document).ready(function ()
                 break;
             }
         }
-        table.draw();
-    });
 
-    $('#acron').keyup(function()
-    {
         acronyms = $('#acron').val().split(";");
         containsAcronFilter = false;
         for (i = 0; i < acronyms.length; i++)
@@ -271,11 +267,7 @@ $(document).ready(function ()
                 break;
             }
         }
-        table.draw();
-    });
 
-    $('#prim-name').keyup(function()
-    {
         primNames = $('#prim-name').val().split(";");
         containsPrimNameFilter = false;
         for (i = 0; i < primNames.length; i++)
@@ -286,11 +278,7 @@ $(document).ready(function ()
                 break;
             }
         }
-        table.draw();
-    });
 
-    $('#prim-acron').keyup(function()
-    {
         primAcronyms = $('#prim-acron').val().split(";");
         containsPrimAcronFilter = false;
         for (i = 0; i < primAcronyms.length; i++)
@@ -301,11 +289,7 @@ $(document).ready(function ()
                 break;
             }
         }
-        table.draw();
-    });
 
-    $('#prod-id').keyup(function()
-    {
         products = $('#prod-id').val().split(";");
         containsProdFilter = false;
         for (i = 0; i < products.length; i++)
@@ -316,59 +300,7 @@ $(document).ready(function ()
                 break;
             }
         }
-        table.draw();
-    });
 
-    $('#min-vol').keyup(function()
-    {
-        minVol = parseFloat($('#min-vol').val(), 10);
-        table.draw();
-    })
-
-    $('#max-vol').keyup(function()
-    {
-        maxVol = parseFloat($('#max-vol').val(), 10);
-        table.draw();
-    })
-
-    $('#min-x').keyup(function()
-    {
-        minX = parseInt($('#min-x').val(), 10);
-        table.draw();
-    })
-
-    $('#max-x').keyup(function()
-    {
-        maxX = parseInt($('#max-x').val(), 10);
-        table.draw();
-    })
-
-    $('#min-y').keyup(function()
-    {
-        minY = parseInt($('#min-y').val(), 10);
-        table.draw();
-    })
-
-    $('#max-y').keyup(function()
-    {
-        maxY = parseInt($('#max-y').val(), 10);
-        table.draw();
-    })
-
-    $('#min-z').keyup(function()
-    {
-        minZ = parseInt($('#min-z').val(), 10);
-        table.draw();
-    })
-
-    $('#max-z').keyup(function()
-    {
-        maxZ = parseInt($('#max-z').val(), 10);
-        table.draw();
-    })
-
-    $('#line').keyup(function()
-    {
         lines = $('#line').val().split(";");
         containsLineFilter = false;
         for (i = 0; i < lines.length; i++)
@@ -379,18 +311,19 @@ $(document).ready(function ()
                 break;
             }
         }
-        table.draw();
-    });
 
-    $('#gender-select').change(function()
-    {
+        minVol = parseFloat($('#min-vol').val(), 10);
+        maxVol = parseFloat($('#max-vol').val(), 10);
+        minX = parseInt($('#min-x').val(), 10);
+        maxX = parseInt($('#max-x').val(), 10);
+        minY = parseInt($('#min-y').val(), 10);
+        maxY = parseInt($('#max-y').val(), 10);
+        minZ = parseInt($('#min-z').val(), 10);
+        maxZ = parseInt($('#max-z').val(), 10);
+
         gender = $('#gender-select').val();
-        table.draw();
-    });
-
-    $('#cre-select').change(function()
-    {
         cre = $('#cre-select').val();
+
         table.draw();
     });
 
