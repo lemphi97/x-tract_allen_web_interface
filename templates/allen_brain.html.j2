@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css"
           href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
     <link rel="stylesheet" type="text/css"
+          href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='css/autocomplete.css') }}"/>
 {% endblock %}
 
@@ -136,11 +138,20 @@
             </div>
         </div>
 
-        <br/>
-
-        <button id="apply" class="btn btn-success">
-            apply
-        </button>
+        <div>
+            <button id="apply" class="btn btn-success">
+                apply
+            </button>
+            <button id="generate-url" class="btn btn-primary">
+                generate url
+            </button>
+            <div class="input-group mb-3" style="display: none;">
+                <input type="text" id="filter-url" class="form-control" value="" disabled>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">Copy</button>
+                </div>
+            </div>
+        </div>
 
         <hr style="border: 1px solid black"/>
 
@@ -231,7 +242,7 @@
                 {% for i in range(0, all_exp|length) %}
                 <tr>
                     <td>
-                        <a href="/experiments/{{ all_exp.iloc[i]['id'] }}">
+                        <a target="_blank" rel="noopener noreferrer" href="/experiments/{{ all_exp.iloc[i]['id'] }}">
                             {{ all_exp.iloc[i]['id'] }}
                         </a>
                     </td>
@@ -329,4 +340,6 @@
     {# socket.io #}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script src="{{ url_for('static', filename='js/download_zip.js') }}"></script>
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 {% endblock %}

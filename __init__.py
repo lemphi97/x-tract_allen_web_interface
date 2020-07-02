@@ -110,6 +110,10 @@ def interface():
 def experiments():
     return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
 
+@app.route("/experiments/filter/<filters>/")
+def experiments_search(filters):
+    return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
+
 @app.route("/experiments/<exp_id>/")
 def experiment(exp_id):
     exp = all_exp.loc[int(exp_id)]

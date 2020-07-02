@@ -168,6 +168,22 @@ function validateSelect(allowedValue, value)
     return false;
 }
 
+/*
+ * Based on https://www.w3schools.com/howto/howto_js_copy_clipboard.asp
+ * Copy field value to clipboard
+*/
+function copy(field_id) {
+  /* Get the text field */
+  var copyText = document.getElementById(field_id);
+
+  /* Select the text field */
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+}
+
 /* Custom filtering function which will validate each lines */
 $.fn.dataTable.ext.search.push
 (
@@ -225,8 +241,12 @@ $.fn.dataTable.ext.search.push
 
 $(document).ready(function ()
 {
+    var page_url = window.location.href;
+    console.log(page_url);
+
     // activate datatable
-    table = $('#experiments').DataTable({
+    table = $('#experiments').DataTable(
+    {
         "scrollX": true
     });
 
