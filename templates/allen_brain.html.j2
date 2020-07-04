@@ -11,6 +11,8 @@
           href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='css/autocomplete.css') }}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/allen_brain_connectivity.css') }}"/>
 {% endblock %}
 
 {% block content %}
@@ -82,29 +84,49 @@
                 <input type="text" id="max-vol" name="max-vol"
                        placeholder="0.0" autocomplete="off"/>
                 <br/>
-                <strong><em>'x'</em> coordinate: </strong>
-                <label class="form-check-label" for="min-x">min</label>
-                <input type="text" id="min-x" name="min-x"
-                       placeholder="0" autocomplete="off"/>
-                <label class="form-check-label" for="max-x">max</label>
-                <input type="text" id="max-x" name="max-x"
-                       placeholder="0" autocomplete="off"/>
-                <br/>
-                <strong><em>'y'</em> coordinate: </strong>
-                <label class="form-check-label" for="min-y">min</label>
-                <input type="text" id="min-y" name="min-y"
-                       placeholder="0" autocomplete="off"/>
-                <label class="form-check-label" for="max-y">max</label>
-                <input type="text" id="max-y"
-                       placeholder="0" name="max-y"/>
-                <br/>
-                <strong><em>'z'</em> coordinate: </strong>
-                <label class="form-check-label" for="min-z">min</label>
-                <input type="text" id="min-z" name="min-z"
-                       placeholder="0" autocomplete="off"/>
-                <label class="form-check-label" for="max-z">max</label>
-                <input type="text" id="max-z" name="max-z"
-                       placeholder="0" autocomplete="off"/>
+                <div class="sliders">
+                    <label class="text-dark" for="range-depth">depth:</label>
+                    <input type="text" id="range-depth" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    <div class="flex-container">
+                        <div class="range-info">
+                            <span class="input-group-text">anterior</span>
+                        </div>
+                        <div class="slider-div">
+                            <div id="slider-range-depth" class="slider"></div>
+                        </div>
+                        <div class="range-info">
+                            <span class="input-group-text">posterior</span>
+                        </div>
+                    </div>
+
+                    <label class="text-dark" for="range-height">height:</label>
+                    <input type="text" id="range-height" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    <div class="flex-container">
+                        <div class="range-info">
+                            <span class="input-group-text">lower</span>
+                        </div>
+                        <div class="slider-div">
+                            <div id="slider-range-height" class="slider"></div>
+                        </div>
+                        <div class="range-info">
+                            <span class="input-group-text">higher</span>
+                        </div>
+                    </div>
+
+                    <label class="text-dark" for="range-width">width:</label>
+                    <input type="text" id="range-width" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    <div class="flex-container">
+                        <div class="range-info">
+                            <span class="input-group-text">left</span>
+                        </div>
+                        <div class="slider-div">
+                            <div id="slider-range-width" class="slider"></div>
+                        </div>
+                        <div class="range-info">
+                            <span class="input-group-text">right</span>
+                        </div>
+                    </div>
+                </div>
                 <hr/>
             </div>
             <button class="btn btn-info" data-toggle="collapse" data-target="#specimen">
@@ -331,6 +353,8 @@
 {% endblock %}
 
 {% block dependenciesScripts %}
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     {# datatable #}
     <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     {# for page skip with datatable https://datatables.net/plug-ins/pagination/input #}
@@ -340,6 +364,4 @@
     {# socket.io #}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script src="{{ url_for('static', filename='js/download_zip.js') }}"></script>
-
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 {% endblock %}

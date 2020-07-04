@@ -1,0 +1,27 @@
+.form-exp {
+    padding: 5px 5px 5px 5px;
+    border-radius: 10px;
+}
+
+.flex-container {
+    display: flex;
+    align-items: center;
+}
+
+.sliders {
+    width: 90%;
+    min-width: 600px;
+}
+
+.range-info {
+    width: 100px;
+}
+
+.slider-div {
+    width: 100%;
+    min-width: 500px;
+}
+
+.slider {
+    margin: 0px 15px 0px 15px;
+}

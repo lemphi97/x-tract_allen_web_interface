@@ -250,15 +250,50 @@ $(document).ready(function ()
         "scrollX": true
     });
 
-    // columns visibilty in datatable
-    $('.toggle-vis').on('click', function(e)
+    $( "#slider-range-depth").slider(
     {
-        // Get the column API object
-        var column = table.column($(this).attr('data-column'));
-
-        // Toggle the visibility
-        column.visible(! column.visible());
+        range: true,
+        min: 0,
+        max: 13100,
+        values: [0, 13100],
+        slide: function(event, ui)
+        {
+            $("#range-depth").val(ui.values[0] + " - " + ui.values[1]);
+        }
     });
+
+    $("#range-depth").val($("#slider-range-depth").slider("values", 0) +
+        " - " + $("#slider-range-depth").slider("values", 1));
+
+    $( "#slider-range-height").slider(
+    {
+        range: true,
+        min: 0,
+        max: 7800,
+        values: [0, 7800],
+        slide: function(event, ui)
+        {
+            $("#range-height").val(ui.values[0] + " - " + ui.values[1]);
+        }
+    });
+
+    $("#range-height").val($("#slider-range-height").slider("values", 0) +
+        " - " + $("#slider-range-height").slider("values", 1));
+
+    $( "#slider-range-width").slider(
+    {
+        range: true,
+        min: 0,
+        max: 11300,
+        values: [0, 11300],
+        slide: function(event, ui)
+        {
+            $("#range-width").val(ui.values[0] + " - " + ui.values[1]);
+        }
+    });
+
+    $("#range-width").val($("#slider-range-width").slider("values", 0) +
+        " - " + $("#slider-range-width").slider("values", 1));
 
     /*
      * Event listener on input to filter table and re-draw it
@@ -334,17 +369,27 @@ $(document).ready(function ()
 
         minVol = parseFloat($('#min-vol').val(), 10);
         maxVol = parseFloat($('#max-vol').val(), 10);
-        minX = parseInt($('#min-x').val(), 10);
-        maxX = parseInt($('#max-x').val(), 10);
-        minY = parseInt($('#min-y').val(), 10);
-        maxY = parseInt($('#max-y').val(), 10);
-        minZ = parseInt($('#min-z').val(), 10);
-        maxZ = parseInt($('#max-z').val(), 10);
+        minX = parseInt($("#slider-range-depth").slider("values", 0), 10);
+        maxX = parseInt($("#slider-range-depth").slider("values", 1), 10);
+        minY = parseInt($("#slider-range-height").slider("values", 0), 10);
+        maxY = parseInt($("#slider-range-height").slider("values", 1), 10);
+        minZ = parseInt($("#slider-range-width").slider("values", 0), 10);
+        maxZ = parseInt($("#slider-range-width").slider("values", 1), 10);
 
         gender = $('#gender-select').val();
         cre = $('#cre-select').val();
 
         table.draw();
+    });
+
+    // columns visibilty in datatable
+    $('.toggle-vis').on('click', function(e)
+    {
+        // Get the column API object
+        var column = table.column($(this).attr('data-column'));
+
+        // Toggle the visibility
+        column.visible(! column.visible());
     });
 
     var structures = getStructures(table.column(1).data().unique());

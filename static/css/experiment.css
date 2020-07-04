@@ -27,6 +27,16 @@
     margin-right: auto;
 }
 
+.sliders {
+    width: 50%;
+    min-width: 250px;
+}
+
+.slider {
+    width: 50%;
+    min-width: 250px;
+}
+
 #img {
     min-width: 275px;
     min-height: 215px;
@@ -35,9 +45,4 @@
 #index {
     width: 55px;
     text-align: center;
-}
-
-#sliders {
-    width: 50%;
-    min-width: 250px;
 }

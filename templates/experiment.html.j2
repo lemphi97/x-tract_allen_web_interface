@@ -6,9 +6,9 @@
 
 {% block dependencies %}
     <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='css/experiment.css') }}"/>
-    <link rel="stylesheet" type="text/css"
           href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/experiment.css') }}"/>
     <script>
         sections_id = {{ sect_id }};
         sections_res = {{ sect_res }};
@@ -132,7 +132,7 @@
                             <p id="nb-img" class="text-dark"></p>
                         </div>
                     </div>
-                    <div id="sliders">
+                    <div class="sliders">
                         <p>
                           <label class="text-dark" for="red-range">Red range:</label>
                           <input type="text" id="red-range" readonly style="border:0; color:#f6931f; font-weight:bold;">
