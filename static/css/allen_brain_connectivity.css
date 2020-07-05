@@ -14,7 +14,11 @@
 }
 
 .range-info {
-    width: 100px;
+    width: 150px;
+}
+
+.range-info>input[type=text] {
+    width: 50px;
 }
 
 .slider-div {

@@ -244,56 +244,127 @@ $(document).ready(function ()
     var page_url = window.location.href;
     console.log(page_url);
 
+    var depth_max = 13100;
+    var height_max = 7800;
+    var width_max = 11300;
+
     // activate datatable
     table = $('#experiments').DataTable(
     {
         "scrollX": true
     });
 
-    $( "#slider-range-depth").slider(
+    $("#slider-range-depth").slider(
     {
         range: true,
         min: 0,
-        max: 13100,
-        values: [0, 13100],
+        max: depth_max,
+        values: [0, depth_max],
         slide: function(event, ui)
         {
-            $("#range-depth").val(ui.values[0] + " - " + ui.values[1]);
+            $("#anterior").val(ui.values[0])
+            $("#posterior").val(ui.values[1]);
         }
     });
 
-    $("#range-depth").val($("#slider-range-depth").slider("values", 0) +
-        " - " + $("#slider-range-depth").slider("values", 1));
-
-    $( "#slider-range-height").slider(
+    $("#slider-range-height").slider(
     {
         range: true,
         min: 0,
-        max: 7800,
-        values: [0, 7800],
+        max: height_max,
+        values: [0, height_max],
         slide: function(event, ui)
         {
-            $("#range-height").val(ui.values[0] + " - " + ui.values[1]);
+            $("#lower").val(ui.values[0])
+            $("#higher").val(ui.values[1]);
         }
     });
 
-    $("#range-height").val($("#slider-range-height").slider("values", 0) +
-        " - " + $("#slider-range-height").slider("values", 1));
-
-    $( "#slider-range-width").slider(
+    $("#slider-range-width").slider(
     {
         range: true,
         min: 0,
-        max: 11300,
-        values: [0, 11300],
+        max: width_max,
+        values: [0, width_max],
         slide: function(event, ui)
         {
-            $("#range-width").val(ui.values[0] + " - " + ui.values[1]);
+            $("#left").val(ui.values[0])
+            $("#right").val(ui.values[1]);
         }
     });
 
-    $("#range-width").val($("#slider-range-width").slider("values", 0) +
-        " - " + $("#slider-range-width").slider("values", 1));
+    $("#anterior").val($("#slider-range-depth").slider("values", 0));
+    $("#posterior").val($("#slider-range-depth").slider("values", 1));
+    $("#lower").val($("#slider-range-height").slider("values", 0));
+    $("#higher").val($("#slider-range-height").slider("values", 1));
+    $("#left").val($("#slider-range-width").slider("values", 0));
+    $("#right").val($("#slider-range-width").slider("values", 1));
+
+    $("#anterior").keyup(function()
+    {
+        var val = parseInt($("#anterior").val(), 10);
+        if (!isNaN(val) &&
+            val >= 0 &&
+            val <= $("#slider-range-depth").slider("values", 1))
+        {
+            $("#slider-range-depth").slider("values", 0, val);
+        }
+    });
+
+    $("#posterior").keyup(function()
+    {
+        var val = parseInt($("#posterior").val(), 10);
+        if (!isNaN(val) &&
+            val <= depth_max &&
+            val >= $("#slider-range-depth").slider("values", 0))
+        {
+            $("#slider-range-depth").slider("values", 1, val);
+        }
+    });
+
+    $("#lower").keyup(function()
+    {
+        var val = parseInt($("#lower").val(), 10);
+        if (!isNaN(val) &&
+            val >= 0 &&
+            val <= $("#slider-range-height").slider("values", 1))
+        {
+            $("#slider-range-height").slider("values", 0, val);
+        }
+    });
+
+    $("#higher").keyup(function()
+    {
+        var val = parseInt($("#higher").val(), 10);
+        if (!isNaN(val) &&
+            val <= height_max &&
+            val >= $("#slider-range-height").slider("values", 0))
+        {
+            $("#slider-range-height").slider("values", 1, val);
+        }
+    });
+
+    $("#left").keyup(function()
+    {
+        var val = parseInt($("#left").val(), 10);
+        if (!isNaN(val) &&
+            val >= 0 &&
+            val <= $("#slider-range-width").slider("values", 1))
+        {
+            $("#slider-range-width").slider("values", 0, val);
+        }
+    });
+
+    $("#right").keyup(function()
+    {
+        var val = parseInt($("#right").val(), 10);
+        if (!isNaN(val) &&
+            val <= width_max &&
+            val >= $("#slider-range-width").slider("values", 0))
+        {
+            $("#slider-range-width").slider("values", 1, val);
+        }
+    });
 
     /*
      * Event listener on input to filter table and re-draw it
