@@ -27,14 +27,16 @@ var containsLineFilter = false;
 // table
 var table;
 
+// TODO Seems to kinda break if there is too many columns. fix?
 function getColumn(datatableVar, columnIndex)
 {
     array_column_data = [];
     var i;
     for (i = 0; i < datatableVar.$('tr', {"filter":"applied"}).length; i++)
     {
-        var id = datatableVar.$('tr', {"filter":"applied"})[i].cells[columnIndex].innerText;
-        array_column_data.push(id);
+        var value = datatableVar.$('tr', {"filter":"applied"})[i].cells[columnIndex].innerText;
+        value = value.replace(/\n/g,'').trim();
+        array_column_data.push(value);
     }
     return array_column_data;
 }
@@ -168,20 +170,50 @@ function validateSelect(allowedValue, value)
     return false;
 }
 
+function copyColumnToClipboard(columnNumber)
+{
+    var arrayColumn = getColumn(table, columnNumber);
+    var strColumn = "";
+    var i = 0
+    while(i < arrayColumn.length - 1)
+    {
+        strColumn += arrayColumn[i] + ';';
+        i++;
+    }
+    strColumn += arrayColumn[i];
+
+    // Create a temporary input field
+    let input = document.createElement('input');
+    input.value = strColumn;
+    document.body.appendChild(input);
+
+    // Select the text field
+    input.select();
+    input.setSelectionRange(0, 99999); /*For mobile devices*/
+
+    // Copy the text inside the text field
+    document.execCommand("copy");
+
+    // Remove the temporary field
+    document.body.removeChild(input);
+
+    alert("ids copied to clipboard.");
+}
+
 /*
  * Based on https://www.w3schools.com/howto/howto_js_copy_clipboard.asp
  * Copy field value to clipboard
 */
 function copy(field_id) {
-  /* Get the text field */
-  var copyText = document.getElementById(field_id);
+    /* Get the text field */
+    var copyText = document.getElementById(field_id);
 
-  /* Select the text field */
-  copyText.select();
-  copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+    /* Select the text field */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /*For mobile devices*/
 
-  /* Copy the text inside the text field */
-  document.execCommand("copy");
+    /* Copy the text inside the text field */
+    document.execCommand("copy");
 }
 
 /* Custom filtering function which will validate each lines */
