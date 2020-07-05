@@ -30,3 +30,9 @@
 .columns-vis>ul>li {
     color: black
 }
+
+.footer {
+    position: absolute;
+    right: 0px;
+    margin: 0px 25px 0px 0px;
+}

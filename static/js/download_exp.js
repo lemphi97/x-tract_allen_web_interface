@@ -143,7 +143,6 @@ $(document).ready(function ()
 
         $('#index').val(shown_index);
 
-        // TODO change img
         var img_url = "http://api.brain-map.org/api/v2/projection_image_download/" +
             sections_id[shown_index - 1] +
             "?downsample=10&range=";

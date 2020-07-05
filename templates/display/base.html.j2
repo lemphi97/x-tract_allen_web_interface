@@ -82,6 +82,17 @@
         {% block content %}
         {% endblock %}
     </div>
+
+    <hr style="border: 1px solid black;"/>
+    <div class="footer content">
+        <div>
+            {% for line in commit_info %}
+            <p>
+                {{ line }}
+            </p>
+            {% endfor %}
+        </div>
+    </footer>
 </body>
 
 {# Bootstrap #}

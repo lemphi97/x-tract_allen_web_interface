@@ -5,6 +5,8 @@ from flask_socketio import SocketIO
 from flask_socketio import emit
 # from flask_compress import Compress #https://github.com/shengulong/flask-compress
 import allensdk_utils as utils
+# for executing terminal cmd (git)
+from subprocess import Popen, PIPE, STDOUT
 
 from shutil import make_archive
 import io
@@ -46,13 +48,25 @@ def handle_download_request(req_id, req_img, res):
 
 @app.before_first_request
 def render_templates():
+    # get HEAD commit log
+    git_cmd = Popen(['git', 'log', '-1'], stdout=PIPE, stderr=STDOUT)
+    head_commit, stderr = git_cmd.communicate()
+    head_commit = head_commit.decode("utf-8")
+    head_commit = head_commit.split('\n')
+
     # home
-    rendered_template = flask.render_template("index.html.j2")
+    rendered_template = flask.render_template(
+        "index.html.j2",
+        commit_info=head_commit
+    )
     with open(app.static_folder + "/html/rendered_template/index.html", "w") as f:
         f.write(rendered_template)
 
     # interface
-    rendered_template = flask.render_template("interface.html.j2")
+    rendered_template = flask.render_template(
+        "interface.html.j2",
+        commit_info=head_commit
+    )
     with open(app.static_folder + "/html/rendered_template/interface.html", "w") as f:
         f.write(rendered_template)
 
@@ -60,18 +74,25 @@ def render_templates():
     rendered_template = flask.render_template(
         "allen_brain.html.j2",
         all_exp=all_exp,
-        struct_dict=st_dict
+        struct_dict=st_dict,
+        commit_info=head_commit
     )
     with open(app.static_folder + "/html/rendered_template/allen_brain.html", "w") as f:
         f.write(rendered_template)
 
     # volume_viewer
-    rendered_template = flask.render_template("volume_viewer.html.j2")
+    rendered_template = flask.render_template(
+        "volume_viewer.html.j2",
+        commit_info=head_commit
+    )
     with open(app.static_folder + "/html/rendered_template/volume_viewer.html", "w") as f:
         f.write(rendered_template)
 
     # about_website
-    rendered_template = flask.render_template("about_website.html.j2")
+    rendered_template = flask.render_template(
+        "about_website.html.j2",
+        commit_info=head_commit
+    )
     with open(app.static_folder + "/html/rendered_template/about_website.html", "w") as f:
         f.write(rendered_template)
 
