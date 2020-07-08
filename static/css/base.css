@@ -23,6 +23,15 @@
     color: black;
 }
 
+.div-include {
+    border: 2px solid green;
+}
+
+.div-exclude {
+    display: none;
+    border: 2px solid red;
+}
+
 .columns-vis {
     color: black
 }

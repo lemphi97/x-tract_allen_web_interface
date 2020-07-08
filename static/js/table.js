@@ -1,31 +1,69 @@
 /**
  * Global variables
  */
-// For filters:
-var names = [""];
-var acronyms = [""];
-var primNames = [""];
-var primAcronyms = [""];
-var products = [""];
-var lines = [""];
-var minVol = "NaN";
-var maxVol = "NaN";
-var minX = "NaN";
-var maxX = "NaN";
-var minY = "NaN";
-var maxY = "NaN";
-var minZ = "NaN";
-var maxZ = "NaN";
-var gender = "ANY";
-var cre = "ANY";
-var containsNameFilter = false;
-var containsAcronFilter = false;
-var containsPrimNameFilter = false;
-var containsPrimAcronFilter = false;
-var containsProdFilter = false;
-var containsLineFilter = false;
 // table
 var table;
+
+// include filters:
+var includeNames = [""];
+var includeAcronyms = [""];
+var includePrimNames = [""];
+var includePrimAcronyms = [""];
+var includeProducts = [""];
+var includeLines = [""];
+var includeMinVol = "NaN";
+var includeMaxVol = "NaN";
+var includeMinX = "NaN";
+var includeMaxX = "NaN";
+var includeMinY = "NaN";
+var includeMaxY = "NaN";
+var includeMinZ = "NaN";
+var includeMaxZ = "NaN";
+var includeGender = "ANY";
+var includeCre = "ANY";
+var includeContainsNameFilter = false;
+var includeContainsAcronFilter = false;
+var includeContainsPrimNameFilter = false;
+var includeContainsPrimAcronFilter = false;
+var includeContainsProdFilter = false;
+var includeContainsLineFilter = false;
+
+// exclude filters:
+var excludeNames = [""];
+var excludeAcronyms = [""];
+var excludePrimNames = [""];
+var excludePrimAcronyms = [""];
+var excludeProducts = [""];
+var excludeLines = [""];
+var excludeMinVol = "NaN";
+var excludeMaxVol = "NaN";
+var excludeMinX = "NaN";
+var excludeMaxX = "NaN";
+var excludeMinY = "NaN";
+var excludeMaxY = "NaN";
+var excludeMinZ = "NaN";
+var excludeMaxZ = "NaN";
+var excludeGender = "ANY";
+var excludeCre = "ANY";
+var excludeContainsNameFilter = false;
+var excludeContainsAcronFilter = false;
+var excludeContainsPrimNameFilter = false;
+var excludeContainsPrimAcronFilter = false;
+var excludeContainsProdFilter = false;
+var excludeContainsLineFilter = false;
+
+// switch between include and exclude filters
+function showIncludeFilters()
+{
+    $("#exclude-filters").css("display", "none");
+    $("#include-filters").css("display", "block");
+}
+
+function showExcludeFilters()
+{
+    $("#include-filters").css("display", "none");
+    $("#exclude-filters").css("display", "block");
+}
 
 // TODO Seems to kinda break if there is too many columns. fix?
 function getColumn(datatableVar, columnIndex)
@@ -136,10 +174,10 @@ function validateText(validTexts, text)
     return valid;
 }
 
-function validateProducts(products, product)
+function validateProducts(product, AllowedProducts)
 {
     var valid = true;
-    if (! caseInsensitiveArrayInclude(products, product))
+    if (! caseInsensitiveArrayInclude(AllowedProducts, product))
     {
         valid = false;
     }
@@ -160,7 +198,7 @@ function validateMinMax(value, min, max)
 /*
  * return true if value match allowedValue
  */
-function validateSelect(allowedValue, value)
+function validateSelect(value, allowedValue)
 {
     if (allowedValue.toUpperCase() == "ANY" ||
         allowedValue.toUpperCase() == value.toUpperCase())
@@ -236,32 +274,32 @@ $.fn.dataTable.ext.search.push
 
         if
         (
-            validateMinMax(columnVolume, minVol, maxVol) &&
-            validateMinMax(x, minX, maxX) &&
-            validateMinMax(y, minY, maxY) &&
-            validateMinMax(z, minZ, maxZ) &&
-            validateSelect(gender, columnGender) &&
-            validateSelect(cre, columnCre) &&
+            validateMinMax(columnVolume, includeMinVol, includeMaxVol) &&
+            validateMinMax(x, includeMinX, includeMaxX) &&
+            validateMinMax(y, includeMinY, includeMaxY) &&
+            validateMinMax(z, includeMinZ, includeMaxZ) &&
+            validateSelect(columnGender, includeGender) &&
+            validateSelect(columnCre, includeCre) &&
             (
-                (! containsNameFilter && ! containsAcronFilter) ||
-                validateText(names, getStructure(columnStruct)) ||
-                validateText(acronyms, getAcronym(columnStruct))
+                (! includeContainsNameFilter && ! includeContainsAcronFilter) ||
+                validateText(includeNames, getStructure(columnStruct)) ||
+                validateText(includeAcronyms, getAcronym(columnStruct))
             )
             &&
             (
-                (! containsPrimNameFilter && ! containsPrimAcronFilter) ||
-                validateText(primNames, getStructure(columnPrimStruct)) ||
-                validateText(primAcronyms, getAcronym(columnPrimStruct))
+                (! includeContainsPrimNameFilter && ! includeContainsPrimAcronFilter) ||
+                validateText(includePrimNames, getStructure(columnPrimStruct)) ||
+                validateText(includePrimAcronyms, getAcronym(columnPrimStruct))
             )
             &&
             (
-                ! containsProdFilter ||
-                validateProducts(products, columnProduct)
+                ! includeContainsProdFilter ||
+                validateProducts(columnProduct, includeProducts)
             )
             &&
             (
-                ! containsLineFilter ||
-                validateText(lines, columnline)
+                ! includeContainsLineFilter ||
+                validateText(includeLines, columnline)
             )
         )
         {
@@ -286,7 +324,7 @@ $(document).ready(function ()
         "scrollX": true
     });
 
-    $("#slider-range-depth").slider(
+    $("#include-slider-range-depth").slider(
     {
         range: true,
         min: 0,
@@ -294,12 +332,12 @@ $(document).ready(function ()
         values: [0, depth_max],
         slide: function(event, ui)
         {
-            $("#anterior").val(ui.values[0])
-            $("#posterior").val(ui.values[1]);
+            $("#include-anterior").val(ui.values[0]);
+            $("#include-posterior").val(ui.values[1]);
         }
     });
 
-    $("#slider-range-height").slider(
+    $("#include-slider-range-height").slider(
     {
         range: true,
         min: 0,
@@ -307,12 +345,12 @@ $(document).ready(function ()
         values: [0, height_max],
         slide: function(event, ui)
         {
-            $("#lower").val(ui.values[0])
-            $("#higher").val(ui.values[1]);
+            $("#include-lower").val(ui.values[0]);
+            $("#include-higher").val(ui.values[1]);
         }
     });
 
-    $("#slider-range-width").slider(
+    $("#include-slider-range-width").slider(
     {
         range: true,
         min: 0,
@@ -320,81 +358,81 @@ $(document).ready(function ()
         values: [0, width_max],
         slide: function(event, ui)
         {
-            $("#left").val(ui.values[0])
-            $("#right").val(ui.values[1]);
+            $("#include-left").val(ui.values[0]);
+            $("#include-right").val(ui.values[1]);
         }
     });
 
-    $("#anterior").val($("#slider-range-depth").slider("values", 0));
-    $("#posterior").val($("#slider-range-depth").slider("values", 1));
-    $("#lower").val($("#slider-range-height").slider("values", 0));
-    $("#higher").val($("#slider-range-height").slider("values", 1));
-    $("#left").val($("#slider-range-width").slider("values", 0));
-    $("#right").val($("#slider-range-width").slider("values", 1));
+    $("#include-anterior").val($("#include-slider-range-depth").slider("values", 0));
+    $("#include-posterior").val($("#include-slider-range-depth").slider("values", 1));
+    $("#include-lower").val($("#include-slider-range-height").slider("values", 0));
+    $("#include-higher").val($("#include-slider-range-height").slider("values", 1));
+    $("#include-left").val($("#include-slider-range-width").slider("values", 0));
+    $("#include-right").val($("#include-slider-range-width").slider("values", 1));
 
-    $("#anterior").keyup(function()
+    $("#include-anterior").keyup(function()
     {
-        var val = parseInt($("#anterior").val(), 10);
+        var val = parseInt($("#include-anterior").val(), 10);
         if (!isNaN(val) &&
             val >= 0 &&
-            val <= $("#slider-range-depth").slider("values", 1))
+            val <= $("#include-slider-range-depth").slider("values", 1))
         {
-            $("#slider-range-depth").slider("values", 0, val);
+            $("#include-slider-range-depth").slider("values", 0, val);
         }
     });
 
-    $("#posterior").keyup(function()
+    $("#include-posterior").keyup(function()
     {
-        var val = parseInt($("#posterior").val(), 10);
+        var val = parseInt($("#include-posterior").val(), 10);
         if (!isNaN(val) &&
             val <= depth_max &&
-            val >= $("#slider-range-depth").slider("values", 0))
+            val >= $("#include-slider-range-depth").slider("values", 0))
         {
-            $("#slider-range-depth").slider("values", 1, val);
+            $("#include-slider-range-depth").slider("values", 1, val);
         }
     });
 
-    $("#lower").keyup(function()
+    $("#include-lower").keyup(function()
     {
-        var val = parseInt($("#lower").val(), 10);
+        var val = parseInt($("#include-lower").val(), 10);
         if (!isNaN(val) &&
             val >= 0 &&
-            val <= $("#slider-range-height").slider("values", 1))
+            val <= $("#include-slider-range-height").slider("values", 1))
         {
-            $("#slider-range-height").slider("values", 0, val);
+            $("#include-slider-range-height").slider("values", 0, val);
         }
     });
 
-    $("#higher").keyup(function()
+    $("#include-higher").keyup(function()
     {
-        var val = parseInt($("#higher").val(), 10);
+        var val = parseInt($("#include-higher").val(), 10);
         if (!isNaN(val) &&
             val <= height_max &&
-            val >= $("#slider-range-height").slider("values", 0))
+            val >= $("#include-slider-range-height").slider("values", 0))
         {
-            $("#slider-range-height").slider("values", 1, val);
+            $("#include-slider-range-height").slider("values", 1, val);
         }
     });
 
-    $("#left").keyup(function()
+    $("#include-left").keyup(function()
     {
-        var val = parseInt($("#left").val(), 10);
+        var val = parseInt($("#include-left").val(), 10);
         if (!isNaN(val) &&
             val >= 0 &&
-            val <= $("#slider-range-width").slider("values", 1))
+            val <= $("#include-slider-range-width").slider("values", 1))
         {
-            $("#slider-range-width").slider("values", 0, val);
+            $("#include-slider-range-width").slider("values", 0, val);
         }
     });
 
-    $("#right").keyup(function()
+    $("#include-right").keyup(function()
     {
-        var val = parseInt($("#right").val(), 10);
+        var val = parseInt($("#include-right").val(), 10);
         if (!isNaN(val) &&
             val <= width_max &&
-            val >= $("#slider-range-width").slider("values", 0))
+            val >= $("#include-slider-range-width").slider("values", 0))
         {
-            $("#slider-range-width").slider("values", 1, val);
+            $("#include-slider-range-width").slider("values", 1, val);
         }
     });
 
@@ -404,83 +442,95 @@ $(document).ready(function ()
 
     $('#apply').click(function()
     {
-        names = $('#name').val().split(";");
-        containsNameFilter = false;
-        for (i = 0; i < names.length; i++)
+        includeNames = $('#include-name').val().split(";");
+        includeContainsNameFilter = false;
+        for (i = 0; i < includeNames.length; i++)
         {
-            if (names[i].trim() != "")
+            if (includeNames[i].trim() != "")
             {
-                containsNameFilter = true;
+                includeContainsNameFilter = true;
                 break;
             }
         }
 
-        acronyms = $('#acron').val().split(";");
-        containsAcronFilter = false;
-        for (i = 0; i < acronyms.length; i++)
+        includeAcronyms = $('#include-acron').val().split(";");
+        includeContainsAcronFilter = false;
+        for (i = 0; i < includeAcronyms.length; i++)
         {
-            if (acronyms[i].trim() != "")
+            if (includeAcronyms[i].trim() != "")
             {
-                containsAcronFilter = true;
+                includeContainsAcronFilter = true;
                 break;
             }
         }
 
-        primNames = $('#prim-name').val().split(";");
-        containsPrimNameFilter = false;
-        for (i = 0; i < primNames.length; i++)
+        includePrimNames = $('#include-prim-name').val().split(";");
+        includeContainsPrimNameFilter = false;
+        for (i = 0; i < includePrimNames.length; i++)
         {
-            if (primNames[i].trim() != "")
+            if (includePrimNames[i].trim() != "")
             {
-                containsPrimNameFilter = true;
+                includeContainsPrimNameFilter = true;
                 break;
             }
         }
 
-        primAcronyms = $('#prim-acron').val().split(";");
-        containsPrimAcronFilter = false;
-        for (i = 0; i < primAcronyms.length; i++)
+        includePrimAcronyms = $('#include-prim-acron').val().split(";");
+        includeContainsPrimAcronFilter = false;
+        for (i = 0; i < includePrimAcronyms.length; i++)
         {
-            if (primAcronyms[i].trim() != "")
+            if (includePrimAcronyms[i].trim() != "")
             {
-                containsPrimAcronFilter = true;
+                includeContainsPrimAcronFilter = true;
                 break;
             }
         }
 
-        products = $('#prod-id').val().split(";");
-        containsProdFilter = false;
-        for (i = 0; i < products.length; i++)
+        includeProducts = $('#include-prod-id').val().split(";");
+        includeContainsProdFilter = false;
+        for (i = 0; i < includeProducts.length; i++)
         {
-            if (products[i].trim() != "")
+            if (includeProducts[i].trim() != "")
             {
-                containsProdFilter = true;
+                includeContainsProdFilter = true;
                 break;
             }
         }
 
-        lines = $('#line').val().split(";");
-        containsLineFilter = false;
-        for (i = 0; i < lines.length; i++)
+        includeLines = $('#include-line').val().split(";");
+        includeContainsLineFilter = false;
+        for (i = 0; i < includeLines.length; i++)
         {
-            if (lines[i].trim() != "")
+            if (includeLines[i].trim() != "")
             {
-                containsLineFilter = true;
+                includeContainsLineFilter = true;
                 break;
             }
         }
 
-        minVol = parseFloat($('#min-vol').val(), 10);
-        maxVol = parseFloat($('#max-vol').val(), 10);
-        minX = parseInt($("#slider-range-depth").slider("values", 0), 10);
-        maxX = parseInt($("#slider-range-depth").slider("values", 1), 10);
-        minY = parseInt($("#slider-range-height").slider("values", 0), 10);
-        maxY = parseInt($("#slider-range-height").slider("values", 1), 10);
-        minZ = parseInt($("#slider-range-width").slider("values", 0), 10);
-        maxZ = parseInt($("#slider-range-width").slider("values", 1), 10);
+        includeMinVol = parseFloat($('#include-min-vol').val(), 10);
+        includeMaxVol = parseFloat($('#include-max-vol').val(), 10);
+        includeMinX = parseInt($("#include-slider-range-depth").slider("values", 0), 10);
+        includeMaxX = parseInt($("#include-slider-range-depth").slider("values", 1), 10);
+        includeMinY = parseInt($("#include-slider-range-height").slider("values", 0), 10);
+        includeMaxY = parseInt($("#include-slider-range-height").slider("values", 1), 10);
+        includeMinZ = parseInt($("#include-slider-range-width").slider("values", 0), 10);
+        includeMaxZ = parseInt($("#include-slider-range-width").slider("values", 1), 10);
+        includeGender = $('#include-gender-select').val();
+        includeCre = $('#include-cre-select').val();
 
-        gender = $('#gender-select').val();
-        cre = $('#cre-select').val();
+        /*
+        excludeMinVol = parseFloat($('#exclude-min-vol').val(), 10);
+        excludeMaxVol = parseFloat($('#exclude-max-vol').val(), 10);
+        excludeMinX = parseInt($("#exclude-slider-range-depth").slider("values", 0), 10);
+        excludeMaxX = parseInt($("#exclude-slider-range-depth").slider("values", 1), 10);
+        excludeMinY = parseInt($("#exclude-slider-range-height").slider("values", 0), 10);
+        excludeMaxY = parseInt($("#exclude-slider-range-height").slider("values", 1), 10);
+        excludeMinZ = parseInt($("#exclude-slider-range-width").slider("values", 0), 10);
+        excludeMaxZ = parseInt($("#exclude-slider-range-width").slider("values", 1), 10);
+        excludeGender = $('#exclude-gender-select').val();
+        excludeCre = $('#exclude-cre-select').val();
+        */
 
         table.draw();
     });
@@ -502,9 +552,14 @@ $(document).ready(function ()
     var specimenLines = table.column(6).data().unique();
     var specimenNames = table.column(7).data().unique();
 
-    autocomplete(document.getElementById("name"), structures);
-    autocomplete(document.getElementById("acron"), structuresAcronyms);
-    autocomplete(document.getElementById("prim-name"), primStructures);
-    autocomplete(document.getElementById("prim-acron"), primStructuresAcronyms);
-    autocomplete(document.getElementById("line"), specimenLines);
+    autocomplete(document.getElementById("include-name"), structures);
+    autocomplete(document.getElementById("include-acron"), structuresAcronyms);
+    autocomplete(document.getElementById("include-prim-name"), primStructures);
+    autocomplete(document.getElementById("include-prim-acron"), primStructuresAcronyms);
+    autocomplete(document.getElementById("include-line"), specimenLines);
+    autocomplete(document.getElementById("exclude-name"), structures);
+    autocomplete(document.getElementById("exclude-acron"), structuresAcronyms);
+    autocomplete(document.getElementById("exclude-prim-name"), primStructures);
+    autocomplete(document.getElementById("exclude-prim-acron"), primStructuresAcronyms);
+    autocomplete(document.getElementById("exclude-line"), specimenLines);
 });

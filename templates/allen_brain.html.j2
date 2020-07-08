@@ -25,143 +25,340 @@
     <div class="content-bg table-sm">
         <div class="filter-exp">
             <h2>Experiments filters</h2>
-            <button class="btn btn-info" data-toggle="collapse" data-target="#structure">
-                structure
-            </button>
-            <div id="structure" class="collapse">
-                <hr/>
-                <div class="autocomplete">
-                    <label class="form-check-label" for="name">
-                        <strong>name(s): </strong>
-                    </label>
-                    <input type="text" id="name" name="name" aria-describedby="name-help"
-                        placeholder="name_1; name_2; ..." autocomplete="off"/>
-                    <small id="name-help" class="text-muted">must be exact</small>
-                </div>
-                <br/>
-                <div class="autocomplete">
-                    <label class="form-check-label" for="acron">
-                        <strong>acronym(s): </strong>
-                    </label>
-                    <input id="acron" type="text" name="acron"
-                           placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
-                </div>
-                <br>
-                <div class="autocomplete">
-                    <label class="form-check-label" for="prim-name">
-                        <strong>primary injection name(s): </strong>
-                    </label>
-                    <input type="text" id="prim-name" name="prim-name" aria-describedby="prim-name-help"
-                        placeholder="name_1; name_2; ..." autocomplete="off"/>
-                    <small id="prim-name-help" class="text-muted">must be exact</small>
-                </div>
-                <br/>
-                <div class="autocomplete">
-                    <label class="form-check-label" for="prim-acron">
-                        <strong>primary injection acronym(s): </strong>
-                    </label>
-                    <input id="prim-acron" type="text" name="prim-acron"
-                           placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
-                </div>
-                <hr/>
+            <div class="btn-group btn-group-toggle" role="group">
+                <button id="btn-include" class="btn btn-success active" type="button"
+                        onclick="showIncludeFilters()">
+                    include
+                </button>
+                <button id="btn-exclude" class="btn btn-danger" type="button"
+                        onclick="showExcludeFilters()">
+                    exclude
+                </button>
             </div>
-            <button class="btn btn-info" data-toggle="collapse" data-target="#injection">
-                injection
-            </button>
-            <div id="injection" class="collapse">
-                <hr/>
-                <label class="form-check-label" for="prod-id">
-                    <strong>product(s) id: </strong>
-                </label>
-                <input id="prod-id" type="text" name="prod-id"
-                       placeholder="id_1; id_2; ..." autocomplete="off"/>
-                <br/>
-                <strong>volume: </strong>
-                <label class="form-check-label" for="min-vol">min</label>
-                <input type="text" id="min-vol" name="min-vol"
-                       placeholder="0.0" autocomplete="off"/>
-                <label class="form-check-label" for="max-vol">max</label>
-                <input type="text" id="max-vol" name="max-vol"
-                       placeholder="0.0" autocomplete="off"/>
-                <br/>
-                <div class="sliders">
-                    <div class="flex-container">
-                        <div class="range-info">
-                            <label class="text-dark" for="anterior">anterior:</label>
-                            <input type="text" id="anterior" style="border:0; color:#f6931f; font-weight:bold;">
+            <div id="include-filters" class="div-include">
+                <button class="btn btn-info" data-toggle="collapse" data-target="#include-filters-id">
+                    id
+                </button>
+                <div id="include-filters-id" class="collapse">
+                    <hr/>
+                    <label class="form-check-label" for="include-experiment-id">
+                        <strong>experiment(s) id: </strong>
+                    </label>
+                    <input id="include-experiment-id" type="text" name="include-experiment-id"
+                           placeholder="id_1; id_2; ..." autocomplete="off"/>
+                    <br/>
+                </div>
+                <button class="btn btn-info" data-toggle="collapse" data-target="#include-filters-structure">
+                    structure
+                </button>
+                <div id="include-filters-structure" class="collapse">
+                    <hr/>
+                    <div class="autocomplete">
+                        <label class="form-check-label" for="include-name">
+                            <strong>name(s): </strong>
+                        </label>
+                        <input type="text" id="include-name" name="include-name" aria-describedby="include-name-help"
+                            placeholder="name_1; name_2; ..." autocomplete="off"/>
+                        <small id="include-name-help" class="text-muted">must be exact</small>
+                    </div>
+                    <br/>
+                    <div class="autocomplete">
+                        <label class="form-check-label" for="include-acron">
+                            <strong>acronym(s): </strong>
+                        </label>
+                        <input id="include-acron" type="text" name="include-acron"
+                               placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
+                    </div>
+                    <br>
+                    <div class="autocomplete">
+                        <label class="form-check-label" for="include-prim-name">
+                            <strong>primary injection name(s): </strong>
+                        </label>
+                        <input type="text" id="include-prim-name" name="include-prim-name"
+                            aria-describedby="include-prim-name-help"
+                            placeholder="name_1; name_2; ..." autocomplete="off"/>
+                        <small id="include-prim-name-help" class="text-muted">must be exact</small>
+                    </div>
+                    <br/>
+                    <div class="autocomplete">
+                        <label class="form-check-label" for="include-prim-acron">
+                            <strong>primary injection acronym(s): </strong>
+                        </label>
+                        <input id="include-prim-acron" type="text" name="include-prim-acron"
+                               placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
+                    </div>
+                    <hr/>
+                </div>
+                <button class="btn btn-info" data-toggle="collapse" data-target="#include-filters-injection">
+                    injection
+                </button>
+                <div id="include-filters-injection" class="collapse">
+                    <hr/>
+                    <label class="form-check-label" for="include-prod-id">
+                        <strong>product(s) id: </strong>
+                    </label>
+                    <input id="include-prod-id" type="text" name="include-prod-id"
+                           placeholder="id_1; id_2; ..." autocomplete="off"/>
+                    <br/>
+                    <strong>volume: </strong>
+                    <label class="form-check-label" for="include-min-vol">min</label>
+                    <input type="text" id="include-min-vol" name="include-min-vol"
+                           placeholder="0.0" autocomplete="off"/>
+                    <label class="form-check-label" for="include-max-vol">max</label>
+                    <input type="text" id="include-max-vol" name="include-max-vol"
+                           placeholder="0.0" autocomplete="off"/>
+                    <br/>
+                    <div class="sliders">
+                        <div class="flex-container">
+                            <div class="range-info">
+                                <label class="text-dark" for="include-anterior">anterior:</label>
+                                <input type="text" id="include-anterior"
+                                    style="border:0; color:#f6931f; font-weight:bold;"/>
+                            </div>
+                            <div class="slider-div">
+                                <div id="include-slider-range-depth" class="slider"></div>
+                            </div>
+                            <div class="range-info">
+                                <label class="text-dark" for="include-posterior">posterior:</label>
+                                <input type="text" id="include-posterior"
+                                    style="border:0; color:#f6931f; font-weight:bold;"/>
+                            </div>
                         </div>
-                        <div class="slider-div">
-                            <div id="slider-range-depth" class="slider"></div>
+
+                        <div class="flex-container">
+                            <div class="range-info">
+                                <label class="text-dark" for="include-lower">lower:</label>
+                                <input type="text" id="include-lower"
+                                    style="border:0; color:#f6931f; font-weight:bold;"/>
+                            </div>
+                            <div class="slider-div">
+                                <div id="include-slider-range-height" class="slider"></div>
+                            </div>
+                            <div class="range-info">
+                                <label class="text-dark" for="include-higher">higher:</label>
+                                <input type="text" id="include-higher"
+                                    style="border:0; color:#f6931f; font-weight:bold;"/>
+                            </div>
                         </div>
-                        <div class="range-info">
-                            <label class="text-dark" for="posterior">posterior:</label>
-                            <input type="text" id="posterior" style="border:0; color:#f6931f; font-weight:bold;">
+
+                        <div class="flex-container">
+                            <div class="range-info">
+                                <label class="text-dark" for="include-left">left:</label>
+                                <input type="text" id="include-left"
+                                    style="border:0; color:#f6931f; font-weight:bold;"/>
+                            </div>
+                            <div class="slider-div">
+                                <div id="include-slider-range-width" class="slider"></div>
+                            </div>
+                            <div class="range-info">
+                                <label class="text-dark" for="include-right">right:</label>
+                                <input type="text" id="include-right"
+                                    style="border:0; color:#f6931f; font-weight:bold;"/>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="flex-container">
-                        <div class="range-info">
-                            <label class="text-dark" for="lower">lower:</label>
-                            <input type="text" id="lower" style="border:0; color:#f6931f; font-weight:bold;">
-                        </div>
-                        <div class="slider-div">
-                            <div id="slider-range-height" class="slider"></div>
-                        </div>
-                        <div class="range-info">
-                            <label class="text-dark" for="higher">higher:</label>
-                            <input type="text" id="higher" style="border:0; color:#f6931f; font-weight:bold;">
-                        </div>
-                    </div>
+                    {# TODO canvas to draw slider on img #}
+                    <img src="{{ url_for('static', filename='img/mouse_brain.png') }}"/>
 
-                    <div class="flex-container">
-                        <div class="range-info">
-                            <label class="text-dark" for="left">left:</label>
-                            <input type="text" id="left" style="border:0; color:#f6931f; font-weight:bold;">
-                        </div>
-                        <div class="slider-div">
-                            <div id="slider-range-width" class="slider"></div>
-                        </div>
-                        <div class="range-info">
-                            <label class="text-dark" for="right">right:</label>
-                            <input type="text" id="right" style="border:0; color:#f6931f; font-weight:bold;">
-                        </div>
-                    </div>
+                    <hr/>
                 </div>
-
-                {# TODO canvas to draw slider on img #}
-                <img src="{{ url_for('static', filename='img/mouse_brain.png') }}"/>
-
-                <hr/>
-            </div>
-            <button class="btn btn-info" data-toggle="collapse" data-target="#specimen">
-                specimen
-            </button>
-            <div id="specimen" class="collapse">
-                <hr/>
-                <div class="autocomplete">
-                    <label class="form-check-label" for="line">
-                        <strong>line(s): </strong>
+                <button class="btn btn-info" data-toggle="collapse" data-target="#include-filters-specimen">
+                    specimen
+                </button>
+                <div id="include-filters-specimen" class="collapse">
+                    <hr/>
+                    <div class="autocomplete">
+                        <label class="form-check-label" for="include-line">
+                            <strong>line(s): </strong>
+                        </label>
+                        <input type="text" id="include-line" name="include-line"
+                            aria-describedby="include-line-help"
+                            placeholder="line_1; line_2; ..." autocomplete="off"/>
+                        <small id="include-line-help" class="text-muted">must be exact</small>
+                    </div>
+                    <br/>
+                    <label class="form-check-label" for="include-gender-select">
+                        <strong>gender: </strong>
                     </label>
-                    <input type="text" id="line" name="line" aria-describedby="line-help"
-                        placeholder="line_1; line_2; ..." autocomplete="off"/>
-                    <small id="line-help" class="text-muted">must be exact</small>
+                    <select id="include-gender-select" name="include-gender-select" autocomplete="off">
+                        <option value="any">ANY</option>
+                        <option value="m">M</option>
+                        <option value="f">F</option>
+                    </select>
+                    <br/>
+                    <label class="form-check-label" for="include-cre-select">
+                        <strong>cre: </strong>
+                    </label>
+                    <select id="include-cre-select" name="cre-select" autocomplete="off">
+                        <option value="any">ANY</option>
+                        <option value="false">FALSE</option>
+                        <option value="true">TRUE</option>
+                    </select>
+                    <hr/>
                 </div>
-                <br/>
-                <label class="form-check-label" for="gender-select"><strong>gender: </strong></label>
-                <select id="gender-select" name="gender-select" autocomplete="off">
-                    <option value="any">ANY</option>
-                    <option value="m">M</option>
-                    <option value="f">F</option>
-                </select>
-                <br/>
-                <label class="form-check-label" for="cre-select"><strong>cre: </strong></label>
-                <select id="cre-select" name="cre-select" autocomplete="off">
-                    <option value="any">ANY</option>
-                    <option value="false">FALSE</option>
-                    <option value="true">TRUE</option>
-                </select>
-                <hr/>
             </div>
+            <div id="exclude-filters" class="div-exclude">
+                <button class="btn btn-info" data-toggle="collapse" data-target="#exclude-filter-id">
+                    id
+                </button>
+                <div id="exclude-filter-id" class="collapse">
+                    <hr/>
+                    <label class="form-check-label" for="exclude-experiment-id">
+                        <strong>experiment(s) id: </strong>
+                    </label>
+                    <input id="exclude-experiment-id" type="text" name="prod-id"
+                           placeholder="id_1; id_2; ..." autocomplete="off"/>
+                    <br/>
+                </div>
+                <button class="btn btn-info" data-toggle="collapse" data-target="#exclude-filters-structure">
+                    structure
+                </button>
+                <div id="exclude-filters-structure" class="collapse">
+                    <hr/>
+                    <div class="autocomplete">
+                        <label class="form-check-label" for="exclude-name">
+                            <strong>name(s): </strong>
+                        </label>
+                        <input type="text" id="exclude-name" name="exclude-name"
+                            aria-describedby="exclude-name-help"
+                            placeholder="name_1; name_2; ..." autocomplete="off"/>
+                        <small id="name-help" class="text-muted">must be exact</small>
+                    </div>
+                    <br/>
+                    <div class="autocomplete">
+                        <label class="form-check-label" for="exclude-acron">
+                            <strong>acronym(s): </strong>
+                        </label>
+                        <input id="exclude-acron" type="text" name="exclude-acron"
+                               placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
+                    </div>
+                    <br>
+                    <div class="autocomplete">
+                        <label class="form-check-label" for="exclude-prim-name">
+                            <strong>primary injection name(s): </strong>
+                        </label>
+                        <input type="text" id="exclude-prim-name" name="exclude-prim-name"
+                            aria-describedby="exclude-prim-name-help"
+                            placeholder="name_1; name_2; ..." autocomplete="off"/>
+                        <small id="exclude-prim-name-help" class="text-muted">must be exact</small>
+                    </div>
+                    <br/>
+                    <div class="autocomplete">
+                        <label class="form-check-label" for="exclude-prim-acron">
+                            <strong>primary injection acronym(s): </strong>
+                        </label>
+                        <input id="exclude-prim-acron" type="text" name="exclude-prim-acron"
+                               placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
+                    </div>
+                    <hr/>
+                </div>
+                <button class="btn btn-info" data-toggle="collapse" data-target="#exclude-filters-injection">
+                    injection
+                </button>
+                <div id="exclude-filters-injection" class="collapse">
+                    <hr/>
+                    <label class="form-check-label" for="exclude-prod-id">
+                        <strong>product(s) id: </strong>
+                    </label>
+                    <input id="exclude-prod-id" type="text" name="exclude-prod-id"
+                           placeholder="id_1; id_2; ..." autocomplete="off"/>
+                    <br/>
+                    <strong>volume: </strong>
+                    <label class="form-check-label" for="exclude-min-vol">min</label>
+                    <input type="text" id="exclude-min-vol" name="exclude-min-vol"
+                           placeholder="0.0" autocomplete="off"/>
+                    <label class="form-check-label" for="exclude-max-vol">max</label>
+                    <input type="text" id="exclude-max-vol" name="exclude-max-vol"
+                           placeholder="0.0" autocomplete="off"/>
+                    <br/>
+                    <div class="sliders">
+                        <div class="flex-container">
+                            <div class="range-info">
+                                <label class="text-dark" for="exclude-anterior">anterior:</label>
+                                <input type="text" id="exclude-anterior"
+                                    style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                            <div class="slider-div">
+                                <div id="exclude-slider-range-depth" class="slider"></div>
+                            </div>
+                            <div class="range-info">
+                                <label class="text-dark" for="exclude-posterior">posterior:</label>
+                                <input type="text" id="exclude-posterior"
+                                    style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                        </div>
+
+                        <div class="flex-container">
+                            <div class="range-info">
+                                <label class="text-dark" for="exclude-lower">lower:</label>
+                                <input type="text" id="exclude-lower"
+                                    style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                            <div class="slider-div">
+                                <div id="exclude-slider-range-height" class="slider"></div>
+                            </div>
+                            <div class="range-info">
+                                <label class="text-dark" for="exclude-higher">higher:</label>
+                                <input type="text" id="exclude-higher"
+                                    style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                        </div>
+
+                        <div class="flex-container">
+                            <div class="range-info">
+                                <label class="text-dark" for="exclude-left">left:</label>
+                                <input type="text" id="exclude-left"
+                                    style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                            <div class="slider-div">
+                                <div id="exclude-slider-range-width" class="slider"></div>
+                            </div>
+                            <div class="range-info">
+                                <label class="text-dark" for="exclude-right">right:</label>
+                                <input type="text" id="exclude-right"
+                                    style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                        </div>
+                    </div>
+
+                    {# TODO canvas to draw slider on img #}
+                    <img src="{{ url_for('static', filename='img/mouse_brain.png') }}"/>
+
+                    <hr/>
+                </div>
+                <button class="btn btn-info" data-toggle="collapse" data-target="#exclude-filters-specimen">
+                    specimen
+                </button>
+                <div id="exclude-filters-specimen" class="collapse">
+                    <hr/>
+                    <div class="autocomplete">
+                        <label class="form-check-label" for="exclude-line">
+                            <strong>line(s): </strong>
+                        </label>
+                        <input type="text" id="exclude-line" name="exclude-line"
+                            aria-describedby="exclude-line-help"
+                            placeholder="line_1; line_2; ..." autocomplete="off"/>
+                        <small id="exclude-line-help" class="text-muted">must be exact</small>
+                    </div>
+                    <br/>
+                    <label class="form-check-label" for="exclude-gender-select"><strong>gender: </strong></label>
+                    <select id="exclude-gender-select" name="exclude-gender-select" autocomplete="off">
+                        <option value="any">ANY</option>
+                        <option value="m">M</option>
+                        <option value="f">F</option>
+                    </select>
+                    <br/>
+                    <label class="form-check-label" for="exclude-cre-select"><strong>cre: </strong></label>
+                    <select id="exclude-cre-select" name="exclude-cre-select" autocomplete="off">
+                        <option value="any">ANY</option>
+                        <option value="false">FALSE</option>
+                        <option value="true">TRUE</option>
+                    </select>
+                    <hr/>
+                </div>
+            </div>
+
         </div>
 
         <div>
