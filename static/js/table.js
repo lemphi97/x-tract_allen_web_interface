@@ -187,17 +187,20 @@ function validateProducts(product, AllowedProducts)
  */
 function validateMinMax(value, includeMin, includeMax, excludeMin, excludeMax)
 {
+    var a = excludeMin <= value;
+    var b = value <= excludeMax;
+    var test = ! (excludeMin <= value && value <= excludeMax);
     var valid = (
         (isNaN(includeMin) && isNaN(includeMax)) ||
         (isNaN(includeMin) && value <= includeMax) ||
-        (includeMin <= value && isNaN(includeMax)) ||
+        (isNaN(includeMax) && includeMin <= value) ||
         (includeMin <= value && value <= includeMax)
     )
     &&
     (
         (isNaN(excludeMin) && isNaN(excludeMax)) ||
-        ! (isNaN(excludeMin) && value <= excludeMax) ||
-        ! (excludeMin <= value && isNaN(excludeMax)) ||
+        (isNaN(excludeMin) && value > excludeMax) ||
+        (isNaN(excludeMax) && excludeMin > value) ||
         ! (excludeMin <= value && value <= excludeMax)
     );
     return valid;
