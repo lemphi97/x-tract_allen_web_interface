@@ -43,8 +43,6 @@ var excludeMinY = "NaN";
 var excludeMaxY = "NaN";
 var excludeMinZ = "NaN";
 var excludeMaxZ = "NaN";
-var excludeGender = "ANY";
-var excludeCre = "ANY";
 var excludeContainsNameFilter = false;
 var excludeContainsAcronFilter = false;
 var excludeContainsPrimNameFilter = false;
@@ -187,12 +185,22 @@ function validateProducts(product, AllowedProducts)
 /*
  * return true if value is between min and max
  */
-function validateMinMax(value, min, max)
+function validateMinMax(value, includeMin, includeMax, excludeMin, excludeMax)
 {
-    return (isNaN(min) && isNaN(max)) ||
-           (isNaN(min) && value <= max) ||
-           (min <= value && isNaN(max)) ||
-           (min <= value && value <= max);
+    var valid = (
+        (isNaN(includeMin) && isNaN(includeMax)) ||
+        (isNaN(includeMin) && value <= includeMax) ||
+        (includeMin <= value && isNaN(includeMax)) ||
+        (includeMin <= value && value <= includeMax)
+    )
+    &&
+    (
+        (isNaN(excludeMin) && isNaN(excludeMax)) ||
+        ! (isNaN(excludeMin) && value <= excludeMax) ||
+        ! (excludeMin <= value && isNaN(excludeMax)) ||
+        ! (excludeMin <= value && value <= excludeMax)
+    );
+    return valid;
 }
 
 /*
@@ -274,10 +282,10 @@ $.fn.dataTable.ext.search.push
 
         if
         (
-            validateMinMax(columnVolume, includeMinVol, includeMaxVol) &&
-            validateMinMax(x, includeMinX, includeMaxX) &&
-            validateMinMax(y, includeMinY, includeMaxY) &&
-            validateMinMax(z, includeMinZ, includeMaxZ) &&
+            validateMinMax(columnVolume, includeMinVol, includeMaxVol, excludeMinVol, excludeMaxVol) &&
+            validateMinMax(x, includeMinX, includeMaxX, excludeMinX, excludeMaxX) &&
+            validateMinMax(y, includeMinY, includeMaxY, excludeMinY, excludeMaxY) &&
+            validateMinMax(z, includeMinZ, includeMaxZ, excludeMinZ, excludeMaxZ) &&
             validateSelect(columnGender, includeGender) &&
             validateSelect(columnCre, includeCre) &&
             (
@@ -287,9 +295,21 @@ $.fn.dataTable.ext.search.push
             )
             &&
             (
+                (! excludeContainsNameFilter && ! excludeContainsAcronFilter) ||
+                ! validateText(excludeNames, getStructure(columnStruct)) ||
+                ! validateText(excludeAcronyms, getAcronym(columnStruct))
+            )
+            &&
+            (
                 (! includeContainsPrimNameFilter && ! includeContainsPrimAcronFilter) ||
                 validateText(includePrimNames, getStructure(columnPrimStruct)) ||
                 validateText(includePrimAcronyms, getAcronym(columnPrimStruct))
+            )
+            &&
+            (
+                (! excludeContainsPrimNameFilter && ! excludeContainsPrimAcronFilter) ||
+                ! validateText(excludePrimNames, getStructure(columnPrimStruct)) ||
+                ! validateText(excludePrimAcronyms, getAcronym(columnPrimStruct))
             )
             &&
             (
@@ -298,8 +318,18 @@ $.fn.dataTable.ext.search.push
             )
             &&
             (
+                ! excludeContainsProdFilter ||
+                ! validateProducts(columnProduct, excludeProducts)
+            )
+            &&
+            (
                 ! includeContainsLineFilter ||
                 validateText(includeLines, columnline)
+            )
+            &&
+            (
+                ! excludeContainsLineFilter ||
+                ! validateText(excludeLines, columnline)
             )
         )
         {
@@ -324,6 +354,7 @@ $(document).ready(function ()
         "scrollX": true
     });
 
+    // include filters sliders
     $("#include-slider-range-depth").slider(
     {
         range: true,
@@ -436,12 +467,125 @@ $(document).ready(function ()
         }
     });
 
-    /*
-     * Event listener on input to filter table and re-draw it
-     */
+    // exclude filters sliders
+    $("#exclude-slider-range-depth").slider(
+    {
+        range: true,
+        min: 0,
+        max: depth_max,
+        values: [0, 0],
+        slide: function(event, ui)
+        {
+            $("#exclude-anterior").val(ui.values[0]);
+            $("#exclude-posterior").val(ui.values[1]);
+        }
+    });
 
+    $("#exclude-slider-range-height").slider(
+    {
+        range: true,
+        min: 0,
+        max: height_max,
+        values: [0, 0],
+        slide: function(event, ui)
+        {
+            $("#exclude-lower").val(ui.values[0]);
+            $("#exclude-higher").val(ui.values[1]);
+        }
+    });
+
+    $("#exclude-slider-range-width").slider(
+    {
+        range: true,
+        min: 0,
+        max: width_max,
+        values: [0, 0],
+        slide: function(event, ui)
+        {
+            $("#exclude-left").val(ui.values[0]);
+            $("#exclude-right").val(ui.values[1]);
+        }
+    });
+
+    $("#exclude-anterior").val($("#exclude-slider-range-depth").slider("values", 0));
+    $("#exclude-posterior").val($("#exclude-slider-range-depth").slider("values", 1));
+    $("#exclude-lower").val($("#exclude-slider-range-height").slider("values", 0));
+    $("#exclude-higher").val($("#exclude-slider-range-height").slider("values", 1));
+    $("#exclude-left").val($("#exclude-slider-range-width").slider("values", 0));
+    $("#exclude-right").val($("#exclude-slider-range-width").slider("values", 1));
+
+    $("#exclude-anterior").keyup(function()
+    {
+        var val = parseInt($("#exclude-anterior").val(), 10);
+        if (!isNaN(val) &&
+            val >= 0 &&
+            val <= $("#exclude-slider-range-depth").slider("values", 1))
+        {
+            $("#exclude-slider-range-depth").slider("values", 0, val);
+        }
+    });
+
+    $("#exclude-posterior").keyup(function()
+    {
+        var val = parseInt($("#exclude-posterior").val(), 10);
+        if (!isNaN(val) &&
+            val <= depth_max &&
+            val >= $("#exclude-slider-range-depth").slider("values", 0))
+        {
+            $("#exclude-slider-range-depth").slider("values", 1, val);
+        }
+    });
+
+    $("#exclude-lower").keyup(function()
+    {
+        var val = parseInt($("#exclude-lower").val(), 10);
+        if (!isNaN(val) &&
+            val >= 0 &&
+            val <= $("#exclude-slider-range-height").slider("values", 1))
+        {
+            $("#exclude-slider-range-height").slider("values", 0, val);
+        }
+    });
+
+    $("#exclude-higher").keyup(function()
+    {
+        var val = parseInt($("#exclude-higher").val(), 10);
+        if (!isNaN(val) &&
+            val <= height_max &&
+            val >= $("#exclude-slider-range-height").slider("values", 0))
+        {
+            $("#exclude-slider-range-height").slider("values", 1, val);
+        }
+    });
+
+    $("#exclude-left").keyup(function()
+    {
+        var val = parseInt($("#exclude-left").val(), 10);
+        if (!isNaN(val) &&
+            val >= 0 &&
+            val <= $("#exclude-slider-range-width").slider("values", 1))
+        {
+            $("#exclude-slider-range-width").slider("values", 0, val);
+        }
+    });
+
+    $("#exclude-right").keyup(function()
+    {
+        var val = parseInt($("#exclude-right").val(), 10);
+        if (!isNaN(val) &&
+            val <= width_max &&
+            val >= $("#exclude-slider-range-width").slider("values", 0))
+        {
+            $("#exclude-slider-range-width").slider("values", 1, val);
+        }
+    });
+
+    /*
+     * Apply filters on table and re-draw it
+     */
     $('#apply').click(function()
     {
+        // get include filters
         includeNames = $('#include-name').val().split(";");
         includeContainsNameFilter = false;
         for (i = 0; i < includeNames.length; i++)
@@ -519,7 +663,73 @@ $(document).ready(function ()
         includeGender = $('#include-gender-select').val();
         includeCre = $('#include-cre-select').val();
 
-        /*
+        // get exclude filters
+        excludeNames = $('#exclude-name').val().split(";");
+        excludeContainsNameFilter = false;
+        for (i = 0; i < excludeNames.length; i++)
+        {
+            if (excludeNames[i].trim() != "")
+            {
+                excludeContainsNameFilter = true;
+                break;
+            }
+        }
+
+        excludeAcronyms = $('#exclude-acron').val().split(";");
+        excludeContainsAcronFilter = false;
+        for (i = 0; i < excludeAcronyms.length; i++)
+        {
+            if (excludeAcronyms[i].trim() != "")
+            {
+                excludeContainsAcronFilter = true;
+                break;
+            }
+        }
+
+        excludePrimNames = $('#exclude-prim-name').val().split(";");
+        excludeContainsPrimNameFilter = false;
+        for (i = 0; i < excludePrimNames.length; i++)
+        {
+            if (excludePrimNames[i].trim() != "")
+            {
+                excludeContainsPrimNameFilter = true;
+                break;
+            }
+        }
+
+        excludePrimAcronyms = $('#exclude-prim-acron').val().split(";");
+        excludeContainsPrimAcronFilter = false;
+        for (i = 0; i < excludePrimAcronyms.length; i++)
+        {
+            if (excludePrimAcronyms[i].trim() != "")
+            {
+                excludeContainsPrimAcronFilter = true;
+                break;
+            }
+        }
+
+        excludeProducts = $('#exclude-prod-id').val().split(";");
+        excludeContainsProdFilter = false;
+        for (i = 0; i < excludeProducts.length; i++)
+        {
+            if (excludeProducts[i].trim() != "")
+            {
+                excludeContainsProdFilter = true;
+                break;
+            }
+        }
+
+        excludeLines = $('#exclude-line').val().split(";");
+        excludeContainsLineFilter = false;
+        for (i = 0; i < excludeLines.length; i++)
+        {
+            if (excludeLines[i].trim() != "")
+            {
+                excludeContainsLineFilter = true;
+                break;
+            }
+        }
+
         excludeMinVol = parseFloat($('#exclude-min-vol').val(), 10);
         excludeMaxVol = parseFloat($('#exclude-max-vol').val(), 10);
         excludeMinX = parseInt($("#exclude-slider-range-depth").slider("values", 0), 10);
@@ -528,10 +738,8 @@ $(document).ready(function ()
         excludeMaxY = parseInt($("#exclude-slider-range-height").slider("values", 1), 10);
         excludeMinZ = parseInt($("#exclude-slider-range-width").slider("values", 0), 10);
         excludeMaxZ = parseInt($("#exclude-slider-range-width").slider("values", 1), 10);
-        excludeGender = $('#exclude-gender-select').val();
-        excludeCre = $('#exclude-cre-select').val();
-        */
 
+        // redraw table
         table.draw();
     });
 
