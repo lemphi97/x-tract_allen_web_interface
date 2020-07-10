@@ -153,7 +153,8 @@ function caseInsensitiveArrayInclude(array, str)
     var included = false;
     for (i = 0; i < array.length; i++)
     {
-        if (array[i].trim().toUpperCase().localeCompare(str.toUpperCase()) == 0)
+        var elem = array[i].trim();
+        if (elem != "" && str.toUpperCase().includes(elem.toUpperCase()))
         {
             included = true;
             break;
@@ -187,9 +188,6 @@ function validateProducts(product, AllowedProducts)
  */
 function validateMinMax(value, includeMin, includeMax, excludeMin, excludeMax)
 {
-    var a = excludeMin <= value;
-    var b = value <= excludeMax;
-    var test = ! (excludeMin <= value && value <= excludeMax);
     var valid = (
         (isNaN(includeMin) && isNaN(includeMax)) ||
         (isNaN(includeMin) && value <= includeMax) ||
@@ -299,8 +297,10 @@ $.fn.dataTable.ext.search.push
             &&
             (
                 (! excludeContainsNameFilter && ! excludeContainsAcronFilter) ||
-                ! validateText(excludeNames, getStructure(columnStruct)) ||
-                ! validateText(excludeAcronyms, getAcronym(columnStruct))
+                ! (
+                    validateText(excludeNames, getStructure(columnStruct)) ||
+                    validateText(excludeAcronyms, getAcronym(columnStruct))
+                )
             )
             &&
             (
@@ -311,8 +311,10 @@ $.fn.dataTable.ext.search.push
             &&
             (
                 (! excludeContainsPrimNameFilter && ! excludeContainsPrimAcronFilter) ||
-                ! validateText(excludePrimNames, getStructure(columnPrimStruct)) ||
-                ! validateText(excludePrimAcronyms, getAcronym(columnPrimStruct))
+                ! (
+                    validateText(excludePrimNames, getStructure(columnPrimStruct)) ||
+                    validateText(excludePrimAcronyms, getAcronym(columnPrimStruct))
+                )
             )
             &&
             (
