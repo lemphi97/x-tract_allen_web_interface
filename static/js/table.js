@@ -353,11 +353,108 @@ $(document).ready(function ()
     var height_max = 7800;
     var width_max = 11300;
 
+    var includeCanvas = document.getElementById("include-brain-canvas").getContext("2d");
+    var excludeCanvas = document.getElementById("exclude-brain-canvas").getContext("2d");
+    var mouseBrainImg = document.getElementById("mouse-brain-img");
+    includeCanvas.drawImage(mouseBrainImg, 0, 0, 600, 200);
+    excludeCanvas.drawImage(mouseBrainImg, 0, 0, 600, 200);
+
     // activate datatable
     table = $('#experiments').DataTable(
     {
         "scrollX": true
     });
+
+    // canvas must be 600x200 for it to work
+    function drawSliders(isInclude)
+    {
+        var context = excludeCanvas;
+        var prefix = "exclude";
+        if (isInclude)
+        {
+            context = includeCanvas;
+            prefix = "include";
+        }
+
+        // expected starting and ending point for drawing lines in canvas:
+        var coronalAxisX = [20, 161];
+        var coronalAxisY = [48, 145];
+        var sagittalAxisX = [202, 390];
+        var sagittalAxisY = [45, 145];
+        var horizontalAxisX = [448, 578];
+        var horizontalAxisY = [17, 180];
+
+        // get sliders values
+        var depthRatio = [
+            $("#" + prefix + "-slider-range-depth").slider("values", 0) / depth_max,
+            $("#" + prefix + "-slider-range-depth").slider("values", 1) / depth_max
+        ];
+        var heightRatio = [
+            $("#" + prefix + "-slider-range-height").slider("values", 0) / height_max,
+            $("#" + prefix + "-slider-range-height").slider("values", 1) / height_max
+        ];
+        var widthRatio = [
+            $("#" + prefix + "-slider-range-width").slider("values", 0) / width_max,
+            $("#" + prefix + "-slider-range-width").slider("values", 1) / width_max
+        ];
+
+        context.clearRect(0, 0, 600, 200);
+        context.drawImage(mouseBrainImg, 0, 0, 600, 200);
+        context.lineWidth = 2;
+        var x = 0;
+        var y = 0;
+
+        // draw depth slider
+        context.beginPath();
+        context.strokeStyle = "red";
+        x = sagittalAxisX[0] + (depthRatio[0] * (sagittalAxisX[1] - sagittalAxisX[0]));
+        context.moveTo(x, sagittalAxisY[0]);
+        context.lineTo(x, sagittalAxisY[1]);
+        x = sagittalAxisX[0] + (depthRatio[1] * (sagittalAxisX[1] - sagittalAxisX[0]));
+        context.moveTo(x, sagittalAxisY[0]);
+        context.lineTo(x, sagittalAxisY[1]);
+        y = horizontalAxisY[0] + (depthRatio[0] * (horizontalAxisY[1] - horizontalAxisY[0]));
+        context.moveTo(horizontalAxisX[0], y);
+        context.lineTo(horizontalAxisX[1], y);
+        y = horizontalAxisY[0] + (depthRatio[1] * (horizontalAxisY[1] - horizontalAxisY[0]));
+        context.moveTo(horizontalAxisX[0], y);
+        context.lineTo(horizontalAxisX[1], y);
+        context.stroke();
+
+        // draw height slider
+        context.beginPath();
+        context.strokeStyle = "blue";
+        y = coronalAxisY[0] + (heightRatio[0] * (coronalAxisY[1] - coronalAxisY[0]));
+        context.moveTo(coronalAxisX[0], y);
+        context.lineTo(coronalAxisX[1], y);
+        y = coronalAxisY[0] + (heightRatio[1] * (coronalAxisY[1] - coronalAxisY[0]));
+        context.moveTo(coronalAxisX[0], y);
+        context.lineTo(coronalAxisX[1], y);
+        y = sagittalAxisY[0] + (heightRatio[0] * (sagittalAxisY[1] - sagittalAxisY[0]));
+        context.moveTo(sagittalAxisX[0], y);
+        context.lineTo(sagittalAxisX[1], y);
+        y = sagittalAxisY[0] + (heightRatio[1] * (sagittalAxisY[1] - sagittalAxisY[0]));
+        context.moveTo(sagittalAxisX[0], y);
+        context.lineTo(sagittalAxisX[1], y);
+        context.stroke();
+
+        // draw width slider
+        context.beginPath();
+        context.strokeStyle = "green";
+        x = coronalAxisX[0] + (widthRatio[0] * (coronalAxisX[1] - coronalAxisX[0]));
+        context.moveTo(x, coronalAxisY[0]);
+        context.lineTo(x, coronalAxisY[1]);
+        x = coronalAxisX[0] + (widthRatio[1] * (coronalAxisX[1] - coronalAxisX[0]));
+        context.moveTo(x, coronalAxisY[0]);
+        context.lineTo(x, coronalAxisY[1]);
+        x = horizontalAxisX[0] + (widthRatio[0] * (horizontalAxisX[1] - horizontalAxisX[0]));
+        context.moveTo(x, horizontalAxisY[0]);
+        context.lineTo(x, horizontalAxisY[1]);
+        x = horizontalAxisX[0] + (widthRatio[1] * (horizontalAxisX[1] - horizontalAxisX[0]));
+        context.moveTo(x, horizontalAxisY[0]);
+        context.lineTo(x, horizontalAxisY[1]);
+        context.stroke();
+    }
 
     // include filters sliders
     $("#include-slider-range-depth").slider(
@@ -370,6 +467,7 @@ $(document).ready(function ()
         {
             $("#include-anterior").val(ui.values[0]);
             $("#include-posterior").val(ui.values[1]);
+            drawSliders(true);
         }
     });
 
@@ -383,6 +481,7 @@ $(document).ready(function ()
         {
             $("#include-lower").val(ui.values[0]);
             $("#include-higher").val(ui.values[1]);
+            drawSliders(true);
         }
     });
 
@@ -396,6 +495,7 @@ $(document).ready(function ()
         {
             $("#include-left").val(ui.values[0]);
             $("#include-right").val(ui.values[1]);
+            drawSliders(true);
         }
     });
 
@@ -414,6 +514,7 @@ $(document).ready(function ()
             val <= $("#include-slider-range-depth").slider("values", 1))
         {
             $("#include-slider-range-depth").slider("values", 0, val);
+            drawSliders(true);
         }
     });
 
@@ -425,6 +526,7 @@ $(document).ready(function ()
             val >= $("#include-slider-range-depth").slider("values", 0))
         {
             $("#include-slider-range-depth").slider("values", 1, val);
+            drawSliders(true);
         }
     });
 
@@ -436,6 +538,7 @@ $(document).ready(function ()
             val <= $("#include-slider-range-height").slider("values", 1))
         {
             $("#include-slider-range-height").slider("values", 0, val);
+            drawSliders(true);
         }
     });
 
@@ -447,6 +550,7 @@ $(document).ready(function ()
             val >= $("#include-slider-range-height").slider("values", 0))
         {
             $("#include-slider-range-height").slider("values", 1, val);
+            drawSliders(true);
         }
     });
 
@@ -458,6 +562,7 @@ $(document).ready(function ()
             val <= $("#include-slider-range-width").slider("values", 1))
         {
             $("#include-slider-range-width").slider("values", 0, val);
+            drawSliders(true);
         }
     });
 
@@ -469,8 +574,11 @@ $(document).ready(function ()
             val >= $("#include-slider-range-width").slider("values", 0))
         {
             $("#include-slider-range-width").slider("values", 1, val);
+            drawSliders(true);
         }
     });
+
+    drawSliders(true); // draw include sliders on load
 
     // exclude filters sliders
     $("#exclude-slider-range-depth").slider(
@@ -483,6 +591,7 @@ $(document).ready(function ()
         {
             $("#exclude-anterior").val(ui.values[0]);
             $("#exclude-posterior").val(ui.values[1]);
+            drawSliders(false);
         }
     });
 
@@ -496,6 +605,7 @@ $(document).ready(function ()
         {
             $("#exclude-lower").val(ui.values[0]);
             $("#exclude-higher").val(ui.values[1]);
+            drawSliders(false);
         }
     });
 
@@ -509,6 +619,7 @@ $(document).ready(function ()
         {
             $("#exclude-left").val(ui.values[0]);
             $("#exclude-right").val(ui.values[1]);
+            drawSliders(false);
         }
     });
 
@@ -527,6 +638,7 @@ $(document).ready(function ()
             val <= $("#exclude-slider-range-depth").slider("values", 1))
         {
             $("#exclude-slider-range-depth").slider("values", 0, val);
+            drawSliders(false);
         }
     });
 
@@ -538,6 +650,7 @@ $(document).ready(function ()
             val >= $("#exclude-slider-range-depth").slider("values", 0))
         {
             $("#exclude-slider-range-depth").slider("values", 1, val);
+            drawSliders(false);
         }
     });
 
@@ -549,6 +662,7 @@ $(document).ready(function ()
             val <= $("#exclude-slider-range-height").slider("values", 1))
         {
             $("#exclude-slider-range-height").slider("values", 0, val);
+            drawSliders(false);
         }
     });
 
@@ -560,6 +674,7 @@ $(document).ready(function ()
             val >= $("#exclude-slider-range-height").slider("values", 0))
         {
             $("#exclude-slider-range-height").slider("values", 1, val);
+            drawSliders(false);
         }
     });
 
@@ -571,6 +686,7 @@ $(document).ready(function ()
             val <= $("#exclude-slider-range-width").slider("values", 1))
         {
             $("#exclude-slider-range-width").slider("values", 0, val);
+            drawSliders(false);
         }
     });
 
@@ -582,8 +698,11 @@ $(document).ready(function ()
             val >= $("#exclude-slider-range-width").slider("values", 0))
         {
             $("#exclude-slider-range-width").slider("values", 1, val);
+            drawSliders(false);
         }
     });
+
+    drawSliders(false); // draw exclude sliders on load
 
     /*
      * Apply filters on table and re-draw it
@@ -743,7 +862,7 @@ $(document).ready(function ()
         excludeMaxY = parseInt($("#exclude-slider-range-height").slider("values", 1), 10);
         excludeMinZ = parseInt($("#exclude-slider-range-width").slider("values", 0), 10);
         excludeMaxZ = parseInt($("#exclude-slider-range-width").slider("values", 1), 10);
-
+        console.log(page_url);
         // redraw table
         table.draw();
     });

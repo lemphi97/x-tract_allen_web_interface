@@ -159,7 +159,10 @@
                     </div>
 
                     {# TODO canvas to draw slider on img #}
-                    <img src="{{ url_for('static', filename='img/mouse_brain.png') }}"/>
+                    <img id="mouse-brain-img" src="{{ url_for('static', filename='img/mouse_brain.png') }}"/>
+                    <canvas id="include-brain-canvas" width="600" height="200">
+                        Your browser does not support the HTML5 canvas tag.
+                    </canvas>
 
                     <hr/>
                 </div>
@@ -322,8 +325,9 @@
                         </div>
                     </div>
 
-                    {# TODO canvas to draw slider on img #}
-                    <img src="{{ url_for('static', filename='img/mouse_brain.png') }}"/>
+                    <canvas id="exclude-brain-canvas" width="600" height="200">
+                        Your browser does not support the HTML5 canvas tag.
+                    </canvas>
 
                     <hr/>
                 </div>

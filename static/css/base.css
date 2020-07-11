@@ -1,5 +1,6 @@
 .content {
     padding: 10px 13px 10px 13px;
+    overflow: auto;
 }
 
 .content h1,
@@ -44,4 +45,8 @@
     position: absolute;
     right: 0px;
     margin: 0px 25px 0px 0px;
+}
+
+#mouse-brain-img {
+    display: none;
 }
