@@ -131,25 +131,25 @@ def interface():
 def experiments():
     return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
 
-@app.route("/experiments/filter/<filters>/")
-def experiments_search(filters):
-    return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
-
-@app.route("/experiments/<exp_id>/")
-def experiment(exp_id):
-    exp = all_exp.loc[int(exp_id)]
-    struct = st_dict[exp['structure_id']]
-    prim_inj_struct = st_dict[exp['primary_injection_structure']]
-    sect_id, res, ranges = utils.get_exp_img_sections_info(exp_id)
-    return flask.render_template(
-        "experiment.html.j2",
-        exp=exp,
-        struct=struct,
-        prim_inj_struct=prim_inj_struct,
-        sect_id=sect_id,
-        sect_res=res,
-        sect_ranges=ranges
-    )
+@app.route("/experiments/<param>/")
+def experiment_search(param):
+    if (param.isdigit()):
+        exp = all_exp.loc[int(param)]
+        struct = st_dict[exp['structure_id']]
+        prim_inj_struct = st_dict[exp['primary_injection_structure']]
+        sect_id, res, ranges = utils.get_exp_img_sections_info(param)
+        return flask.render_template(
+            "experiment.html.j2",
+            exp=exp,
+            struct=struct,
+            prim_inj_struct=prim_inj_struct,
+            sect_id=sect_id,
+            sect_res=res,
+            sect_ranges=ranges
+        )
+    else:
+        # For using pre-establish filters specified in the url
+        return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
 
 @app.route("/volume_viewer/")
 def volume_viewer():
