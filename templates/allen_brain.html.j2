@@ -41,10 +41,10 @@
                 </button>
                 <div id="include-filters-id" class="collapse">
                     <hr/>
-                    <label class="form-check-label" for="include-experiment-id">
+                    <label class="form-check-label" for="include-id">
                         <strong>experiment(s) id: </strong>
                     </label>
-                    <input id="include-experiment-id" type="text" name="include-experiment-id"
+                    <input id="include-id" type="text" name="include-id"
                            placeholder="id_1; id_2; ..." autocomplete="off"/>
                     <br/>
                 </div>
@@ -158,7 +158,6 @@
                         </div>
                     </div>
 
-                    {# TODO canvas to draw slider on img #}
                     <img id="mouse-brain-img" src="{{ url_for('static', filename='img/mouse_brain.png') }}"/>
                     <canvas id="include-brain-canvas" width="600" height="200">
                         Your browser does not support the HTML5 canvas tag.
@@ -207,10 +206,10 @@
                 </button>
                 <div id="exclude-filter-id" class="collapse">
                     <hr/>
-                    <label class="form-check-label" for="exclude-experiment-id">
+                    <label class="form-check-label" for="exclude-id">
                         <strong>experiment(s) id: </strong>
                     </label>
-                    <input id="exclude-experiment-id" type="text" name="prod-id"
+                    <input id="exclude-id" type="text" name="exclude-id"
                            placeholder="id_1; id_2; ..." autocomplete="off"/>
                     <br/>
                 </div>
@@ -358,10 +357,13 @@
             <button id="generate-url" class="btn btn-primary">
                 generate url
             </button>
-            <div class="input-group mb-3" style="display: none;">
-                <input type="text" id="filter-url" class="form-control" value="" disabled>
+            <div id="div-filter-url" class="input-group mb-3">
+                <input type="text" id="filter-url" class="form-control" value="" disabled/>
                 <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button">Copy</button>
+                    <button class="btn btn-outline-secondary" type="button"
+                            onclick="copy('filter-url')">
+                        Copy
+                    </button>
                 </div>
             </div>
         </div>

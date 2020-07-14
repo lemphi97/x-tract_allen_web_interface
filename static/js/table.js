@@ -346,8 +346,7 @@ $.fn.dataTable.ext.search.push
 
 $(document).ready(function ()
 {
-    var page_url = window.location.href;
-    console.log(page_url);
+    var pageUrl = window.location.href.split('/');
 
     var depth_max = 13100;
     var height_max = 7800;
@@ -365,6 +364,10 @@ $(document).ready(function ()
         "scrollX": true
     });
 
+    //
+    // Sliders
+    //
+
     // canvas must be 600x200 for it to work
     function drawSliders(isInclude)
     {
@@ -376,7 +379,7 @@ $(document).ready(function ()
             prefix = "include";
         }
 
-        // expected starting and ending point for drawing lines in canvas:
+        // expected starting and ending pixels for drawing lines in canvas:
         var coronalAxisX = [20, 161];
         var coronalAxisY = [48, 145];
         var sagittalAxisX = [202, 390];
@@ -854,6 +857,7 @@ $(document).ready(function ()
             }
         }
 
+        excludeAcronyms = $('#exclude-acron').val().split(";");
         excludeMinVol = parseFloat($('#exclude-min-vol').val(), 10);
         excludeMaxVol = parseFloat($('#exclude-max-vol').val(), 10);
         excludeMinX = parseInt($("#exclude-slider-range-depth").slider("values", 0), 10);
@@ -862,10 +866,67 @@ $(document).ready(function ()
         excludeMaxY = parseInt($("#exclude-slider-range-height").slider("values", 1), 10);
         excludeMinZ = parseInt($("#exclude-slider-range-width").slider("values", 0), 10);
         excludeMaxZ = parseInt($("#exclude-slider-range-width").slider("values", 1), 10);
-        console.log(page_url);
+
         // redraw table
         table.draw();
     });
+
+    // generating URL to make save search and share them
+    $('#generate-url').click(function()
+    {
+        var searchUrl = pageUrl[0] + "//" + pageUrl[2] + "/" + pageUrl[3] + "/filter/"
+
+        var firstFilterInUrl = true;
+        var filtersId = ["include-id", "exclude-id",
+                         "include-name", "exclude-name",
+                         "include-prim-name", "exclude-prim-name",
+                         "include-prim-acron", "exclude-prim-acron",
+                         "include-prod-id", "exclude-prod-id",
+                         "include-line", "exclude-line",
+                         "include-min-vol", "exclude-min-vol",
+                         "include-max-vol", "exclude-max-vol",
+                         "include-gender-select",
+                         "include-cre-select"];
+
+        filtersId.forEach(function(item, index)
+        {
+            var value = $('#' + item).val().trim();
+
+            // if filter was set (not empty, it will be saved in URL
+            if (value)
+            {
+                if (firstFilterInUrl)
+                {
+                    firstFilterInUrl = false;
+                }
+                else
+                {
+                    searchUrl += '?'
+                }
+
+                searchUrl += item + ':"' + value + '"';
+            }
+        });
+
+        function addSliderToUrl(sliderId, minId, maxId)
+        {
+            return '?' + minId + ':"' + $('#' + sliderId).slider("values", 0) + '"' +
+                   '?' + maxId + ':"' + $('#' + sliderId).slider("values", 1) + '"';
+        }
+
+        // sliders filters
+        searchUrl += addSliderToUrl("include-slider-range-depth", "include-anterior", "include-posterior") +
+                     addSliderToUrl("exclude-slider-range-depth", "exclude-anterior", "exclude-posterior") +
+                     addSliderToUrl("include-slider-range-height", "include-lower", "include-higher") +
+                     addSliderToUrl("exclude-slider-range-height", "exclude-lower", "exclude-higher") +
+                     addSliderToUrl("include-slider-range-width", "include-left", "include-right") +
+                     addSliderToUrl("exclude-slider-range-width", "exclude-left", "exclude-right");
+
+        console.log("Generated url: " + searchUrl);
+        $("#filter-url").val(searchUrl);
+
+        $('#div-filter-url').css("display", "auto"); // show input field
+    })
 
     // columns visibilty in datatable
     $('.toggle-vis').on('click', function(e)
@@ -877,6 +938,9 @@ $(document).ready(function ()
         column.visible(! column.visible());
     });
 
+    //
+    // Configure autocomplete
+    //
     var structures = getStructures(table.column(1).data().unique());
     var structuresAcronyms = getAcronyms(table.column(1).data().unique());
     var primStructures = getStructures(table.column(2).data().unique());
@@ -894,4 +958,47 @@ $(document).ready(function ()
     autocomplete(document.getElementById("exclude-prim-name"), primStructures);
     autocomplete(document.getElementById("exclude-prim-acron"), primStructuresAcronyms);
     autocomplete(document.getElementById("exclude-line"), specimenLines);
+
+    //
+    // Apply filters based on url
+    //
+    if (pageUrl.length > 4 && pageUrl[4].localeCompare("filter") == 0)
+    {
+        console.log("Applying pre-establish filters...");
+        var filter = pageUrl[5];
+        var index = 0;
+        while (index < filter.length)
+        {
+            var filterField = "";
+            while (filter[index] != ':' && index < filter.length)
+            {
+                filterField += filter[index];
+                index++;
+            }
+            index++; // go over double dot char
+            index++; // go over quote char
+
+            var value = "";
+            while (filter[index] != '"' && index < filter.length)
+            {
+                value += filter[index];
+                index++;
+            }
+            index++; // go over quote char
+
+            // set value in element id
+            $("#" + filterField).val(value).change();
+            $("#" + filterField).keyup(); // update a slider via text input
+
+            // go to the next filter field
+            while (filter[index] != '?' && index < filter.length)
+            {
+                index++;
+            }
+            index++; // go over comma char
+        }
+
+        // Apply filters
+        document.getElementById('apply').click();
+    }
 });
