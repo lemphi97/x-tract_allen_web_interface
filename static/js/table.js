@@ -218,39 +218,6 @@ function validateSelect(value, allowedValue)
     return false;
 }
 
-// TODO Seems to kinda break if there is too many columns. fix?
-// Event is finish before we copy to clipboard, so browser think it wasn't triggered by user:
-// https://stackoverflow.com/questions/41094318/firefox-document-execcommand-cut-copy-was-denied-because-it-was-not-calle
-function copyColumnToClipboard(columnNumber)
-{
-    var arrayColumn = getColumn(table, columnNumber);
-    var strColumn = "";
-    var i = 0
-    while(i < arrayColumn.length - 1)
-    {
-        strColumn += arrayColumn[i] + ';';
-        i++;
-    }
-    strColumn += arrayColumn[i];
-
-    // Create a temporary input field
-    let input = document.createElement('input');
-    input.value = strColumn;
-    document.body.appendChild(input);
-
-    // Select the text field
-    input.select();
-    input.setSelectionRange(0, 99999); /*For mobile devices*/
-
-    // Copy the text inside the text field
-    document.execCommand("copy");
-
-    // Remove the temporary field
-    document.body.removeChild(input);
-
-    alert("ids copied to clipboard.");
-}
-
 /* Custom filtering function which will validate each lines */
 $.fn.dataTable.ext.search.push
 (
@@ -870,7 +837,9 @@ $(document).ready(function ()
         table.draw();
     });
 
-    // generating URL to make save search and share them
+    //
+    // generating URL to make save search and share them. Offer copy to clipboard
+    //
     $('#generate-url').click(function()
     {
         var searchUrl = pageUrl[0] + "//" + pageUrl[2] + "/" + pageUrl[3] + "/filter/"
@@ -915,7 +884,7 @@ $(document).ready(function ()
         $("#filter-url").val(searchUrl);
 
         $(".filter-url-group").css("display", "inline"); // show input field
-    })
+    });
 
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Interact_with_the_clipboard
     function copyLink() {
@@ -935,7 +904,9 @@ $(document).ready(function ()
 
     document.querySelector("#filter-url").addEventListener("click", copyLink);
 
+    //
     // columns visibilty in datatable
+    //
     $('.toggle-vis').on('click', function(e)
     {
         // Get the column API object
@@ -965,6 +936,44 @@ $(document).ready(function ()
     autocomplete(document.getElementById("exclude-prim-name"), primStructures);
     autocomplete(document.getElementById("exclude-prim-acron"), primStructuresAcronyms);
     autocomplete(document.getElementById("exclude-line"), specimenLines);
+
+    //
+    // Get all ids and copy them
+    //
+    $('#copy-id-btn').click(function()
+    {
+        var arrayColumn = getColumn(table, 0);
+        var strColumn = "";
+        var i = 0
+        while(i < arrayColumn.length - 1)
+        {
+            strColumn += arrayColumn[i] + ';';
+            i++;
+        }
+        strColumn += arrayColumn[i];
+
+        $("#copy-ids-input").val(strColumn);
+
+        $(".copy-ids-group").css("display", "inline"); // show input field
+    });
+
+    // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Interact_with_the_clipboard
+    function copyLink() {
+        var elemToCopy = document.querySelector("#copy-ids-input");
+
+        elemToCopy.select(); // Select the text field
+        elemToCopy.setSelectionRange(0, 99999); // For mobile devices
+        if (document.execCommand("copy"))
+        {
+            document.getElementById("label-copy-ids").innerHTML = "link copied";
+        }
+        else
+        {
+            document.getElementById("label-copy-ids").innerHTML = "couldn't copy";
+        }
+    }
+
+    document.querySelector("#copy-ids-input").addEventListener("click", copyLink);
 
     //
     // Apply filters based on url

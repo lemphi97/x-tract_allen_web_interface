@@ -507,9 +507,11 @@
                 {% endfor %}
             </tbody>
         </table>
-        <button id="copy-id-btn" type="button" onclick="copyColumnToClipboard(0)">
+        <button id="copy-id-btn" class="btn btn-outline-primary">
             copy id(s)
         </button>
+        <input type="text" id="copy-ids-input" class="copy-ids-group" value=""/>
+        <label id="label-copy-ids" class="copy-ids-group" for="copy-ids-input">Click to copy</label>
     </div>
     <hr/>
     <div class="content-bg">

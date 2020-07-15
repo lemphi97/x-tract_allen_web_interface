@@ -62,9 +62,15 @@
 }
 
 .columns-vis {
-    color: black
+    color: black;
 }
 
 .columns-vis>ul>li {
-    color: black
+    color: black;
+}
+
+.copy-ids-group {
+    display: none;
+    min-width: 50px;
+    max-width: 400px;
 }
