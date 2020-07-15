@@ -65,7 +65,6 @@ function showExcludeFilters()
     $("#exclude-filters").css("display", "block");
 }
 
-// TODO Seems to kinda break if there is too many columns. fix?
 function getColumn(datatableVar, columnIndex)
 {
     array_column_data = [];
@@ -219,6 +218,9 @@ function validateSelect(value, allowedValue)
     return false;
 }
 
+// TODO Seems to kinda break if there is too many columns. fix?
+// Event is finish before we copy to clipboard, so browser think it wasn't triggered by user:
+// https://stackoverflow.com/questions/41094318/firefox-document-execcommand-cut-copy-was-denied-because-it-was-not-calle
 function copyColumnToClipboard(columnNumber)
 {
     var arrayColumn = getColumn(table, columnNumber);
@@ -475,8 +477,8 @@ $(document).ready(function ()
         values: [0, height_max],
         slide: function(event, ui)
         {
-            $("#include-lower").val(ui.values[0]);
-            $("#include-higher").val(ui.values[1]);
+            $("#include-higher").val(ui.values[0]);
+            $("#include-lower").val(ui.values[1]);
             drawSliders(true);
         }
     });
@@ -497,8 +499,8 @@ $(document).ready(function ()
 
     $("#include-anterior").val($("#include-slider-range-depth").slider("values", 0));
     $("#include-posterior").val($("#include-slider-range-depth").slider("values", 1));
-    $("#include-lower").val($("#include-slider-range-height").slider("values", 0));
-    $("#include-higher").val($("#include-slider-range-height").slider("values", 1));
+    $("#include-higher").val($("#include-slider-range-height").slider("values", 0));
+    $("#include-lower").val($("#include-slider-range-height").slider("values", 1));
     $("#include-left").val($("#include-slider-range-width").slider("values", 0));
     $("#include-right").val($("#include-slider-range-width").slider("values", 1));
 
@@ -526,9 +528,9 @@ $(document).ready(function ()
         }
     });
 
-    $("#include-lower").keyup(function()
+    $("#include-higher").keyup(function()
     {
-        var val = parseInt($("#include-lower").val(), 10);
+        var val = parseInt($("#include-higher").val(), 10);
         if (!isNaN(val) &&
             val >= 0 &&
             val <= $("#include-slider-range-height").slider("values", 1))
@@ -538,9 +540,9 @@ $(document).ready(function ()
         }
     });
 
-    $("#include-higher").keyup(function()
+    $("#include-lower").keyup(function()
     {
-        var val = parseInt($("#include-higher").val(), 10);
+        var val = parseInt($("#include-lower").val(), 10);
         if (!isNaN(val) &&
             val <= height_max &&
             val >= $("#include-slider-range-height").slider("values", 0))
@@ -599,8 +601,8 @@ $(document).ready(function ()
         values: [0, 0],
         slide: function(event, ui)
         {
-            $("#exclude-lower").val(ui.values[0]);
-            $("#exclude-higher").val(ui.values[1]);
+            $("#exclude-higher").val(ui.values[0]);
+            $("#exclude-lower").val(ui.values[1]);
             drawSliders(false);
         }
     });
@@ -621,8 +623,8 @@ $(document).ready(function ()
 
     $("#exclude-anterior").val($("#exclude-slider-range-depth").slider("values", 0));
     $("#exclude-posterior").val($("#exclude-slider-range-depth").slider("values", 1));
-    $("#exclude-lower").val($("#exclude-slider-range-height").slider("values", 0));
-    $("#exclude-higher").val($("#exclude-slider-range-height").slider("values", 1));
+    $("#exclude-higher").val($("#exclude-slider-range-height").slider("values", 0));
+    $("#exclude-lower").val($("#exclude-slider-range-height").slider("values", 1));
     $("#exclude-left").val($("#exclude-slider-range-width").slider("values", 0));
     $("#exclude-right").val($("#exclude-slider-range-width").slider("values", 1));
 
@@ -650,9 +652,9 @@ $(document).ready(function ()
         }
     });
 
-    $("#exclude-lower").keyup(function()
+    $("#exclude-higher").keyup(function()
     {
-        var val = parseInt($("#exclude-lower").val(), 10);
+        var val = parseInt($("#exclude-higher").val(), 10);
         if (!isNaN(val) &&
             val >= 0 &&
             val <= $("#exclude-slider-range-height").slider("values", 1))
@@ -662,9 +664,9 @@ $(document).ready(function ()
         }
     });
 
-    $("#exclude-higher").keyup(function()
+    $("#exclude-lower").keyup(function()
     {
-        var val = parseInt($("#exclude-higher").val(), 10);
+        var val = parseInt($("#exclude-lower").val(), 10);
         if (!isNaN(val) &&
             val <= height_max &&
             val >= $("#exclude-slider-range-height").slider("values", 0))
@@ -897,15 +899,15 @@ $(document).ready(function ()
 
         function addSliderToUrl(sliderId, minId, maxId)
         {
-            return '?' + minId + ':"' + $('#' + sliderId).slider("values", 0) + '"' +
-                   '?' + maxId + ':"' + $('#' + sliderId).slider("values", 1) + '"';
+            return '?' + maxId + ':"' + $('#' + sliderId).slider("values", 1) + '"' +
+                   '?' + minId + ':"' + $('#' + sliderId).slider("values", 0) + '"';
         }
 
         // sliders filters
         searchUrl += addSliderToUrl("include-slider-range-depth", "include-anterior", "include-posterior") +
                      addSliderToUrl("exclude-slider-range-depth", "exclude-anterior", "exclude-posterior") +
-                     addSliderToUrl("include-slider-range-height", "include-lower", "include-higher") +
-                     addSliderToUrl("exclude-slider-range-height", "exclude-lower", "exclude-higher") +
+                     addSliderToUrl("include-slider-range-height", "include-higher", "include-lower") +
+                     addSliderToUrl("exclude-slider-range-height", "exclude-higher", "exclude-lower") +
                      addSliderToUrl("include-slider-range-width", "include-left", "include-right") +
                      addSliderToUrl("exclude-slider-range-width", "exclude-left", "exclude-right");
 
