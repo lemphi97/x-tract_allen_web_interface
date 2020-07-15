@@ -8,13 +8,17 @@
     align-items: center;
 }
 
-.div-include {
-    border: 2px solid green;
+#include-filters {
+    border-left: 3px solid green;
 }
 
-.div-exclude {
+#exclude-filters {
     display: none;
-    border: 2px solid red;
+    border-left: 3px solid red;
+}
+
+.div-filter-setter {
+    padding: 5px 5px 5px 5px;
 }
 
 .sliders {
@@ -47,13 +51,20 @@
     display: none;
 }
 
-#div-filter-url {
-    display: none;
-    width: 100%;
-    min-width: 375px;
+#filter-option {
+    margin-top: 5px;
 }
 
-#div-filter-url>input {
-    min-width: 300px;
-    max-width: 600px;
+.filter-url-group {
+    display: none;
+    min-width: 50px;
+    max-width: 400px;
+}
+
+.columns-vis {
+    color: black
+}
+
+.columns-vis>ul>li {
+    color: black
 }

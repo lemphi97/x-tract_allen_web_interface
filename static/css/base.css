@@ -24,14 +24,6 @@
     color: black;
 }
 
-.columns-vis {
-    color: black
-}
-
-.columns-vis>ul>li {
-    color: black
-}
-
 .footer {
     position: absolute;
     right: 0px;

@@ -249,22 +249,6 @@ function copyColumnToClipboard(columnNumber)
     alert("ids copied to clipboard.");
 }
 
-/*
- * Based on https://www.w3schools.com/howto/howto_js_copy_clipboard.asp
- * Copy field value to clipboard
-*/
-function copy(field_id) {
-    /* Get the text field */
-    var copyText = document.getElementById(field_id);
-
-    /* Select the text field */
-    copyText.select();
-    copyText.setSelectionRange(0, 99999); /*For mobile devices*/
-
-    /* Copy the text inside the text field */
-    document.execCommand("copy");
-}
-
 /* Custom filtering function which will validate each lines */
 $.fn.dataTable.ext.search.push
 (
@@ -928,8 +912,26 @@ $(document).ready(function ()
         console.log("Generated url: " + searchUrl);
         $("#filter-url").val(searchUrl);
 
-        $("#div-filter-url").css("display", "inline"); // show input field
+        $(".filter-url-group").css("display", "inline"); // show input field
     })
+
+    // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Interact_with_the_clipboard
+    function copyLink() {
+        var elemToCopy = document.querySelector("#filter-url");
+
+        elemToCopy.select(); // Select the text field
+        elemToCopy.setSelectionRange(0, 99999); // For mobile devices
+        if (document.execCommand("copy"))
+        {
+            document.getElementById("label-copy-url").innerHTML = "link copied";
+        }
+        else
+        {
+            document.getElementById("label-copy-url").innerHTML = "couldn't copy";
+        }
+    }
+
+    document.querySelector("#filter-url").addEventListener("click", copyLink);
 
     // columns visibilty in datatable
     $('.toggle-vis').on('click', function(e)

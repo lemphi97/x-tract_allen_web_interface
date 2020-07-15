@@ -35,8 +35,8 @@
                     exclude
                 </button>
             </div>
-            <div id="include-filters" class="div-include">
-                <button class="btn btn-info" data-toggle="collapse" data-target="#include-filters-id">
+            <div id="include-filters" class="div-filter-setter">
+                <button class="btn btn-outline-info" data-toggle="collapse" data-target="#include-filters-id">
                     id
                 </button>
                 <div id="include-filters-id" class="collapse">
@@ -47,8 +47,9 @@
                     <input id="include-id" type="text" name="include-id"
                            placeholder="id_1; id_2; ..." autocomplete="off"/>
                     <br/>
+                    <hr/>
                 </div>
-                <button class="btn btn-info" data-toggle="collapse" data-target="#include-filters-structure">
+                <button class="btn btn-outline-info" data-toggle="collapse" data-target="#include-filters-structure">
                     structure
                 </button>
                 <div id="include-filters-structure" class="collapse">
@@ -89,7 +90,7 @@
                     </div>
                     <hr/>
                 </div>
-                <button class="btn btn-info" data-toggle="collapse" data-target="#include-filters-injection">
+                <button class="btn btn-outline-info" data-toggle="collapse" data-target="#include-filters-injection">
                     injection
                 </button>
                 <div id="include-filters-injection" class="collapse">
@@ -174,7 +175,7 @@
 
                     <hr/>
                 </div>
-                <button class="btn btn-info" data-toggle="collapse" data-target="#include-filters-specimen">
+                <button class="btn btn-outline-info" data-toggle="collapse" data-target="#include-filters-specimen">
                     specimen
                 </button>
                 <div id="include-filters-specimen" class="collapse">
@@ -209,8 +210,8 @@
                     <hr/>
                 </div>
             </div>
-            <div id="exclude-filters" class="div-exclude">
-                <button class="btn btn-info" data-toggle="collapse" data-target="#exclude-filter-id">
+            <div id="exclude-filters" class="div-filter-setter">
+                <button class="btn btn-outline-info" data-toggle="collapse" data-target="#exclude-filter-id">
                     id
                 </button>
                 <div id="exclude-filter-id" class="collapse">
@@ -221,8 +222,9 @@
                     <input id="exclude-id" type="text" name="exclude-id"
                            placeholder="id_1; id_2; ..." autocomplete="off"/>
                     <br/>
+                    <hr/>
                 </div>
-                <button class="btn btn-info" data-toggle="collapse" data-target="#exclude-filters-structure">
+                <button class="btn btn-outline-info" data-toggle="collapse" data-target="#exclude-filters-structure">
                     structure
                 </button>
                 <div id="exclude-filters-structure" class="collapse">
@@ -264,7 +266,7 @@
                     </div>
                     <hr/>
                 </div>
-                <button class="btn btn-info" data-toggle="collapse" data-target="#exclude-filters-injection">
+                <button class="btn btn-outline-info" data-toggle="collapse" data-target="#exclude-filters-injection">
                     injection
                 </button>
                 <div id="exclude-filters-injection" class="collapse">
@@ -348,7 +350,7 @@
 
                     <hr/>
                 </div>
-                <button class="btn btn-info" data-toggle="collapse" data-target="#exclude-filters-specimen">
+                <button class="btn btn-outline-info" data-toggle="collapse" data-target="#exclude-filters-specimen">
                     specimen
                 </button>
                 <div id="exclude-filters-specimen" class="collapse">
@@ -368,18 +370,15 @@
 
         </div>
 
-        <div>
+        <div id="filter-option">
             <button id="apply" class="btn btn-success">
                 apply
             </button>
-            <button id="generate-url" class="btn btn-outline-secondary">
+            <button id="generate-url" class="btn btn-outline-primary">
                 generate url
             </button>
-            {# TODO make it more sexy #}
-            <div id="div-filter-url">
-                <input type="text" id="filter-url" class="form-control" value="" disabled/>
-                <label for="filter-url">label here</label>
-            </div>
+            <input type="text" id="filter-url" class="filter-url-group" value=""/>
+            <label id="label-copy-url" class="filter-url-group" for="filter-url">Click to copy</label>
         </div>
 
         <hr style="border: 1px solid black"/>
