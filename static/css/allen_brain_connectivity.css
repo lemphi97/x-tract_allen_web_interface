@@ -8,13 +8,26 @@
     align-items: center;
 }
 
+.div-include {
+    border: 2px solid green;
+}
+
+.div-exclude {
+    display: none;
+    border: 2px solid red;
+}
+
 .sliders {
     width: 90%;
     min-width: 600px;
 }
 
+.slider-tag {
+    width: 80px;
+}
+
 .range-info {
-    width: 150px;
+    width: 155px;
 }
 
 .range-info>input[type=text] {
@@ -28,4 +41,19 @@
 
 .slider {
     margin: 0px 15px 0px 15px;
+}
+
+#mouse-brain-img {
+    display: none;
+}
+
+#div-filter-url {
+    display: none;
+    width: 100%;
+    min-width: 375px;
+}
+
+#div-filter-url>input {
+    min-width: 300px;
+    max-width: 600px;
 }

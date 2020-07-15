@@ -110,6 +110,9 @@
                     <br/>
                     <div class="sliders">
                         <div class="flex-container">
+                            <div class="slider-tag">
+                                <strong>x axis</strong>
+                            </div>
                             <div class="range-info">
                                 <label class="text-dark" for="include-anterior">anterior:</label>
                                 <input type="text" id="include-anterior"
@@ -126,6 +129,9 @@
                         </div>
 
                         <div class="flex-container">
+                            <div class="slider-tag">
+                                <strong>y axis</strong>
+                            </div>
                             <div class="range-info">
                                 <label class="text-dark" for="include-lower">lower:</label>
                                 <input type="text" id="include-lower"
@@ -142,6 +148,9 @@
                         </div>
 
                         <div class="flex-container">
+                            <div class="slider-tag">
+                                <strong>z axis</strong>
+                            </div>
                             <div class="range-info">
                                 <label class="text-dark" for="include-left">left:</label>
                                 <input type="text" id="include-left"
@@ -276,6 +285,9 @@
                     <br/>
                     <div class="sliders">
                         <div class="flex-container">
+                            <div class="slider-tag">
+                                <strong>x axis</strong>
+                            </div>
                             <div class="range-info">
                                 <label class="text-dark" for="exclude-anterior">anterior:</label>
                                 <input type="text" id="exclude-anterior"
@@ -292,6 +304,9 @@
                         </div>
 
                         <div class="flex-container">
+                            <div class="slider-tag">
+                                <strong>y axis</strong>
+                            </div>
                             <div class="range-info">
                                 <label class="text-dark" for="exclude-lower">lower:</label>
                                 <input type="text" id="exclude-lower"
@@ -308,6 +323,9 @@
                         </div>
 
                         <div class="flex-container">
+                            <div class="slider-tag">
+                                <strong>z axis</strong>
+                            </div>
                             <div class="range-info">
                                 <label class="text-dark" for="exclude-left">left:</label>
                                 <input type="text" id="exclude-left"
@@ -354,17 +372,13 @@
             <button id="apply" class="btn btn-success">
                 apply
             </button>
-            <button id="generate-url" class="btn btn-primary">
+            <button id="generate-url" class="btn btn-outline-secondary">
                 generate url
             </button>
-            <div id="div-filter-url" class="input-group mb-3">
+            {# TODO make it more sexy #}
+            <div id="div-filter-url">
                 <input type="text" id="filter-url" class="form-control" value="" disabled/>
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button"
-                            onclick="copy('filter-url')">
-                        Copy
-                    </button>
-                </div>
+                <label for="filter-url">label here</label>
             </div>
         </div>
 

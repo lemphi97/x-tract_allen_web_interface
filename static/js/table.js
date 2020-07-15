@@ -384,7 +384,7 @@ $(document).ready(function ()
         var coronalAxisY = [48, 145];
         var sagittalAxisX = [202, 390];
         var sagittalAxisY = [45, 145];
-        var horizontalAxisX = [448, 578];
+        var horizontalAxisX = [445, 578];
         var horizontalAxisY = [17, 180];
 
         // get sliders values
@@ -876,7 +876,6 @@ $(document).ready(function ()
     {
         var searchUrl = pageUrl[0] + "//" + pageUrl[2] + "/" + pageUrl[3] + "/filter/"
 
-        var firstFilterInUrl = true;
         var filtersId = ["include-id", "exclude-id",
                          "include-name", "exclude-name",
                          "include-prim-name", "exclude-prim-name",
@@ -892,19 +891,10 @@ $(document).ready(function ()
         {
             var value = $('#' + item).val().trim();
 
-            // if filter was set (not empty, it will be saved in URL
+            // if filter was set (not empty), it will be saved in URL
             if (value)
             {
-                if (firstFilterInUrl)
-                {
-                    firstFilterInUrl = false;
-                }
-                else
-                {
-                    searchUrl += '?'
-                }
-
-                searchUrl += item + ':"' + value + '"';
+                searchUrl += '?' + item + ':"' + value + '"';
             }
         });
 
@@ -925,7 +915,7 @@ $(document).ready(function ()
         console.log("Generated url: " + searchUrl);
         $("#filter-url").val(searchUrl);
 
-        $('#div-filter-url').css("display", "auto"); // show input field
+        $("#div-filter-url").css("display", "inline"); // show input field
     })
 
     // columns visibilty in datatable
@@ -965,10 +955,12 @@ $(document).ready(function ()
     if (pageUrl.length > 4 && pageUrl[4].localeCompare("filter") == 0)
     {
         console.log("Applying pre-establish filters...");
-        var filter = pageUrl[5];
+        var filter = pageUrl[5].replace(/%22/g, "\"");
         var index = 0;
         while (index < filter.length)
         {
+            index++; // go over question mark char
+
             var filterField = "";
             while (filter[index] != ':' && index < filter.length)
             {
@@ -987,15 +979,21 @@ $(document).ready(function ()
             index++; // go over quote char
 
             // set value in element id
-            $("#" + filterField).val(value).change();
-            $("#" + filterField).keyup(); // update a slider via text input
+            if (filterField.includes("select"))
+            {
+                $("#" + filterField + " option[value=" + value + "]").attr('selected','selected');
+            }
+            else
+            {
+                $("#" + filterField).val(value);
+                $("#" + filterField).keyup(); // update a slider via text input
+            }
 
             // go to the next filter field
             while (filter[index] != '?' && index < filter.length)
             {
                 index++;
             }
-            index++; // go over comma char
         }
 
         // Apply filters

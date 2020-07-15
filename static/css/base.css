@@ -24,15 +24,6 @@
     color: black;
 }
 
-.div-include {
-    border: 2px solid green;
-}
-
-.div-exclude {
-    display: none;
-    border: 2px solid red;
-}
-
 .columns-vis {
     color: black
 }
@@ -45,12 +36,4 @@
     position: absolute;
     right: 0px;
     margin: 0px 25px 0px 0px;
-}
-
-#mouse-brain-img {
-    display: none;
-}
-
-#div-filter-url {
-    display: none;
 }
