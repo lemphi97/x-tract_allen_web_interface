@@ -5,6 +5,7 @@
 var table;
 
 // include filters:
+var includeIds = [""];
 var includeNames = [""];
 var includeAcronyms = [""];
 var includePrimNames = [""];
@@ -29,6 +30,7 @@ var includeContainsProdFilter = false;
 var includeContainsLineFilter = false;
 
 // exclude filters:
+var excludeIds = [""];
 var excludeNames = [""];
 var excludeAcronyms = [""];
 var excludePrimNames = [""];
@@ -268,6 +270,9 @@ $.fn.dataTable.ext.search.push
 (
     function(settings, data, dataIndex)
     {
+        var matchFilter = false;
+
+        var columnExpId = data[0];
         var columnStruct = data[1];
         var columnPrimStruct = data[2];
         var columnProduct = data[3];
@@ -281,66 +286,70 @@ $.fn.dataTable.ext.search.push
         var columnGender = data[8];
         var columnCre = data[9];
 
-        if
-        (
-            validateMinMax(columnVolume, includeMinVol, includeMaxVol, excludeMinVol, excludeMaxVol) &&
-            validateMinMax(x, includeMinX, includeMaxX, excludeMinX, excludeMaxX) &&
-            validateMinMax(y, includeMinY, includeMaxY, excludeMinY, excludeMaxY) &&
-            validateMinMax(z, includeMinZ, includeMaxZ, excludeMinZ, excludeMaxZ) &&
-            validateSelect(columnGender, includeGender) &&
-            validateSelect(columnCre, includeCre) &&
-            (
-                (! includeContainsNameFilter && ! includeContainsAcronFilter) ||
-                validateText(includeNames, getStructure(columnStruct)) ||
-                validateText(includeAcronyms, getAcronym(columnStruct))
-            )
-            &&
-            (
-                (! excludeContainsNameFilter && ! excludeContainsAcronFilter) ||
-                ! (
-                    validateText(excludeNames, getStructure(columnStruct)) ||
-                    validateText(excludeAcronyms, getAcronym(columnStruct))
-                )
-            )
-            &&
-            (
-                (! includeContainsPrimNameFilter && ! includeContainsPrimAcronFilter) ||
-                validateText(includePrimNames, getStructure(columnPrimStruct)) ||
-                validateText(includePrimAcronyms, getAcronym(columnPrimStruct))
-            )
-            &&
-            (
-                (! excludeContainsPrimNameFilter && ! excludeContainsPrimAcronFilter) ||
-                ! (
-                    validateText(excludePrimNames, getStructure(columnPrimStruct)) ||
-                    validateText(excludePrimAcronyms, getAcronym(columnPrimStruct))
-                )
-            )
-            &&
-            (
-                ! includeContainsProdFilter ||
-                validateProducts(columnProduct, includeProducts)
-            )
-            &&
-            (
-                ! excludeContainsProdFilter ||
-                ! validateProducts(columnProduct, excludeProducts)
-            )
-            &&
-            (
-                ! includeContainsLineFilter ||
-                validateText(includeLines, columnline)
-            )
-            &&
-            (
-                ! excludeContainsLineFilter ||
-                ! validateText(excludeLines, columnline)
-            )
-        )
+        if (validateText(includeIds, columnExpId))
         {
-            return true;
+            matchFilter = true;
         }
-        return false;
+        else if (! validateText(excludeIds, columnExpId) &&
+            (
+                validateMinMax(columnVolume, includeMinVol, includeMaxVol, excludeMinVol, excludeMaxVol) &&
+                validateMinMax(x, includeMinX, includeMaxX, excludeMinX, excludeMaxX) &&
+                validateMinMax(y, includeMinY, includeMaxY, excludeMinY, excludeMaxY) &&
+                validateMinMax(z, includeMinZ, includeMaxZ, excludeMinZ, excludeMaxZ) &&
+                validateSelect(columnGender, includeGender) &&
+                validateSelect(columnCre, includeCre) &&
+                (
+                    (! includeContainsNameFilter && ! includeContainsAcronFilter) ||
+                    validateText(includeNames, getStructure(columnStruct)) ||
+                    validateText(includeAcronyms, getAcronym(columnStruct))
+                )
+                &&
+                (
+                    (! excludeContainsNameFilter && ! excludeContainsAcronFilter) ||
+                    ! (
+                        validateText(excludeNames, getStructure(columnStruct)) ||
+                        validateText(excludeAcronyms, getAcronym(columnStruct))
+                    )
+                )
+                &&
+                (
+                    (! includeContainsPrimNameFilter && ! includeContainsPrimAcronFilter) ||
+                    validateText(includePrimNames, getStructure(columnPrimStruct)) ||
+                    validateText(includePrimAcronyms, getAcronym(columnPrimStruct))
+                )
+                &&
+                (
+                    (! excludeContainsPrimNameFilter && ! excludeContainsPrimAcronFilter) ||
+                    ! (
+                        validateText(excludePrimNames, getStructure(columnPrimStruct)) ||
+                        validateText(excludePrimAcronyms, getAcronym(columnPrimStruct))
+                    )
+                )
+                &&
+                (
+                    ! includeContainsProdFilter ||
+                    validateProducts(columnProduct, includeProducts)
+                )
+                &&
+                (
+                    ! excludeContainsProdFilter ||
+                    ! validateProducts(columnProduct, excludeProducts)
+                )
+                &&
+                (
+                    ! includeContainsLineFilter ||
+                    validateText(includeLines, columnline)
+                )
+                &&
+                (
+                    ! excludeContainsLineFilter ||
+                    ! validateText(excludeLines, columnline)
+                )
+            )
+        ){
+            matchFilter = true;
+        }
+        return matchFilter;
     }
 );
 
@@ -713,6 +722,8 @@ $(document).ready(function ()
     $('#apply').click(function()
     {
         // get include filters
+        includeIds = $('#include-id').val().split(";");
+
         includeNames = $('#include-name').val().split(";");
         includeContainsNameFilter = false;
         for (i = 0; i < includeNames.length; i++)
@@ -791,6 +802,8 @@ $(document).ready(function ()
         includeCre = $('#include-cre-select').val();
 
         // get exclude filters
+        excludeIds = $('#exclude-id').val().split(";");
+
         excludeNames = $('#exclude-name').val().split(";");
         excludeContainsNameFilter = false;
         for (i = 0; i < excludeNames.length; i++)
@@ -954,8 +967,7 @@ $(document).ready(function ()
     //
     if (pageUrl.length > 4 && pageUrl[4].localeCompare("filter") == 0)
     {
-        console.log("Applying pre-establish filters...");
-        var filter = pageUrl[5].replace(/%22/g, "\"");
+        var filter = pageUrl[5].replace(/%22/g, "\"").replace(/%20/g, " ");
         var index = 0;
         while (index < filter.length)
         {
