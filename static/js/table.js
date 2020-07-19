@@ -796,6 +796,7 @@ $(document).ready(function ()
 
         var filtersId = ["include-id", "exclude-id",
                          "include-name", "exclude-name",
+                         "include-acron", "exclude-acron",
                          "include-prod-id", "exclude-prod-id",
                          "include-line", "exclude-line",
                          "include-min-vol", "exclude-min-vol",
@@ -867,8 +868,8 @@ $(document).ready(function ()
     //
     // Configure autocomplete
     //
-    var structures = getStructures(table.column(1).data().unique());
-    var structuresAcronyms = getAcronyms(table.column(1).data().unique());
+    var structures = getStructures(table.column(1).data());
+    var structuresAcronyms = getAcronyms(table.column(1).data());
     var specimenLines = table.column(7).data().unique();
     var specimenNames = table.column(8).data().unique();
 
@@ -900,7 +901,7 @@ $(document).ready(function ()
     });
 
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Interact_with_the_clipboard
-    function copyLink() {
+    function copyAllIds() {
         var elemToCopy = document.querySelector("#copy-ids-input");
 
         elemToCopy.select(); // Select the text field
@@ -915,7 +916,7 @@ $(document).ready(function ()
         }
     }
 
-    document.querySelector("#copy-ids-input").addEventListener("click", copyLink);
+    document.querySelector("#copy-ids-input").addEventListener("click", copyAllIds);
 
     //
     // Apply filters based on url
