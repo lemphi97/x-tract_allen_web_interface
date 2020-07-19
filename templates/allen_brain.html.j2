@@ -70,24 +70,6 @@
                         <input id="include-acron" type="text" name="include-acron"
                                placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
                     </div>
-                    <br>
-                    <div class="autocomplete">
-                        <label class="form-check-label" for="include-prim-name">
-                            <strong>primary injection name(s): </strong>
-                        </label>
-                        <input type="text" id="include-prim-name" name="include-prim-name"
-                            aria-describedby="include-prim-name-help"
-                            placeholder="name_1; name_2; ..." autocomplete="off"/>
-                        <small id="include-prim-name-help" class="text-muted">must be exact</small>
-                    </div>
-                    <br/>
-                    <div class="autocomplete">
-                        <label class="form-check-label" for="include-prim-acron">
-                            <strong>primary injection acronym(s): </strong>
-                        </label>
-                        <input id="include-prim-acron" type="text" name="include-prim-acron"
-                               placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
-                    </div>
                     <hr/>
                 </div>
                 <button class="btn btn-outline-info" data-toggle="collapse" data-target="#include-filters-injection">
@@ -246,24 +228,6 @@
                         <input id="exclude-acron" type="text" name="exclude-acron"
                                placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
                     </div>
-                    <br>
-                    <div class="autocomplete">
-                        <label class="form-check-label" for="exclude-prim-name">
-                            <strong>primary injection name(s): </strong>
-                        </label>
-                        <input type="text" id="exclude-prim-name" name="exclude-prim-name"
-                            aria-describedby="exclude-prim-name-help"
-                            placeholder="name_1; name_2; ..." autocomplete="off"/>
-                        <small id="exclude-prim-name-help" class="text-muted">must be exact</small>
-                    </div>
-                    <br/>
-                    <div class="autocomplete">
-                        <label class="form-check-label" for="exclude-prim-acron">
-                            <strong>primary injection acronym(s): </strong>
-                        </label>
-                        <input id="exclude-prim-acron" type="text" name="exclude-prim-acron"
-                               placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
-                    </div>
                     <hr/>
                 </div>
                 <button class="btn btn-outline-info" data-toggle="collapse" data-target="#exclude-filters-injection">
@@ -392,46 +356,51 @@
             </div>
             <div class="form-check form-check-inline">
                 <input class="toggle-vis form-check-input" type="checkbox" data-column="1"
-                       id="structure-name" value="structure-name" autocomplete="off" checked/>
+                       id="injection-structures" value="injection-structures" autocomplete="off" checked/>
                 <label class="form-check-label" for="structure-name">structure name</label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="toggle-vis form-check-input" type="checkbox" data-column="2"
-                       id="primary-inject-struct" value="primary-inject-struct" autocomplete="off" checked/>
-                <label class="form-check-label" for="primary-inject-struct">prim. inj. struct.</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="toggle-vis form-check-input" type="checkbox" data-column="3"
                        id="product-id" value="product-id" autocomplete="off" checked/>
                 <label class="form-check-label" for="product-id">product id</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="toggle-vis form-check-input" type="checkbox" data-column="4"
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="3"
                        id="injection-vol" value="injection-vol" autocomplete="off" checked/>
                 <label class="form-check-label" for="injection-vol">injection vol.</label>
             </div>
             <div class="form-check form-check-inline">
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="4"
+                       id="injection-x" value="injection-x" autocomplete="off" checked/>
+                <label class="form-check-label" for="injection-xyz">injection x</label>
+            </div>
+            <div class="form-check form-check-inline">
                 <input class="toggle-vis form-check-input" type="checkbox" data-column="5"
-                       id="injection-xyz" value="injection-xyz" autocomplete="off" checked/>
-                <label class="form-check-label" for="injection-xyz">injection (x,y,z)</label>
+                       id="injection-y" value="injection-y" autocomplete="off" checked/>
+                <label class="form-check-label" for="injection-xyz">injection y</label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="toggle-vis form-check-input" type="checkbox" data-column="6"
+                       id="injection-z" value="injection-z" autocomplete="off" checked/>
+                <label class="form-check-label" for="injection-xyz">injection z</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="7"
                        id="transgenic-line" value="transgenic-line" autocomplete="off" checked/>
                 <label class="form-check-label" for="transgenic-line">transgenic line</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="toggle-vis form-check-input" type="checkbox" data-column="7"
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="8"
                        id="specimen-name" value="specimen-name" autocomplete="off" checked/>
                 <label class="form-check-label" for="specimen-name">specimen name</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="toggle-vis form-check-input" type="checkbox" data-column="8"
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="9"
                        id="gender" value="gender" autocomplete="off" checked/>
                 <label class="form-check-label" for="gender">gender </label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="toggle-vis form-check-input" type="checkbox" data-column="9"
+                <input class="toggle-vis form-check-input" type="checkbox" data-column="10"
                        id="cre" value="cre" autocomplete="off" checked/>
                 <label class="form-check-label" for="cre">cre </label>
             </div>
@@ -439,14 +408,15 @@
 
         <hr style="border: 1px solid black"/>
 
-        <table id="experiments" class="datatable" cellspacing="0" width="100%">
+        <table id="experiments" class="datatable row-border" cellspacing="0" width="100%">
             <thead>
                 <th>experiment id</th>
-                <th>structure</th>
-                <th>primary injection structure</th>
+                <th>injection structures</th>
                 <th>product id</th>
                 <th>injection vol.</th>
-                <th>injection (x,y,z)</th>
+                <th>injection x</th>
+                <th>injection y</th>
+                <th>injection z</th>
                 <th>transgenic line</th>
                 <th>specimen name</th>
                 <th>gender</th>
@@ -455,11 +425,12 @@
 
             <tfoot>
                 <th>experiment id</th>
-                <th>structure</th>
-                <th>primary injection structure</th>
+                <th>injection structures</th>
                 <th>product id</th>
                 <th>injection vol.</th>
-                <th>injection (x,y,z)</th>
+                <th>injection x</th>
+                <th>injection y</th>
+                <th>injection z</th>
                 <th>transgenic line</th>
                 <th>specimen name</th>
                 <th>gender</th>
@@ -475,10 +446,13 @@
                         </a>
                     </td>
                     <td>
-                        {{ struct_dict[all_exp.iloc[i]['structure_id']] }}
-                    </td>
-                    <td>
-                        {{ struct_dict[all_exp.iloc[i]['primary_injection_structure']] }}
+                        <ol>
+                        {% for j in range(0, all_exp.iloc[i]['injection_structures']|length) %}
+                            <li class="text-dark">
+                                {{ struct_dict[all_exp.iloc[i]['injection_structures'][j]] }}
+                            </li>
+                        {% endfor %}
+                        </ol>
                     </td>
                     <td>
                         {{ all_exp.iloc[i]['product_id'] }}
@@ -487,9 +461,13 @@
                         {{ all_exp.iloc[i]['injection_volume'] }}
                     </td>
                     <td>
-                        ({{ all_exp.iloc[i]['injection_x'] }},
-                        {{ all_exp.iloc[i]['injection_y'] }},
-                        {{ all_exp.iloc[i]['injection_z'] }})
+                        {{ all_exp.iloc[i]['injection_x'] }}
+                    </td>
+                    <td>
+                        {{ all_exp.iloc[i]['injection_y'] }}
+                    </td>
+                    <td>
+                        {{ all_exp.iloc[i]['injection_z'] }}
                     </td>
                     <td>
                         {{ all_exp.iloc[i]['transgenic_line'] }}

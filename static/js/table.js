@@ -8,8 +8,6 @@ var table;
 var includeIds = [""];
 var includeNames = [""];
 var includeAcronyms = [""];
-var includePrimNames = [""];
-var includePrimAcronyms = [""];
 var includeProducts = [""];
 var includeLines = [""];
 var includeMinVol = "NaN";
@@ -24,8 +22,6 @@ var includeGender = "ANY";
 var includeCre = "ANY";
 var includeContainsNameFilter = false;
 var includeContainsAcronFilter = false;
-var includeContainsPrimNameFilter = false;
-var includeContainsPrimAcronFilter = false;
 var includeContainsProdFilter = false;
 var includeContainsLineFilter = false;
 
@@ -33,8 +29,6 @@ var includeContainsLineFilter = false;
 var excludeIds = [""];
 var excludeNames = [""];
 var excludeAcronyms = [""];
-var excludePrimNames = [""];
-var excludePrimAcronyms = [""];
 var excludeProducts = [""];
 var excludeLines = [""];
 var excludeMinVol = "NaN";
@@ -47,8 +41,6 @@ var excludeMinZ = "NaN";
 var excludeMaxZ = "NaN";
 var excludeContainsNameFilter = false;
 var excludeContainsAcronFilter = false;
-var excludeContainsPrimNameFilter = false;
-var excludeContainsPrimAcronFilter = false;
 var excludeContainsProdFilter = false;
 var excludeContainsLineFilter = false;
 
@@ -226,18 +218,37 @@ $.fn.dataTable.ext.search.push
         var matchFilter = false;
 
         var columnExpId = data[0];
-        var columnStruct = data[1];
-        var columnPrimStruct = data[2];
-        var columnProduct = data[3];
-        var columnVolume = parseFloat(data[4]) || 0;
-        var location = parseParenthesesToArray(data[5]);
-        var x = parseInt(location[0]);
-        var y = parseInt(location[1]);
-        var z = parseInt(location[2]);
-        var columnline = data[6];
-        var columnSpecName = data[7];
-        var columnGender = data[8];
-        var columnCre = data[9];
+        var columnStruct = data[1].replace(/  /g,""); // remove as much whitespace as possible
+        var columnProduct = data[2];
+        var columnVolume = parseFloat(data[3]) || 0;
+        var x = parseInt(data[4]) || 0;
+        var y = parseInt(data[5]) || 0;
+        var z = parseInt(data[6]) || 0;
+        var columnline = data[7];
+        var columnSpecName = data[8];
+        var columnGender = data[9];
+        var columnCre = data[10];
+
+        var structIsIncluded = false;
+        var structIsExcluded = false;
+        var startIndex = 0;
+        var endIndex = 0;
+        while (endIndex < columnStruct.length && !structIsIncluded && !structIsExcluded)
+        {
+            if (columnStruct[endIndex] == ')')
+            {
+                var experimentStruct = columnStruct.substring(startIndex, endIndex + 1);
+
+                structIsIncluded = validateText(includeNames, getStructure(experimentStruct)) ||
+                                   validateText(includeAcronyms, getAcronym(experimentStruct));
+
+                structIsExcluded = validateText(excludeNames, getStructure(experimentStruct)) ||
+                                   validateText(excludeAcronyms, getAcronym(experimentStruct));
+
+                startIndex = endIndex + 1
+            }
+            endIndex++;
+        }
 
         if (validateText(includeIds, columnExpId))
         {
@@ -253,30 +264,12 @@ $.fn.dataTable.ext.search.push
                 validateSelect(columnCre, includeCre) &&
                 (
                     (! includeContainsNameFilter && ! includeContainsAcronFilter) ||
-                    validateText(includeNames, getStructure(columnStruct)) ||
-                    validateText(includeAcronyms, getAcronym(columnStruct))
+                    structIsIncluded
                 )
                 &&
                 (
                     (! excludeContainsNameFilter && ! excludeContainsAcronFilter) ||
-                    ! (
-                        validateText(excludeNames, getStructure(columnStruct)) ||
-                        validateText(excludeAcronyms, getAcronym(columnStruct))
-                    )
-                )
-                &&
-                (
-                    (! includeContainsPrimNameFilter && ! includeContainsPrimAcronFilter) ||
-                    validateText(includePrimNames, getStructure(columnPrimStruct)) ||
-                    validateText(includePrimAcronyms, getAcronym(columnPrimStruct))
-                )
-                &&
-                (
-                    (! excludeContainsPrimNameFilter && ! excludeContainsPrimAcronFilter) ||
-                    ! (
-                        validateText(excludePrimNames, getStructure(columnPrimStruct)) ||
-                        validateText(excludePrimAcronyms, getAcronym(columnPrimStruct))
-                    )
+                    ! structIsExcluded
                 )
                 &&
                 (
@@ -323,7 +316,8 @@ $(document).ready(function ()
     // activate datatable
     table = $('#experiments').DataTable(
     {
-        "scrollX": true
+        "scrollX": true,
+        lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]]
     });
 
     //
@@ -699,28 +693,6 @@ $(document).ready(function ()
             }
         }
 
-        includePrimNames = $('#include-prim-name').val().split(";");
-        includeContainsPrimNameFilter = false;
-        for (i = 0; i < includePrimNames.length; i++)
-        {
-            if (includePrimNames[i].trim() != "")
-            {
-                includeContainsPrimNameFilter = true;
-                break;
-            }
-        }
-
-        includePrimAcronyms = $('#include-prim-acron').val().split(";");
-        includeContainsPrimAcronFilter = false;
-        for (i = 0; i < includePrimAcronyms.length; i++)
-        {
-            if (includePrimAcronyms[i].trim() != "")
-            {
-                includeContainsPrimAcronFilter = true;
-                break;
-            }
-        }
-
         includeProducts = $('#include-prod-id').val().split(";");
         includeContainsProdFilter = false;
         for (i = 0; i < includeProducts.length; i++)
@@ -779,28 +751,6 @@ $(document).ready(function ()
             }
         }
 
-        excludePrimNames = $('#exclude-prim-name').val().split(";");
-        excludeContainsPrimNameFilter = false;
-        for (i = 0; i < excludePrimNames.length; i++)
-        {
-            if (excludePrimNames[i].trim() != "")
-            {
-                excludeContainsPrimNameFilter = true;
-                break;
-            }
-        }
-
-        excludePrimAcronyms = $('#exclude-prim-acron').val().split(";");
-        excludeContainsPrimAcronFilter = false;
-        for (i = 0; i < excludePrimAcronyms.length; i++)
-        {
-            if (excludePrimAcronyms[i].trim() != "")
-            {
-                excludeContainsPrimAcronFilter = true;
-                break;
-            }
-        }
-
         excludeProducts = $('#exclude-prod-id').val().split(";");
         excludeContainsProdFilter = false;
         for (i = 0; i < excludeProducts.length; i++)
@@ -846,8 +796,6 @@ $(document).ready(function ()
 
         var filtersId = ["include-id", "exclude-id",
                          "include-name", "exclude-name",
-                         "include-prim-name", "exclude-prim-name",
-                         "include-prim-acron", "exclude-prim-acron",
                          "include-prod-id", "exclude-prod-id",
                          "include-line", "exclude-line",
                          "include-min-vol", "exclude-min-vol",
@@ -921,20 +869,14 @@ $(document).ready(function ()
     //
     var structures = getStructures(table.column(1).data().unique());
     var structuresAcronyms = getAcronyms(table.column(1).data().unique());
-    var primStructures = getStructures(table.column(2).data().unique());
-    var primStructuresAcronyms = getAcronyms(table.column(2).data().unique());
-    var specimenLines = table.column(6).data().unique();
-    var specimenNames = table.column(7).data().unique();
+    var specimenLines = table.column(7).data().unique();
+    var specimenNames = table.column(8).data().unique();
 
     autocomplete(document.getElementById("include-name"), structures);
     autocomplete(document.getElementById("include-acron"), structuresAcronyms);
-    autocomplete(document.getElementById("include-prim-name"), primStructures);
-    autocomplete(document.getElementById("include-prim-acron"), primStructuresAcronyms);
     autocomplete(document.getElementById("include-line"), specimenLines);
     autocomplete(document.getElementById("exclude-name"), structures);
     autocomplete(document.getElementById("exclude-acron"), structuresAcronyms);
-    autocomplete(document.getElementById("exclude-prim-name"), primStructures);
-    autocomplete(document.getElementById("exclude-prim-acron"), primStructuresAcronyms);
     autocomplete(document.getElementById("exclude-line"), specimenLines);
 
     //
