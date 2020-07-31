@@ -1,23 +1,40 @@
-# Dependencies
+from sys import modules
+def validate_import(module_name):
+    valid = True
+    if module_name not in modules:
+        print(module_name, 'was not imported')
+        valid = False
+    return valid
+
+# Framework
 import flask
-# flask_socketio recommends eventlet for better performance
-from flask_socketio import SocketIO
-from flask_socketio import emit
-# from flask_compress import Compress #https://github.com/shengulong/flask-compress
-import allensdk_utils as utils
+
+# Socket (flask_socketio recommends eventlet for better performance)
+from flask_socketio import SocketIO, emit
+
 # for executing terminal cmd (git)
 from subprocess import Popen, PIPE, STDOUT
 
+# Generate secret key
+from os import urandom
+
+# For testing files compression
 from shutil import make_archive
 import io
 import pathlib
 import zipfile
 
+# Custom files
+import allensdk_utils as utils
+validate_import('allensdk_utils')
+import forms
+validate_import('forms')
+
 # Init website
 app = flask.Flask(__name__)
 app.static_folder = 'static'
 app.template_folder = 'templates'
-#app.config["SECRET_KEY"] = "secretencryptionkey"
+app.config["SECRET_KEY"] = urandom(24).hex()
 #app.config['SERVER_NAME'] = 'xtract.com'
 
 socketio = SocketIO(app)
@@ -71,10 +88,14 @@ def render_templates():
         f.write(rendered_template)
 
     # allen_brain
+    f_source = forms.form1()
+    f_hotspot = forms.form2()
     rendered_template = flask.render_template(
         "allen_brain.html.j2",
         all_exp=all_exp,
         struct_dict=st_dict,
+        f_source=f_source,
+        f_hotspot=f_hotspot,
         commit_info=head_commit
     )
     with open(app.static_folder + "/html/rendered_template/allen_brain.html", "w") as f:
@@ -150,6 +171,27 @@ def experiment_search(param):
     else:
         # For using pre-establish filters specified in the url
         return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
+
+@app.route("/experiments/forms/correlation/")
+def form_correlation():
+    f_correlation = forms.f_correlation()
+    if f_correlation.validate_on_submit():
+        return "Correlation search"
+    return "Error with form submit"
+
+@app.route("/experiments/forms/source/", methods=['POST'])
+def form_source():
+    f_source = forms.form1()
+    if f_source.validate_on_submit():
+        return "SOURCE: field1: {}, field2: {}".format(f_source.field1.data, f_source.field2.data)
+    return "Error with form submit"
+
+@app.route("/experiments/forms/hotspot/", methods=['POST'])
+def form_hotspot():
+    f_hotspot = forms.form2()
+    if f_hotspot.validate_on_submit():
+        return "Submit HOTSPOT: field1: {}, field2: {}, field3: {}".format(f_hotspot.field1.data, f_hotspot.field2.data, f_hotspot.field3.data)
+    return "Error with form submit"
 
 @app.route("/volume_viewer/")
 def volume_viewer():

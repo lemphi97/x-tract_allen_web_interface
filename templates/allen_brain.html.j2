@@ -58,9 +58,8 @@
                         <label class="form-check-label" for="include-name">
                             <strong>name(s): </strong>
                         </label>
-                        <input type="text" id="include-name" name="include-name" aria-describedby="include-name-help"
+                        <input type="text" id="include-name" name="include-name"
                             placeholder="name_1; name_2; ..." autocomplete="off"/>
-                        <small id="include-name-help" class="text-muted">must be exact</small>
                     </div>
                     <br/>
                     <div class="autocomplete">
@@ -167,9 +166,7 @@
                             <strong>line(s): </strong>
                         </label>
                         <input type="text" id="include-line" name="include-line"
-                            aria-describedby="include-line-help"
                             placeholder="line_1; line_2; ..." autocomplete="off"/>
-                        <small id="include-line-help" class="text-muted">must be exact</small>
                     </div>
                     <br/>
                     <label class="form-check-label" for="include-gender-select">
@@ -216,9 +213,7 @@
                             <strong>name(s): </strong>
                         </label>
                         <input type="text" id="exclude-name" name="exclude-name"
-                            aria-describedby="exclude-name-help"
                             placeholder="name_1; name_2; ..." autocomplete="off"/>
-                        <small id="name-help" class="text-muted">must be exact</small>
                     </div>
                     <br/>
                     <div class="autocomplete">
@@ -324,9 +319,7 @@
                             <strong>line(s): </strong>
                         </label>
                         <input type="text" id="exclude-line" name="exclude-line"
-                            aria-describedby="exclude-line-help"
                             placeholder="line_1; line_2; ..." autocomplete="off"/>
-                        <small id="exclude-line-help" class="text-muted">must be exact</small>
                     </div>
                     <hr/>
                 </div>
@@ -490,6 +483,138 @@
         </button>
         <input type="text" id="copy-ids-input" class="copy-ids-group" value=""/>
         <label id="label-copy-ids" class="copy-ids-group" for="copy-ids-input">Click to copy</label>
+        <br class="copy-ids-group"/>
+
+        <button class="btn btn-outline-info" data-toggle="collapse" data-target="#experiment-correlation-search">
+            correlation search
+        </button>
+        <div id="experiment-correlation-search" class="collapse">
+            <form action="/result" method="POST">
+                <label for="correlation-id">Experiment id:</label>
+                <input type="text" id="correlation-id" name="exp-id"
+                    placeholder="id" autocomplete="off"/>
+                <br/>
+                <label for="correlation-struct">Structure:</label>
+                <input type="text" id="correlation-struct" name="struct-acron"
+                    placeholder="acron_1; acron_2; ..." autocomplete="off"/>
+                <br/>
+                <label for="correlation-hemi">Hemisphere:</label>
+                <select id="correlation-hemi" name="hemisphere" autocomplete="off">
+                    <option value="both">Both</option>
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                </select>
+                <br/>
+                <label for="correlation-line">Transgenic lines:</label>
+                <input type="text" id="correlation-line" name="transgenic-line"
+                    placeholder="line_1; line_2; ..." autocomplete="off"/>
+                <br/>
+                <label for="correlation-prim-only">Primary structures only:</label>
+                <select id="correlation-prim-only" name="primary-struct-only" autocomplete="off">
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+                <br/>
+                <label for="correlation-prod">Product id:</label>
+                <input type="text" id="correlation-prod" name="prod-id"
+                    placeholder="prod_1; prod_2; ..." autocomplete="off"/>
+                <br/>
+                <button type="submit">
+                    submit
+                </button>
+            </form>
+        </div>
+
+        <button class="btn btn-outline-info" data-toggle="collapse" data-target="#experiment-injection-coordinate-search">
+            injection coordinate search
+        </button>
+        <div id="experiment-injection-coordinate-search" class="collapse">
+            <form action="/result" method="POST">
+                <label for="injection-coordinate-injection-struct">Injection structure:</label>
+                <input type="text" id="injection-coordinate-injection-struct" name="inj-struct-acron"
+                    placeholder="acron_1; acron_2; ..." autocomplete="off"/>
+                <br/>
+                <label for="injection-coordinate-target-struct">Target structure:</label>
+                <input type="text" id="injection-coordinate-struct" name="target-struct-acron"
+                    placeholder="acron_1; acron_2; ..." autocomplete="off"/>
+                <br/>
+                <label for="injection-coordinate-injection-hemi">Hemisphere:</label>
+                <select id="injection-coordinate-injection-hemi" name="inj-hemisphere" autocomplete="off">
+                    <option value="both">Both</option>
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                </select>
+                <br/>
+                <label for="injection-coordinate-target-hemi">Hemisphere:</label>
+                <select id="injection-coordinate-target-hemi" name="target-hemisphere" autocomplete="off">
+                    <option value="both">Both</option>
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                </select>
+                <br/>
+                <label for="injection-coordinate-line">Transgenic lines:</label>
+                <input type="text" id="injection-coordinate-line" name="transgenic-line"
+                    placeholder="line_1; line_2; ..." autocomplete="off"/>
+                <br/>
+                <label for="injection-coordinate-prim-only">Primary structures only:</label>
+                <select id="injection-coordinate-prim-only" name="primary-struct-only" autocomplete="off">
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+                <br/>
+                <label for="injection-coordinate-prod">Product id:</label>
+                <input type="text" id="injection-coordinate-prod" name="prod-id"
+                    placeholder="prod_1; prod_2; ..." autocomplete="off"/>
+                <br/>
+                <button type="submit">
+                    submit
+                </button>
+            </form>
+        </div>
+
+        <button class="btn btn-outline-info" data-toggle="collapse" data-target="#experiment-source-search">
+            source search
+        </button>
+        <div id="experiment-source-search" class="collapse">
+            <form method="POST" action="{{ url_for('form_source') }}">
+                {{ f_source.csrf_token }}
+                <div class="form-group">
+                    {{ f_source.field1.label }}
+                    {{ f_source.field1(required='required') }}
+                </div>
+                <div class="form-group">
+                    {{ f_source.field2.label }}
+                    {{ f_source.field2(required='required') }}
+                </div>
+                <button type="submit" class="btn btn-success">
+                    submit
+                </button>
+            </form>
+        </div>
+
+        <button class="btn btn-outline-info" data-toggle="collapse" data-target="#experiment-hotspot">
+            find hotspot
+        </button>
+        <div id="experiment-hotspot" class="collapse">
+            <form method="POST" action="{{ url_for('form_hotspot') }}">
+                {{ f_hotspot.csrf_token }}
+                <div class="form-group">
+                    {{ f_hotspot.field1.label }}
+                    {{ f_hotspot.field1(required='required') }}
+                </div>
+                <div class="form-group">
+                    {{ f_hotspot.field2.label }}
+                    {{ f_hotspot.field2(required='required') }}
+                </div>
+                <div class="form-group">
+                    {{ f_hotspot.field3.label }}
+                    {{ f_hotspot.field3(required='required') }}
+                </div>
+                <button type="submit" class="btn btn-success">
+                    submit
+                </button>
+            </form>
+        </div>
     </div>
     <hr/>
     <div class="content-bg">
