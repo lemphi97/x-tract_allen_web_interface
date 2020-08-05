@@ -83,6 +83,7 @@
         {% endblock %}
     </div>
 
+    {% if commit_info is defined %}
     <hr style="border: 1px solid black;"/>
     <div class="footer content">
         <div>
@@ -92,7 +93,8 @@
             </p>
             {% endfor %}
         </div>
-    </footer>
+    </div>
+    {% endif %}
 </body>
 
 {# Bootstrap #}

@@ -489,39 +489,46 @@
             correlation search
         </button>
         <div id="experiment-correlation-search" class="collapse">
-            <form action="/result" method="POST">
-                <label for="correlation-id">Experiment id:</label>
-                <input type="text" id="correlation-id" name="exp-id"
-                    placeholder="id" autocomplete="off"/>
-                <br/>
-                <label for="correlation-struct">Structure:</label>
-                <input type="text" id="correlation-struct" name="struct-acron"
-                    placeholder="acron_1; acron_2; ..." autocomplete="off"/>
-                <br/>
-                <label for="correlation-hemi">Hemisphere:</label>
-                <select id="correlation-hemi" name="hemisphere" autocomplete="off">
-                    <option value="both">Both</option>
-                    <option value="left">Left</option>
-                    <option value="right">Right</option>
-                </select>
-                <br/>
-                <label for="correlation-line">Transgenic lines:</label>
-                <input type="text" id="correlation-line" name="transgenic-line"
-                    placeholder="line_1; line_2; ..." autocomplete="off"/>
-                <br/>
-                <label for="correlation-prim-only">Primary structures only:</label>
-                <select id="correlation-prim-only" name="primary-struct-only" autocomplete="off">
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </select>
-                <br/>
-                <label for="correlation-prod">Product id:</label>
-                <input type="text" id="correlation-prod" name="prod-id"
-                    placeholder="prod_1; prod_2; ..." autocomplete="off"/>
-                <br/>
-                <button type="submit">
-                    submit
-                </button>
+            <form method="POST" action="{{ url_for('form_correlation') }}" target="_blank">
+                {{ f_correlation.csrf_token }}
+                <div class="form-group">
+                    {{ f_correlation.row.label }}
+                    {{ f_correlation.row(required='required') }}
+                </div>
+                <div class="form-group">
+                    {{ f_correlation.structures.label }}
+                    {{ f_correlation.structures() }}
+                </div>
+                <div class="form-group">
+                    {{ f_correlation.hemisphere.label }}
+                    {{ f_correlation.hemisphere() }}
+                </div>
+                <div class="form-group">
+                    {{ f_correlation.transgenic_lines.label }}
+                    {{ f_correlation.transgenic_lines() }}
+                    <p>Put 0 for wild type</p>
+                </div>
+                <div class="form-group">
+                    {{ f_correlation.injection_structures.label }}
+                    {{ f_correlation.injection_structures() }}
+                </div>
+                <div class="form-group">
+                    {{ f_correlation.primary_structure_only.label }}
+                    {{ f_correlation.primary_structure_only() }}
+                </div>
+                <div class="form-group">
+                    {{ f_correlation.product_ids.label }}
+                    {{ f_correlation.product_ids() }}
+                </div>
+                <div class="form-group">
+                    {{ f_correlation.start_row.label }}
+                    {{ f_correlation.start_row() }}
+                </div>
+                <div class="form-group">
+                    {{ f_correlation.num_rows.label }}
+                    {{ f_correlation.num_rows() }}
+                </div>
+                {{ f_correlation.submit(class_="btn btn-success") }}
             </form>
         </div>
 

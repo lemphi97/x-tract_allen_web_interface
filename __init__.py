@@ -94,6 +94,7 @@ def render_templates():
         "allen_brain.html.j2",
         all_exp=all_exp,
         struct_dict=st_dict,
+        f_correlation=forms.form_correlation(),
         f_source=f_source,
         f_hotspot=f_hotspot,
         commit_info=head_commit
@@ -172,12 +173,43 @@ def experiment_search(param):
         # For using pre-establish filters specified in the url
         return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
 
-@app.route("/experiments/forms/correlation/")
+@app.route("/experiments/forms/correlation/", methods=['POST'])
 def form_correlation():
-    f_correlation = forms.f_correlation()
-    if f_correlation.validate_on_submit():
-        return "Correlation search"
-    return "Error with form submit"
+    f_correlation = forms.form_correlation()
+    # error with form submit (validate_on_submit), don't know how to fix... TODO
+    row = f_correlation.row.data
+
+    structures = forms.str_to_array(f_correlation.structures.data)
+
+    product_ids = forms.convert_array_str_to_int(forms.str_to_array(f_correlation.product_ids.data))
+
+    hemisphere = f_correlation.hemisphere.data
+    if hemisphere.upper() == "BOTH":
+        hemisphere = None
+
+    transgenic_lines = forms.str_to_array(f_correlation.transgenic_lines.data)
+
+    injection_structures = forms.str_to_array(f_correlation.injection_structures.data)
+
+    primary_structure_only = True
+    if f_correlation.primary_structure_only.data.upper() == 'FALSE':
+        primary_structure_only = False
+
+    start_row = f_correlation.start_row.data
+    num_rows = f_correlation.num_rows.data
+    result, errors = utils.correlation_search(row=row,
+                                              structures=structures,
+                                              product_ids=product_ids,
+                                              hemisphere=hemisphere,
+                                              transgenic_lines=transgenic_lines,
+                                              injection_structures=injection_structures,
+                                              primary_structure_only=primary_structure_only,
+                                              start_row=start_row,
+                                              num_rows=num_rows)
+    return flask.render_template("xml_display.html",
+                                 search_type="correlation",
+                                 xml=result,
+                                 errors=errors)
 
 @app.route("/experiments/forms/source/", methods=['POST'])
 def form_source():
@@ -202,4 +234,5 @@ def about_website():
     return flask.current_app.send_static_file('html/rendered_template/about_website.html')
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    #socketio.run(app, debug=True)
+    app.run(debug=True)
