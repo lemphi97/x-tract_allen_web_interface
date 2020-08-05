@@ -623,54 +623,6 @@
             </form>
         </div>
     </div>
-    <hr/>
-    <div class="content-bg">
-        <h2>Downloads</h2>
-        <form>
-            <label for="res-nrrd">resolution:</label>
-            <select id="res-nrrd">
-                <option>100</option>
-                <option>50</option>
-                <option>25</option>
-                <option>10</option>
-            </select>
-        </form>
-        {#
-            available img type:
-                - projection_density
-                - projection_energy
-                - injection_fraction
-                - injection_density
-                - injection_energy
-                - data_mask
-        #}
-        <div class="form-check form-check-inline">
-            <input type="checkbox" id="projection-density"/>
-            <label class="form-check-label" for"projection-density">projection density</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input type="checkbox" id="projection-energy"/>
-            <label class="form-check-label" for"projection-energy">projection energy</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input type="checkbox" id="injection-fraction"/>
-            <label class="form-check-label" for"injection-fraction">injection fraction</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input type="checkbox" id="injection-density"/>
-            <label class="form-check-label" for"injection-density">injection density</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input type="checkbox" id="injection-energy"/>
-            <label class="form-check-label" for"injection-energy">injection energy</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input type="checkbox" id="data-mask"/>
-            <label class="form-check-label" for"data-mask">data mask</label>
-        </div>
-        <br/>
-        <button id="download-all-nrrd">Click me</button>
-    </div>
 {% endblock %}
 
 {% block dependenciesScripts %}

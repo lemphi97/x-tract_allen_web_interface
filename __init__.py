@@ -9,9 +9,6 @@ def validate_import(module_name):
 # Framework
 import flask
 
-# Socket (flask_socketio recommends eventlet for better performance)
-from flask_socketio import SocketIO, emit
-
 # for executing terminal cmd (git)
 from subprocess import Popen, PIPE, STDOUT
 
@@ -37,31 +34,9 @@ app.template_folder = 'templates'
 app.config["SECRET_KEY"] = urandom(24).hex()
 #app.config['SERVER_NAME'] = 'xtract.com'
 
-socketio = SocketIO(app)
-
 # Global variables
 all_exp = utils.get_all_exp()
 st_dict = utils.get_struct_in_dict(all_exp)
-
-# Check for globus SDK instead
-@socketio.on('req_download', namespace="/request_zip")
-def handle_download_request(req_id, req_img, res):
-    download_id = flask.request.sid
-    tmp_folder = app.static_folder + "/tmp/" + download_id
-
-    # download experiments nrrd #todo wayyy to slow
-    for exp_id in req_id:
-        utils.exp_save_nrrd(exp_id, req_img, res, tmp_folder)
-
-    # make zip
-    make_archive(app.static_folder + "/tmp/" + download_id, 'zip', tmp_folder)
-
-    # delete tmp folder
-    #todo
-
-    # send zip file
-    #flask.current_app.send_static_file("tmp/" + download_id + "zip")
-    emit('zip_ready', download_id, broadcast=False)
 
 @app.before_first_request
 def render_templates():
@@ -206,7 +181,16 @@ def form_correlation():
                                               primary_structure_only=primary_structure_only,
                                               start_row=start_row,
                                               num_rows=num_rows)
-    return flask.render_template("xml_display.html",
+    if len(errors) == 0:
+        rendered_template = flask.render_template("experiment_search.xml", values=result)
+        # For test
+        #with open(app.static_folder + "/html/rendered_template/text1.xml", "w") as f:
+        #    f.write(rendered_template)
+        response = flask.make_response(rendered_template)
+        response.headers['Content-Type'] = 'application/xml'
+        return response
+
+    return flask.render_template("experiment_search_error.html.j2",
                                  search_type="correlation",
                                  xml=result,
                                  errors=errors)
