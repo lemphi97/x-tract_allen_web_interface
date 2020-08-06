@@ -47,69 +47,41 @@ def render_templates():
     head_commit = head_commit.split('\n')
 
     # home
-    rendered_template = flask.render_template(
-        "index.html.j2",
-        commit_info=head_commit
-    )
+    rendered_template = flask.render_template("html/index.html.j2",
+                                              commit_info=head_commit)
     with open(app.static_folder + "/html/rendered_template/index.html", "w") as f:
         f.write(rendered_template)
 
     # interface
-    rendered_template = flask.render_template(
-        "interface.html.j2",
-        commit_info=head_commit
-    )
+    rendered_template = flask.render_template("html/interface.html.j2",
+                                              commit_info=head_commit)
     with open(app.static_folder + "/html/rendered_template/interface.html", "w") as f:
         f.write(rendered_template)
 
     # allen_brain
     f_source = forms.form1()
     f_hotspot = forms.form2()
-    rendered_template = flask.render_template(
-        "allen_brain.html.j2",
-        all_exp=all_exp,
-        struct_dict=st_dict,
-        f_correlation=forms.form_correlation(),
-        f_source=f_source,
-        f_hotspot=f_hotspot,
-        commit_info=head_commit
-    )
+    rendered_template = flask.render_template("html/allen_brain.html.j2",
+                                              all_exp=all_exp,
+                                              struct_dict=st_dict,
+                                              f_correlation=forms.form_correlation(),
+                                              f_source=f_source,
+                                              f_hotspot=f_hotspot,
+                                              commit_info=head_commit)
     with open(app.static_folder + "/html/rendered_template/allen_brain.html", "w") as f:
         f.write(rendered_template)
 
     # volume_viewer
-    rendered_template = flask.render_template(
-        "volume_viewer.html.j2",
-        commit_info=head_commit
-    )
+    rendered_template = flask.render_template("html/volume_viewer.html.j2",
+                                              commit_info=head_commit)
     with open(app.static_folder + "/html/rendered_template/volume_viewer.html", "w") as f:
         f.write(rendered_template)
 
     # about_website
-    rendered_template = flask.render_template(
-        "about_website.html.j2",
-        commit_info=head_commit
-    )
+    rendered_template = flask.render_template("html/about_website.html.j2",
+                                              commit_info=head_commit)
     with open(app.static_folder + "/html/rendered_template/about_website.html", "w") as f:
         f.write(rendered_template)
-
-@app.route('/download-zip/<zip_id>')
-def request_zip(zip_id):
-    #todo
-    base_path = pathlib.Path('./data/')
-    data = io.BytesIO()
-    with zipfile.ZipFile(data, mode='w') as z:
-        for f_name in base_path.iterdir():
-            z.write(f_name)
-    data.seek(0)
-    return flask.send_file(
-        data,
-        mimetype='application/zip',
-        as_attachment=True,
-        attachment_filename='data.zip'
-    )
-    #https://stackoverflow.com/questions/24612366/delete-an-uploaded-file-after-downloading-it-from-flask
-    #https://stackoverflow.com/questions/9419162/download-returned-zip-file-from-url
 
 @app.route("/")
 def default():
@@ -136,7 +108,7 @@ def experiment_search(param):
         prim_inj_struct = st_dict[exp['primary_injection_structure']]
         sect_id, res, ranges = utils.get_exp_img_sections_info(param)
         return flask.render_template(
-            "experiment.html.j2",
+            "html/experiment.html.j2",
             exp=exp,
             struct=struct,
             prim_inj_struct=prim_inj_struct,
@@ -182,7 +154,7 @@ def form_correlation():
                                               start_row=start_row,
                                               num_rows=num_rows)
     if len(errors) == 0:
-        rendered_template = flask.render_template("experiment_search.xml", values=result)
+        rendered_template = flask.render_template("xml/experiment_search.xml.j2", values=result)
         # For test
         #with open(app.static_folder + "/html/rendered_template/text1.xml", "w") as f:
         #    f.write(rendered_template)
@@ -190,7 +162,7 @@ def form_correlation():
         response.headers['Content-Type'] = 'application/xml'
         return response
 
-    return flask.render_template("experiment_search_error.html.j2",
+    return flask.render_template("html/experiment_search_error.html.j2",
                                  search_type="correlation",
                                  xml=result,
                                  errors=errors)
