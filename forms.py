@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, FloatField, StringField, SelectField, SubmitField, FieldList, FormField
 # For regex validation in input field
-#from wtforms.validators import Regexp
+# from wtforms.validators import Regexp
+
 
 def str_to_array(str):
     array = []
@@ -15,10 +16,12 @@ def str_to_array(str):
         return None
     return array
 
+
 def convert_array_str_to_int(strArray):
     if strArray is None:
         return None
     return {int(string) for string in strArray}
+
 
 class form_correlation(FlaskForm):
     # https://allensdk.readthedocs.io/en/latest/allensdk.api.queries.mouse_connectivity_api.html#allensdk.api.queries.mouse_connectivity_api.MouseConnectivityApi.experiment_correlation_search
@@ -42,6 +45,7 @@ class form_correlation(FlaskForm):
     # submit btn
     submit = SubmitField("submit")
 
+
 class form_injection_coord(FlaskForm):
     # https://allensdk.readthedocs.io/en/latest/allensdk.api.queries.mouse_connectivity_api.html#allensdk.api.queries.mouse_connectivity_api.MouseConnectivityApi.experiment_injection_coordinate_search
     # (list of integers) The coordinates of a point in 3-D SectionDataSet space
@@ -63,15 +67,19 @@ class form_injection_coord(FlaskForm):
     # submit btn
     submit = SubmitField("submit")
 
+
 class form_source(FlaskForm):
     ...
+
 
 class form_hotspot(FlaskForm):
     ...
 
+
 class form1(FlaskForm):
     field1 = StringField("field1")
     field2 = StringField("field2")
+
 
 class form2(FlaskForm):
     field1 = StringField("field1")

@@ -21,6 +21,7 @@ dict_struct_id = st_tree.get_name_map()
 dict_struct_acron = st_tree.get_id_acronym_map()
 dict_struct_name = {v: k for k, v in dict_struct_id.items()}
 
+
 # return all structure in a dict (key: id, value: name with acronym)
 def exp_save_nrrd(exp_id, img=[], res=100, folder="."):
     '''
@@ -57,6 +58,7 @@ def exp_save_nrrd(exp_id, img=[], res=100, folder="."):
         files_path.append(save_file_path)
     return files_path
 
+
 def get_struct_in_dict(experiences):
     st_dict = {}
 
@@ -71,6 +73,7 @@ def get_struct_in_dict(experiences):
 
     return st_dict
 
+
 def get_all_exp():
     cre_neg_exp = mcc.get_experiments(dataframe=True, cre=False)
     cre_neg_exp['cre'] = np.zeros((len(cre_neg_exp), 1), dtype=bool)
@@ -79,6 +82,7 @@ def get_all_exp():
     cre_pos_exp['cre'] = np.ones((len(cre_pos_exp), 1), dtype=bool)
 
     return pd.concat([cre_neg_exp, cre_pos_exp])
+
 
 def get_exp_img_sections_info(exp_id):
     # res and ranges don't seem to change from section to section.
@@ -102,6 +106,33 @@ def get_exp_img_sections_info(exp_id):
 
     return sections_id, default_res, default_ranges
 
+
+def validate_structures(structures, errors, category):
+    if structures is not None:
+        for i in range(0, len(structures)):
+            exist = True
+            struct = structures[i]
+            if struct.isdigit():
+                struct = int(struct)
+                structures[i] = struct
+                if struct not in dict_struct_id:
+                    exist = False
+            elif struct in dict_struct_name:
+                structures[i] = dict_struct_name[struct]
+            elif struct not in dict_struct_acron:
+                exist = False
+            if not exist:
+                errors.append(category + " |" + str(struct) + "| doesn't exist")
+    return
+
+
+def validate_hemisphere(hemisphere, errors, category):
+    if hemisphere is not None:
+        hemisphere = hemisphere.lower()
+    if hemisphere not in ["left", "right", None]:
+        errors.append(category + " |" + str(hemisphere) + "| is invalid")
+    return
+
 def correlation_search(row,                          # Integer
                        structures=None,              # [String], None
                        product_ids=None,             # [Integer], None
@@ -111,38 +142,16 @@ def correlation_search(row,                          # Integer
                        primary_structure_only=None,  # True, False, None
                        start_row=None,               # Integer, None
                        num_rows=None):               # Integer, None
-    result = None
     errors = []
 
     if row not in mcc.get_experiments(dataframe=True)['id']:
         errors.append("experiment |" + str(row) + "| doesn't exist")
 
-    if structures is not None:
-        for i in range(0, len(structures)):
-            struct = structures[i]
-            if struct.isdigit():
-                struct = int(struct)
-                structures[i] = struct
-                if struct not in dict_struct_id:
-                    errors.append("injection structure |" + str(struct) + "| doesn't exist")
-            elif struct not in dict_struct_acron or struct not in dict_struct_name:
-                errors.append("structure |" + str(struct) + "| doesn't exist")
+    validate_structures(structures=structures, errors=errors, category="structure")
 
-    if injection_structures is not None:
-        for i in range(0, len(injection_structures)):
-            struct = injection_structures[i]
-            if struct.isdigit():
-                struct = int(struct)
-                injection_structures[i] = struct
-                if struct not in dict_struct_id:
-                    errors.append("injection structure |" + str(struct) + "| doesn't exist")
-            elif struct not in dict_struct_acron or struct not in dict_struct_name:
-                errors.append("injection structure |" + str(struct) + "| doesn't exist")
+    validate_structures(structures=injection_structures, errors=errors, category="injection structures")
 
-    if hemisphere is not None:
-        hemisphere = hemisphere.lower()
-    if hemisphere not in ["left", "right", None]:
-        errors.append("hemisphere |" + str(hemisphere) + "| is invalid")
+    validate_hemisphere(hemisphere=hemisphere, errors=errors, category="hemisphere")
 
     # I don't know how to validate product id beforehand
     # I don't know how to validate transgenic line beforehand
@@ -164,14 +173,14 @@ def correlation_search(row,                          # Integer
 
     return result, errors
 
-def injection_correlation_search(seed_point,                   # [Float]
+
+def injection_correlation_search(seed_point,                   # [Integer]
                                  product_ids=None,             # [Integer], None
                                  transgenic_lines=None,        # [String], None, Specify ID '0' to exclude all TransgenicLines.
                                  injection_structures=None,    # [String], None
-                                 primary_structure_only=None,  # True, False, None
+                                 primary_structure_only=None,  # Boolean, None
                                  start_row=None,               # Integer, None
                                  num_rows=None):               # Integer, None
-    result = None
     errors = []
 
     coord_maximums = [13100, 7800, 11300]
@@ -182,16 +191,7 @@ def injection_correlation_search(seed_point,                   # [Float]
                           " (0, " + coord_maximums[i] +
                           ") is out of bound |" + seed_point[i] + "|")
 
-    if injection_structures is not None:
-        for i in range(0, len(injection_structures)):
-            struct = injection_structures[i]
-            if struct.isdigit():
-                struct = int(struct)
-                injection_structures[i] = struct
-                if struct not in dict_struct_id:
-                    errors.append("injection structure |" + str(struct) + "| doesn't exist")
-            elif struct not in dict_struct_acron or struct not in dict_struct_name:
-                errors.append("injection structure |" + str(struct) + "| doesn't exist")
+    validate_structures(structures=injection_structures, errors=errors, category="injection structures")
 
     # I don't know how to validate product id beforehand
     # I don't know how to validate transgenic line beforehand
@@ -208,5 +208,49 @@ def injection_correlation_search(seed_point,                   # [Float]
                                                         primary_structure_only=primary_structure_only,
                                                         start_row=start_row,
                                                         num_rows=num_rows)
+
+    return result, errors
+
+
+def source_search(injection_structures,         # [String], None
+                  target_domain=None,           # [String], None
+                  injection_hemisphere=None,    # String, None
+                  target_hemisphere=None,       # String, None
+                  transgenic_lines=None,        # [String], None
+                  injection_domain=None,        # [String], None
+                  primary_structure_only=None,  # Boolean, None
+                  product_ids=None,             # [Integer], None
+                  start_row=None,               # Integer, None
+                  num_rows=None):               # Integer, None
+    errors = []
+
+    validate_structures(structures=injection_structures, errors=errors, category="injection structures")
+
+    validate_structures(structures=target_domain, errors=errors, category="target domain")
+
+    validate_structures(structures=injection_domain, errors=errors, category="injection domain")
+
+    validate_hemisphere(hemisphere=injection_hemisphere, errors=errors, category="injection hemisphere")
+
+    validate_hemisphere(hemisphere=target_hemisphere, errors=errors, category="target hemisphere")
+
+    # I don't know how to validate product id beforehand
+    # I don't know how to validate transgenic line beforehand
+    if transgenic_lines is not None:
+        for i in range(0, len(transgenic_lines)):
+            line = transgenic_lines[i]
+            if line.isdigit():
+                transgenic_lines[i] = line
+
+    result = mca.experiment_source_search(injection_structures=injection_structures,
+                                          target_domain=target_domain,
+                                          injection_hemisphere=injection_hemisphere,
+                                          target_hemisphere=target_hemisphere,
+                                          transgenic_lines=transgenic_lines,
+                                          injection_domain=injection_domain,
+                                          primary_structure_only=primary_structure_only,
+                                          product_ids=product_ids,
+                                          start_row=start_row,
+                                          num_rows=num_rows)
 
     return result, errors

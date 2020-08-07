@@ -1,8 +1,8 @@
-from sys import modules
+from sys import modules, stderr
 def validate_import(module_name):
     valid = True
     if module_name not in modules:
-        print(module_name, 'was not imported')
+        print(module_name, 'was not imported', file=stderr)
         valid = False
     return valid
 
@@ -14,12 +14,6 @@ from subprocess import Popen, PIPE, STDOUT
 
 # Generate secret key
 from os import urandom
-
-# For testing files compression
-from shutil import make_archive
-import io
-import pathlib
-import zipfile
 
 # Custom files
 import allensdk_utils as utils
@@ -37,6 +31,7 @@ app.config["SECRET_KEY"] = urandom(24).hex()
 # Global variables
 all_exp = utils.get_all_exp()
 st_dict = utils.get_struct_in_dict(all_exp)
+
 
 @app.before_first_request
 def render_templates():
@@ -82,22 +77,27 @@ def render_templates():
     with open(app.static_folder + "/html/rendered_template/about_website.html", "w") as f:
         f.write(rendered_template)
 
+
 @app.route("/")
 def default():
     return flask.redirect(flask.url_for("home"))
+
 
 @app.route("/home/")
 def home():
     # https://stackoverflow.com/questions/24578330/flask-how-to-serve-static-html
     return flask.current_app.send_static_file('html/rendered_template/index.html')
 
+
 @app.route("/interface/")
 def interface():
     return flask.current_app.send_static_file('html/rendered_template/interface.html')
 
+
 @app.route("/experiments/")
 def experiments():
     return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
+
 
 @app.route("/experiments/<param>/")
 def experiment_search(param):
@@ -116,6 +116,7 @@ def experiment_search(param):
     else:
         # For using pre-establish filters specified in the url
         return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
+
 
 @app.route("/experiments/forms/correlation_search/", methods=['POST'])
 def form_correlation():
@@ -152,6 +153,7 @@ def form_correlation():
                                               primary_structure_only=primary_structure_only,
                                               start_row=start_row,
                                               num_rows=num_rows)
+
     if len(errors) == 0 and isinstance(result, list):
         rendered_template = flask.render_template("xml/experiment_search.xml.j2", values=result)
         # For test
@@ -165,6 +167,7 @@ def form_correlation():
                                  search_type="injection coordinate",
                                  xml=result,
                                  errors=errors)
+
 
 @app.route("/experiments/forms/injection_coord_search/", methods=['POST'])
 def form_injection_coord():
@@ -205,12 +208,14 @@ def form_injection_coord():
                                  xml=result,
                                  errors=errors)
 
+
 @app.route("/experiments/forms/source/", methods=['POST'])
 def form_source():
     f_source = forms.form1()
     if f_source.validate_on_submit():
         return "SOURCE: field1: {}, field2: {}".format(f_source.field1.data, f_source.field2.data)
     return "Error with form submit"
+
 
 @app.route("/experiments/forms/hotspot/", methods=['POST'])
 def form_hotspot():
@@ -219,14 +224,16 @@ def form_hotspot():
         return "Submit HOTSPOT: field1: {}, field2: {}, field3: {}".format(f_hotspot.field1.data, f_hotspot.field2.data, f_hotspot.field3.data)
     return "Error with form submit"
 
+
 @app.route("/volume_viewer/")
 def volume_viewer():
     return flask.current_app.send_static_file('html/rendered_template/volume_viewer.html')
+
 
 @app.route("/about_website/")
 def about_website():
     return flask.current_app.send_static_file('html/rendered_template/about_website.html')
 
+
 if __name__ == "__main__":
-    #socketio.run(app, debug=True)
     app.run(debug=True)
