@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, StringField, SelectField, SubmitField
+from wtforms import IntegerField, FloatField, StringField, SelectField, SubmitField, FieldList, FormField
 # For regex validation in input field
 #from wtforms.validators import Regexp
 
@@ -42,8 +42,26 @@ class form_correlation(FlaskForm):
     # submit btn
     submit = SubmitField("submit")
 
-class form_inj_coord(FlaskForm):
-    ...
+class form_injection_coord(FlaskForm):
+    # https://allensdk.readthedocs.io/en/latest/allensdk.api.queries.mouse_connectivity_api.html#allensdk.api.queries.mouse_connectivity_api.MouseConnectivityApi.experiment_injection_coordinate_search
+    # (list of integers) The coordinates of a point in 3-D SectionDataSet space
+    coord_x = IntegerField("Axe Antérieur / Postérieur, Min=0, Max=13100 (Midpoint=6550)")
+    coord_y = IntegerField("Axe Supérieur / Inférieur, Min=0, Max=7800 (Midpoint=3900)")
+    coord_z = IntegerField("Axe Droite / Gauche, Min=0, Max=11300 (Midpoint=5650)")
+    # (list of integers or strings, optional) Integer TransgenicLine.id or String TransgenicLine.name. Specify ID 0 to exclude all TransgenicLines.
+    transgenic_lines = StringField("transgenic lines:")
+    # (list of integers or strings, optional) Integer Structure.id or String Structure.acronym
+    injection_structures = StringField("injection structures:")
+    # (boolean, optional)
+    primary_structure_only = SelectField("primary structure only:", choices=["True", "False"])
+    # (list of integers, optional) Integer Product.id
+    product_ids = StringField("product_ids:")
+    # (integer, optional) For paging purposes. Defaults to 0
+    start_row = IntegerField("start row:")
+    # (integer, optional) For paging purposes. Defaults to 2000
+    num_rows = IntegerField("num rows:")
+    # submit btn
+    submit = SubmitField("submit")
 
 class form_source(FlaskForm):
     ...

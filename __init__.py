@@ -59,14 +59,13 @@ def render_templates():
         f.write(rendered_template)
 
     # allen_brain
-    f_source = forms.form1()
-    f_hotspot = forms.form2()
     rendered_template = flask.render_template("html/allen_brain.html.j2",
                                               all_exp=all_exp,
                                               struct_dict=st_dict,
                                               f_correlation=forms.form_correlation(),
-                                              f_source=f_source,
-                                              f_hotspot=f_hotspot,
+                                              f_inj_coord=forms.form_injection_coord(),
+                                              f_source=forms.form1(),
+                                              f_hotspot=forms.form2(),
                                               commit_info=head_commit)
     with open(app.static_folder + "/html/rendered_template/allen_brain.html", "w") as f:
         f.write(rendered_template)
@@ -107,20 +106,18 @@ def experiment_search(param):
         struct = st_dict[exp['structure_id']]
         prim_inj_struct = st_dict[exp['primary_injection_structure']]
         sect_id, res, ranges = utils.get_exp_img_sections_info(param)
-        return flask.render_template(
-            "html/experiment.html.j2",
-            exp=exp,
-            struct=struct,
-            prim_inj_struct=prim_inj_struct,
-            sect_id=sect_id,
-            sect_res=res,
-            sect_ranges=ranges
-        )
+        return flask.render_template("html/experiment.html.j2",
+                                     exp=exp,
+                                     struct=struct,
+                                     prim_inj_struct=prim_inj_struct,
+                                     sect_id=sect_id,
+                                     sect_res=res,
+                                     sect_ranges=ranges)
     else:
         # For using pre-establish filters specified in the url
         return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
 
-@app.route("/experiments/forms/correlation/", methods=['POST'])
+@app.route("/experiments/forms/correlation_search/", methods=['POST'])
 def form_correlation():
     f_correlation = forms.form_correlation()
     # error with form submit (validate_on_submit), don't know how to fix... TODO
@@ -143,7 +140,9 @@ def form_correlation():
         primary_structure_only = False
 
     start_row = f_correlation.start_row.data
+
     num_rows = f_correlation.num_rows.data
+
     result, errors = utils.correlation_search(row=row,
                                               structures=structures,
                                               product_ids=product_ids,
@@ -153,7 +152,7 @@ def form_correlation():
                                               primary_structure_only=primary_structure_only,
                                               start_row=start_row,
                                               num_rows=num_rows)
-    if len(errors) == 0:
+    if len(errors) == 0 and isinstance(result, list):
         rendered_template = flask.render_template("xml/experiment_search.xml.j2", values=result)
         # For test
         #with open(app.static_folder + "/html/rendered_template/text1.xml", "w") as f:
@@ -163,7 +162,46 @@ def form_correlation():
         return response
 
     return flask.render_template("html/experiment_search_error.html.j2",
-                                 search_type="correlation",
+                                 search_type="injection coordinate",
+                                 xml=result,
+                                 errors=errors)
+
+@app.route("/experiments/forms/injection_coord_search/", methods=['POST'])
+def form_injection_coord():
+    f_inj_coord = forms.form_injection_coord()
+    # error with form submit (validate_on_submit), don't know how to fix... TODO
+    seed_point = [f_inj_coord.coord_x.data, f_inj_coord.coord_y.data, f_inj_coord.coord_z.data]
+
+    product_ids = forms.convert_array_str_to_int(forms.str_to_array(f_inj_coord.product_ids.data))
+
+    transgenic_lines = forms.str_to_array(f_inj_coord.transgenic_lines.data)
+
+    injection_structures = forms.str_to_array(f_inj_coord.injection_structures.data)
+
+    primary_structure_only = True
+    if f_inj_coord.primary_structure_only.data.upper() == 'FALSE':
+        primary_structure_only = False
+
+    start_row = f_inj_coord.start_row.data
+
+    num_rows = f_inj_coord.num_rows.data
+
+    result, errors = utils.injection_correlation_search(seed_point=seed_point,
+                                                        product_ids=product_ids,
+                                                        transgenic_lines=transgenic_lines,
+                                                        injection_structures=injection_structures,
+                                                        primary_structure_only=primary_structure_only,
+                                                        start_row=start_row,
+                                                        num_rows=num_rows)
+
+    if len(errors) == 0 and isinstance(result, list):
+        rendered_template = flask.render_template("xml/experiment_search.xml.j2", values=result)
+        response = flask.make_response(rendered_template)
+        response.headers['Content-Type'] = 'application/xml'
+        return response
+
+    return flask.render_template("html/experiment_search_error.html.j2",
+                                 search_type="injection coordinate",
                                  xml=result,
                                  errors=errors)
 

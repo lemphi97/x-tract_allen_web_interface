@@ -20,7 +20,10 @@
     background-color: #f8f9fa;
 }
 
-.content-bg a {
+.content h1,
+.content p,
+.content li,
+.content a {
     color: black;
 }
 

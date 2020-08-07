@@ -109,7 +109,6 @@ def correlation_search(row,                          # Integer
                        transgenic_lines=None,        # [String], None, Specify ID '0' to exclude all TransgenicLines.
                        injection_structures=None,    # [String], None
                        primary_structure_only=None,  # True, False, None
-                       sort_order=None,              # 'asc', 'desc', None
                        start_row=None,               # Integer, None
                        num_rows=None):               # Integer, None
     result = None
@@ -153,15 +152,61 @@ def correlation_search(row,                          # Integer
             if line.isdigit():
                 transgenic_lines[i] = line
 
-    if len(errors) == 0:
-        result = mca.experiment_correlation_search(row=row,
-                                                   structures=structures,
-                                                   injection_structures=injection_structures,
-                                                   product_ids=product_ids,
-                                                   hemisphere=hemisphere,
-                                                   transgenic_lines=transgenic_lines,
-                                                   primary_structure_only=primary_structure_only,
-                                                   start_row=start_row,
-                                                   num_rows=num_rows)
+    result = mca.experiment_correlation_search(row=row,
+                                               structures=structures,
+                                               injection_structures=injection_structures,
+                                               product_ids=product_ids,
+                                               hemisphere=hemisphere,
+                                               transgenic_lines=transgenic_lines,
+                                               primary_structure_only=primary_structure_only,
+                                               start_row=start_row,
+                                               num_rows=num_rows)
+
+    return result, errors
+
+def injection_correlation_search(seed_point,                   # [Float]
+                                 product_ids=None,             # [Integer], None
+                                 transgenic_lines=None,        # [String], None, Specify ID '0' to exclude all TransgenicLines.
+                                 injection_structures=None,    # [String], None
+                                 primary_structure_only=None,  # True, False, None
+                                 start_row=None,               # Integer, None
+                                 num_rows=None):               # Integer, None
+    result = None
+    errors = []
+
+    coord_maximums = [13100, 7800, 11300]
+    coord_axis = ['x', 'y', 'z']
+    for i in range(0, 3):
+        if seed_point[i] < 0 or seed_point[i] > coord_maximums[i]:
+            errors.append("coordonate " + coord_axis[i] +
+                          " (0, " + coord_maximums[i] +
+                          ") is out of bound |" + seed_point[i] + "|")
+
+    if injection_structures is not None:
+        for i in range(0, len(injection_structures)):
+            struct = injection_structures[i]
+            if struct.isdigit():
+                struct = int(struct)
+                injection_structures[i] = struct
+                if struct not in dict_struct_id:
+                    errors.append("injection structure |" + str(struct) + "| doesn't exist")
+            elif struct not in dict_struct_acron or struct not in dict_struct_name:
+                errors.append("injection structure |" + str(struct) + "| doesn't exist")
+
+    # I don't know how to validate product id beforehand
+    # I don't know how to validate transgenic line beforehand
+    if transgenic_lines is not None:
+        for i in range(0, len(transgenic_lines)):
+            line = transgenic_lines[i]
+            if line.isdigit():
+                transgenic_lines[i] = line
+
+    result = mca.experiment_injection_coordinate_search(seed_point=seed_point,
+                                                        injection_structures=injection_structures,
+                                                        product_ids=product_ids,
+                                                        transgenic_lines=transgenic_lines,
+                                                        primary_structure_only=primary_structure_only,
+                                                        start_row=start_row,
+                                                        num_rows=num_rows)
 
     return result, errors

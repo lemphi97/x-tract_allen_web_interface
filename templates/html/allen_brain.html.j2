@@ -489,6 +489,7 @@
             correlation search
         </button>
         <div id="experiment-correlation-search" class="collapse">
+            <hr/>
             <form method="POST" action="{{ url_for('form_correlation') }}" target="_blank">
                 {{ f_correlation.csrf_token }}
                 <div class="form-group">
@@ -506,7 +507,7 @@
                 <div class="form-group">
                     {{ f_correlation.transgenic_lines.label }}
                     {{ f_correlation.transgenic_lines() }}
-                    <p>Put 0 for wild type</p>
+                    <p>Specify ID '0' to exclude all TransgenicLines</p>
                 </div>
                 <div class="form-group">
                     {{ f_correlation.injection_structures.label }}
@@ -530,59 +531,63 @@
                 </div>
                 {{ f_correlation.submit(class_="btn btn-success") }}
             </form>
+            <hr/>
         </div>
 
         <button class="btn btn-outline-info" data-toggle="collapse" data-target="#experiment-injection-coordinate-search">
             injection coordinate search
         </button>
         <div id="experiment-injection-coordinate-search" class="collapse">
-            <form action="/result" method="POST">
-                <label for="injection-coordinate-injection-struct">Injection structure:</label>
-                <input type="text" id="injection-coordinate-injection-struct" name="inj-struct-acron"
-                    placeholder="acron_1; acron_2; ..." autocomplete="off"/>
-                <br/>
-                <label for="injection-coordinate-target-struct">Target structure:</label>
-                <input type="text" id="injection-coordinate-struct" name="target-struct-acron"
-                    placeholder="acron_1; acron_2; ..." autocomplete="off"/>
-                <br/>
-                <label for="injection-coordinate-injection-hemi">Hemisphere:</label>
-                <select id="injection-coordinate-injection-hemi" name="inj-hemisphere" autocomplete="off">
-                    <option value="both">Both</option>
-                    <option value="left">Left</option>
-                    <option value="right">Right</option>
-                </select>
-                <br/>
-                <label for="injection-coordinate-target-hemi">Hemisphere:</label>
-                <select id="injection-coordinate-target-hemi" name="target-hemisphere" autocomplete="off">
-                    <option value="both">Both</option>
-                    <option value="left">Left</option>
-                    <option value="right">Right</option>
-                </select>
-                <br/>
-                <label for="injection-coordinate-line">Transgenic lines:</label>
-                <input type="text" id="injection-coordinate-line" name="transgenic-line"
-                    placeholder="line_1; line_2; ..." autocomplete="off"/>
-                <br/>
-                <label for="injection-coordinate-prim-only">Primary structures only:</label>
-                <select id="injection-coordinate-prim-only" name="primary-struct-only" autocomplete="off">
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </select>
-                <br/>
-                <label for="injection-coordinate-prod">Product id:</label>
-                <input type="text" id="injection-coordinate-prod" name="prod-id"
-                    placeholder="prod_1; prod_2; ..." autocomplete="off"/>
-                <br/>
-                <button type="submit">
-                    submit
-                </button>
+            <hr/>
+            <form method="POST" action="{{ url_for('form_injection_coord') }}" target="_blank">
+                {{ f_inj_coord.csrf_token }}
+                <div class="form-group">
+                    {{ f_inj_coord.coord_x.label }}
+                    {{ f_inj_coord.coord_x(required='required') }}
+                </div>
+                <div class="form-group">
+                    {{ f_inj_coord.coord_y.label }}
+                    {{ f_inj_coord.coord_y(required='required') }}
+                </div>
+                <div class="form-group">
+                    {{ f_inj_coord.coord_z.label }}
+                    {{ f_inj_coord.coord_z(required='required') }}
+                </div>
+                <div class="form-group">
+                    {{ f_inj_coord.transgenic_lines.label }}
+                    {{ f_inj_coord.transgenic_lines() }}
+                    <p>Specify ID '0' to exclude all TransgenicLines</p>
+                </div>
+                <div class="form-group">
+                    {{ f_inj_coord.injection_structures.label }}
+                    {{ f_inj_coord.injection_structures() }}
+                </div>
+                <div class="form-group">
+                    {{ f_inj_coord.primary_structure_only.label }}
+                    {{ f_inj_coord.primary_structure_only() }}
+                </div>
+                <div class="form-group">
+                    {{ f_inj_coord.product_ids.label }}
+                    {{ f_inj_coord.product_ids() }}
+                </div>
+                <div class="form-group">
+                    {{ f_inj_coord.start_row.label }}
+                    {{ f_inj_coord.start_row() }}
+                </div>
+                <div class="form-group">
+                    {{ f_inj_coord.num_rows.label }}
+                    {{ f_inj_coord.num_rows() }}
+                </div>
+                {{ f_inj_coord.submit(class_="btn btn-success") }}
             </form>
+            <hr/>
         </div>
 
         <button class="btn btn-outline-info" data-toggle="collapse" data-target="#experiment-source-search">
             source search
         </button>
         <div id="experiment-source-search" class="collapse">
+            <hr/>
             <form method="POST" action="{{ url_for('form_source') }}">
                 {{ f_source.csrf_token }}
                 <div class="form-group">
@@ -597,12 +602,14 @@
                     submit
                 </button>
             </form>
+            <hr/>
         </div>
 
         <button class="btn btn-outline-info" data-toggle="collapse" data-target="#experiment-hotspot">
             find hotspot
         </button>
         <div id="experiment-hotspot" class="collapse">
+            <hr/>
             <form method="POST" action="{{ url_for('form_hotspot') }}">
                 {{ f_hotspot.csrf_token }}
                 <div class="form-group">
@@ -621,6 +628,7 @@
                     submit
                 </button>
             </form>
+            <hr/>
         </div>
     </div>
 {% endblock %}
