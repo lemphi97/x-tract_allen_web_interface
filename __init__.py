@@ -59,7 +59,7 @@ def render_templates():
                                               struct_dict=st_dict,
                                               f_correlation=forms.form_correlation(),
                                               f_inj_coord=forms.form_injection_coord(),
-                                              f_source=forms.form1(),
+                                              f_source=forms.form_source(),
                                               f_hotspot=forms.form2(),
                                               commit_info=head_commit)
     with open(app.static_folder + "/html/rendered_template/allen_brain.html", "w") as f:
@@ -121,12 +121,14 @@ def experiment_search(param):
 @app.route("/experiments/forms/correlation_search/", methods=['POST'])
 def form_correlation():
     f_correlation = forms.form_correlation()
+
     # error with form submit (validate_on_submit), don't know how to fix... TODO
+    if f_correlation.validate_on_submit():
+        return "You're a wizard Harry"
+
     row = f_correlation.row.data
 
     structures = forms.str_to_array(f_correlation.structures.data)
-
-    product_ids = forms.convert_array_str_to_int(forms.str_to_array(f_correlation.product_ids.data))
 
     hemisphere = f_correlation.hemisphere.data
     if hemisphere.upper() == "BOTH":
@@ -139,6 +141,8 @@ def form_correlation():
     primary_structure_only = True
     if f_correlation.primary_structure_only.data.upper() == 'FALSE':
         primary_structure_only = False
+
+    product_ids = forms.convert_array_str_to_int(forms.str_to_array(f_correlation.product_ids.data))
 
     start_row = f_correlation.start_row.data
 
@@ -172,10 +176,12 @@ def form_correlation():
 @app.route("/experiments/forms/injection_coord_search/", methods=['POST'])
 def form_injection_coord():
     f_inj_coord = forms.form_injection_coord()
-    # error with form submit (validate_on_submit), don't know how to fix... TODO
-    seed_point = [f_inj_coord.coord_x.data, f_inj_coord.coord_y.data, f_inj_coord.coord_z.data]
 
-    product_ids = forms.convert_array_str_to_int(forms.str_to_array(f_inj_coord.product_ids.data))
+    # error with form submit (validate_on_submit), don't know how to fix... TODO
+    if f_inj_coord.validate_on_submit():
+        return "You're a wizard Harry"
+
+    seed_point = [f_inj_coord.coord_x.data, f_inj_coord.coord_y.data, f_inj_coord.coord_z.data]
 
     transgenic_lines = forms.str_to_array(f_inj_coord.transgenic_lines.data)
 
@@ -184,6 +190,8 @@ def form_injection_coord():
     primary_structure_only = True
     if f_inj_coord.primary_structure_only.data.upper() == 'FALSE':
         primary_structure_only = False
+
+    product_ids = forms.convert_array_str_to_int(forms.str_to_array(f_inj_coord.product_ids.data))
 
     start_row = f_inj_coord.start_row.data
 
@@ -211,10 +219,59 @@ def form_injection_coord():
 
 @app.route("/experiments/forms/source/", methods=['POST'])
 def form_source():
-    f_source = forms.form1()
+    f_source = forms.form_source()
+
+    # error with form submit (validate_on_submit), don't know how to fix... TODO
     if f_source.validate_on_submit():
-        return "SOURCE: field1: {}, field2: {}".format(f_source.field1.data, f_source.field2.data)
-    return "Error with form submit"
+        return "You're a wizard Harry"
+
+    injection_structures = forms.str_to_array(f_source.injection_structures.data)
+
+    target_domain = forms.str_to_array(f_source.target_domain.data)
+
+    injection_hemisphere = f_source.injection_hemisphere.data
+    if injection_hemisphere.upper() == "BOTH":
+        injection_hemisphere = None
+
+    target_hemisphere = f_source.target_hemisphere.data
+    if target_hemisphere.upper() == "BOTH":
+        target_hemisphere = None
+
+    transgenic_lines = forms.str_to_array(f_source.transgenic_lines.data)
+
+    injection_domain = forms.str_to_array(f_source.injection_domain.data)
+
+    primary_structure_only = True
+    if f_source.primary_structure_only.data.upper() == 'FALSE':
+        primary_structure_only = False
+
+    product_ids = forms.convert_array_str_to_int(forms.str_to_array(f_source.product_ids.data))
+
+    start_row = f_source.start_row.data
+
+    num_rows = f_source.num_rows.data
+
+    result, errors = utils.source_search(injection_structures=injection_structures,
+                                         target_domain=target_domain,
+                                         injection_hemisphere=injection_hemisphere,
+                                         target_hemisphere=target_hemisphere,
+                                         transgenic_lines=transgenic_lines,
+                                         injection_domain=injection_domain,
+                                         primary_structure_only=primary_structure_only,
+                                         product_ids=product_ids,
+                                         start_row=start_row,
+                                         num_rows=num_rows)
+
+    if len(errors) == 0 and isinstance(result, list):
+        rendered_template = flask.render_template("xml/experiment_search.xml.j2", values=result)
+        response = flask.make_response(rendered_template)
+        response.headers['Content-Type'] = 'application/xml'
+        return response
+
+    return flask.render_template("html/experiment_search_error.html.j2",
+                                 search_type="injection coordinate",
+                                 xml=result,
+                                 errors=errors)
 
 
 @app.route("/experiments/forms/hotspot/", methods=['POST'])

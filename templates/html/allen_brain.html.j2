@@ -529,7 +529,7 @@
                     {{ f_correlation.num_rows.label }}
                     {{ f_correlation.num_rows() }}
                 </div>
-                {{ f_correlation.submit(class_="btn btn-success") }}
+                {{ f_correlation.submit_correlation(class_="btn btn-success") }}
             </form>
             <hr/>
         </div>
@@ -544,14 +544,17 @@
                 <div class="form-group">
                     {{ f_inj_coord.coord_x.label }}
                     {{ f_inj_coord.coord_x(required='required') }}
+                    <p>Min=0, Max=13100 (Midpoint=6550)</p>
                 </div>
                 <div class="form-group">
                     {{ f_inj_coord.coord_y.label }}
                     {{ f_inj_coord.coord_y(required='required') }}
+                    <p>Min=0, Max=7800 (Midpoint=3900)</p>
                 </div>
                 <div class="form-group">
                     {{ f_inj_coord.coord_z.label }}
                     {{ f_inj_coord.coord_z(required='required') }}
+                    <p>Min=0, Max=11300 (Midpoint=5650)</p>
                 </div>
                 <div class="form-group">
                     {{ f_inj_coord.transgenic_lines.label }}
@@ -578,7 +581,7 @@
                     {{ f_inj_coord.num_rows.label }}
                     {{ f_inj_coord.num_rows() }}
                 </div>
-                {{ f_inj_coord.submit(class_="btn btn-success") }}
+                {{ f_inj_coord.submit_injection_coord(class_="btn btn-success") }}
             </form>
             <hr/>
         </div>
@@ -588,19 +591,50 @@
         </button>
         <div id="experiment-source-search" class="collapse">
             <hr/>
-            <form method="POST" action="{{ url_for('form_source') }}">
+            <form method="POST" action="{{ url_for('form_source') }}" target="_blank">
                 {{ f_source.csrf_token }}
                 <div class="form-group">
-                    {{ f_source.field1.label }}
-                    {{ f_source.field1(required='required') }}
+                    {{ f_source.injection_structures.label }}
+                    {{ f_source.injection_structures(required='required') }}
                 </div>
                 <div class="form-group">
-                    {{ f_source.field2.label }}
-                    {{ f_source.field2(required='required') }}
+                    {{ f_source.target_domain.label }}
+                    {{ f_source.target_domain() }}
                 </div>
-                <button type="submit" class="btn btn-success">
-                    submit
-                </button>
+                <div class="form-group">
+                    {{ f_source.injection_hemisphere.label }}
+                    {{ f_source.injection_hemisphere() }}
+                </div>
+                <div class="form-group">
+                    {{ f_source.target_hemisphere.label }}
+                    {{ f_source.target_hemisphere() }}
+                </div>
+                <div class="form-group">
+                    {{ f_source.transgenic_lines.label }}
+                    {{ f_source.transgenic_lines() }}
+                </div>
+                <div class="form-group">
+                    {{ f_source.injection_domain.label }}
+                    {{ f_source.injection_domain() }}
+                    <p>Specify ID '0' to exclude all TransgenicLines</p>
+                </div>
+                <div class="form-group">
+                    {{ f_source.primary_structure_only.label }}
+                    {{ f_source.primary_structure_only() }}
+                </div>
+                <div class="form-group">
+                    {{ f_source.product_ids.label }}
+                    {{ f_source.product_ids() }}
+                </div>
+                <div class="form-group">
+                    {{ f_source.start_row.label }}
+                    {{ f_source.start_row() }}
+                </div>
+                <div class="form-group">
+                    {{ f_source.num_rows.label }}
+                    {{ f_source.num_rows() }}
+                </div>
+                {{ f_source.submit_source(class_="btn btn-success") }}
             </form>
             <hr/>
         </div>
