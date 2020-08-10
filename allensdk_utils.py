@@ -133,6 +133,7 @@ def validate_hemisphere(hemisphere, errors, category):
         errors.append(category + " |" + str(hemisphere) + "| is invalid")
     return
 
+
 def correlation_search(row,                          # Integer
                        structures=None,              # [String], None
                        product_ids=None,             # [Integer], None
@@ -254,3 +255,60 @@ def source_search(injection_structures,         # [String], None
                                           num_rows=num_rows)
 
     return result, errors
+
+
+def hotspot_search(rows,                  # [Integer]
+                   injection_structures,  # [String, Integer], None
+                   depth):                # String
+    errors = []
+
+    all_exp_id = mcc.get_experiments(dataframe=True)['id']
+    for row in rows:
+        if row not in all_exp_id:
+            errors.append("experiment |" + str(row) + "| doesn't exist")
+
+    structures_id = []
+    for struct in injection_structures:
+        structure_id = None
+        if struct in dict_struct_id:
+            structure_id = struct
+        elif struct in dict_struct_acron:
+            structure_id = dict_struct_acron[struct]
+        elif struct in dict_struct_name:
+            structure_id = dict_struct_name[struct]
+        else:
+            errors.append("structure |" + str(struct) + "| doesn't exist")
+
+        if structure_id is not None and structure_id not in structures_id:
+            structures_id.append(structure_id)
+        if depth == 'child':
+            structure_childs = st_tree.child_ids([structure_id])[0]
+            structures_id.extend(struct for struct in structure_childs if struct not in structures_id)
+        elif depth == 'all':
+            structure_descendants = st_tree.descendant_ids([structure_id])[0]
+            structures_id.extend(struct for struct in structure_descendants if struct not in structures_id)
+
+    if len(structures_id) == 0:
+        structures_id = None
+
+    # connectivity matrix
+    pm = mcc.get_projection_matrix(experiment_ids=rows,
+                                   projection_structure_ids=structures_id,
+                                   parameter="projection_density")
+
+    projections_density = np.nan_to_num([i for i in pm['matrix']])
+
+    # Normalize density
+    projections_probability = []
+    for density in projections_density:
+        projections_probability.append(density / density.sum())
+
+    projections_crossing = projections_probability[0]
+    for i in range(1, len(projections_probability)):
+        projections_crossing *= projections_probability[i]
+
+    dict_proj_crossing = {}
+    for i in range(0, len(projections_crossing)):
+        projections_crossing[pm['columns'][i]['label']] = projections_crossing[i]
+
+    return dict_proj_crossing, projections_density, errors

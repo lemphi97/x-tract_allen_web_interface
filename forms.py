@@ -99,15 +99,11 @@ class form_source(FlaskForm):
 
 
 class form_hotspot(FlaskForm):
-    ...
-
-
-class form1(FlaskForm):
-    field1 = StringField("field1")
-    field2 = StringField("field2")
-
-
-class form2(FlaskForm):
-    field1 = StringField("field1")
-    field2 = StringField("field2")
-    field3 = StringField("field3")
+    # (list of integers or strings) SectionDataSet.id to correlate against
+    rows = StringField("experiment ids: *")
+    # (list of integers or strings, optional) Integer Structure.id or String Structure.acronym
+    injection_structures = StringField("injection structures:")
+    # (string, optional) Use ‘right’ or ‘left’. Defaults to both hemispheres.
+    depth = SelectField("structures depth:", choices=["none", "child", "all"])
+    # submit btn
+    submit_hotspot = SubmitField("submit")

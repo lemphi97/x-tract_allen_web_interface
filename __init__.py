@@ -60,7 +60,7 @@ def render_templates():
                                               f_correlation=forms.form_correlation(),
                                               f_inj_coord=forms.form_injection_coord(),
                                               f_source=forms.form_source(),
-                                              f_hotspot=forms.form2(),
+                                              f_hotspot=forms.form_hotspot(),
                                               commit_info=head_commit)
     with open(app.static_folder + "/html/rendered_template/allen_brain.html", "w") as f:
         f.write(rendered_template)
@@ -159,7 +159,7 @@ def form_correlation():
                                               num_rows=num_rows)
 
     if len(errors) == 0 and isinstance(result, list):
-        rendered_template = flask.render_template("xml/experiment_search.xml.j2", values=result)
+        rendered_template = flask.render_template("xml/experiment_search.xml.j2", elem="experiment", values=result)
         # For test
         #with open(app.static_folder + "/html/rendered_template/text1.xml", "w") as f:
         #    f.write(rendered_template)
@@ -206,7 +206,7 @@ def form_injection_coord():
                                                         num_rows=num_rows)
 
     if len(errors) == 0 and isinstance(result, list):
-        rendered_template = flask.render_template("xml/experiment_search.xml.j2", values=result)
+        rendered_template = flask.render_template("xml/experiment_search.xml.j2", elem="experiment", values=result)
         response = flask.make_response(rendered_template)
         response.headers['Content-Type'] = 'application/xml'
         return response
@@ -263,7 +263,7 @@ def form_source():
                                          num_rows=num_rows)
 
     if len(errors) == 0 and isinstance(result, list):
-        rendered_template = flask.render_template("xml/experiment_search.xml.j2", values=result)
+        rendered_template = flask.render_template("xml/experiment_search.xml.j2", elem="experiment", values=result)
         response = flask.make_response(rendered_template)
         response.headers['Content-Type'] = 'application/xml'
         return response
@@ -276,11 +276,26 @@ def form_source():
 
 @app.route("/experiments/forms/hotspot/", methods=['POST'])
 def form_hotspot():
-    f_hotspot = forms.form2()
-    if f_hotspot.validate_on_submit():
-        return "Submit HOTSPOT: field1: {}, field2: {}, field3: {}".format(f_hotspot.field1.data, f_hotspot.field2.data, f_hotspot.field3.data)
-    return "Error with form submit"
+    f_hotspot = forms.form_hotspot()
 
+    # error with form submit (validate_on_submit), don't know how to fix... TODO
+    if f_hotspot.validate_on_submit():
+        return "You're a wizard Harry"
+
+    rows = forms.convert_array_str_to_int(forms.str_to_array(f_hotspot.rows.data))
+
+    injection_structures = forms.str_to_array(f_hotspot.injection_structures.data)
+
+    depth = f_hotspot.depth.data
+    if depth.upper() == "NONE":
+        depth = None
+
+    result, errors = utils.hotspot_search(rows=rows,
+                                          injection_structures=injection_structures,
+                                          depth=depth)
+
+    # custom template TODO
+    return ...
 
 @app.route("/volume_viewer/")
 def volume_viewer():

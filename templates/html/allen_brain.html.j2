@@ -478,6 +478,11 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+
+    <br/>
+
+    <div class="content-bg">
         <button id="copy-id-btn" class="btn btn-outline-primary">
             copy id(s)
         </button>
@@ -644,23 +649,21 @@
         </button>
         <div id="experiment-hotspot" class="collapse">
             <hr/>
-            <form method="POST" action="{{ url_for('form_hotspot') }}">
+            <form method="POST" action="{{ url_for('form_hotspot') }}" target="_blank">
                 {{ f_hotspot.csrf_token }}
                 <div class="form-group">
-                    {{ f_hotspot.field1.label }}
-                    {{ f_hotspot.field1(required='required') }}
+                    {{ f_hotspot.rows.label }}
+                    {{ f_hotspot.rows(required='required') }}
                 </div>
                 <div class="form-group">
-                    {{ f_hotspot.field2.label }}
-                    {{ f_hotspot.field2(required='required') }}
+                    {{ f_hotspot.injection_structures.label }}
+                    {{ f_hotspot.injection_structures() }}
                 </div>
                 <div class="form-group">
-                    {{ f_hotspot.field3.label }}
-                    {{ f_hotspot.field3(required='required') }}
+                    {{ f_hotspot.depth.label }}
+                    {{ f_hotspot.depth(required='required') }}
                 </div>
-                <button type="submit" class="btn btn-success">
-                    submit
-                </button>
+                {{ f_hotspot.submit_hotspot(class_="btn btn-success") }}
             </form>
             <hr/>
         </div>
