@@ -76,29 +76,49 @@ function getRowColumn(datatableVar, rowIndex, columnIndex)
 }
 
 /*
- * Gets structure without the acronym from a line in the datatable
+ * Gets structures without the acronym from a line in the datatable.
+ * Returns string of structures
  */
-function getStructure(str)
+function getStructures(str)
 {
-    var indexBeforeAcron = str.lastIndexOf("(");
-    if (indexBeforeAcron < 0)
+    var innerHTML = parser.parseFromString(str, 'text/html');
+    var structures = innerHTML.getElementsByTagName('li');
+    var result = "";
+    for (i = 0; i < structures.length; i++)
     {
-        return "";
+        var indexBeforeAcron = str.lastIndexOf("|");
+        if (indexBeforeAcron > 0)
+        {
+            result += str.substring(0, indexBeforeAcron).trim();
+            if (i + 1 < structures.length)
+            {
+                result += ";";
+            }
+
     }
-    return str.substring(0, indexBeforeAcron).trim();
+
+    return result;
 }
 
 /*
  * Gets all the unique structures without the acronym from the column of the datatable
  */
-function getStructures(column)
+function getUniqueStructures(column)
 {
-    var array = new Array(column.length);
+    uniqueStruct = [];
     for (i = 0; i < column.length; i++)
     {
-        array[i] = getStructure(column[i]);
+        var structures = getStructures(column[i]).split(';');
+        for (j = 0; j < structures.length; j++)
+        {
+            if (! uniqueStruct.includes(structures[j]))
+            {
+                uniqueStruct.push(structures[j]);
+            }
+        }
     }
-    return array;
+
+    return uniqueStruct;
 }
 
 /*
@@ -118,7 +138,7 @@ function getAcronym(str)
 /*
  * Gets all the unique acronym from the column of the datatable
  */
-function getAcronyms(column)
+function getUniqueAcronyms(column)
 {
     var array = new Array(column.length);
     for (i = 0; i < column.length; i++)
@@ -868,8 +888,8 @@ $(document).ready(function ()
     //
     // Configure autocomplete
     //
-    var structures = getStructures(table.column(1).data());
-    var structuresAcronyms = getAcronyms(table.column(1).data());
+    var structures = getUniqueStructures(table.column(1).data());
+    var structuresAcronyms = getUniqueAcronyms(table.column(1).data());
     var specimenLines = table.column(7).data().unique();
     var specimenNames = table.column(8).data().unique();
 

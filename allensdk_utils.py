@@ -69,7 +69,7 @@ def get_struct_in_dict(experiences):
         for struct_id in struct_id_array:
             if struct_id not in st_dict:
                 struct_dict = st_tree.get_structures_by_id([struct_id])[0]
-                st_dict[struct_id] = struct_dict['name'] + " (" + struct_dict['acronym'] + ")"
+                st_dict[struct_id] = struct_dict['name'] + " |" + struct_dict['acronym'] + "|"
 
     return st_dict
 

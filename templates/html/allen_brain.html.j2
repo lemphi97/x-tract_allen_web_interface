@@ -441,9 +441,7 @@
                     <td>
                         <ol>
                         {% for j in range(0, all_exp.iloc[i]['injection_structures']|length) %}
-                            <li class="text-dark">
-                                {{ struct_dict[all_exp.iloc[i]['injection_structures'][j]] }}
-                            </li>
+                            <li>{{ struct_dict[all_exp.iloc[i]['injection_structures'][j]] }}</li>
                         {% endfor %}
                         </ol>
                     </td>
