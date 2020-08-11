@@ -116,9 +116,9 @@ function getUniqueAcronyms(column)
         for (j = 0; j < structures.length; j++)
         {
             var struct = structures[j].innerHTML;
-            var structAcron = struct.match(/\|[^\|]*\|/);
+            var structAcron = struct.match(/\|[^\|]*\|/)[0];
             // remove `|` chars from acronym
-            structAcron[0].substring(1, structAcron.length - 1);
+            structAcron = structAcron.substring(1, structAcron.length - 1);
             if (structAcron.length > 0 && ! uniqueStruct.includes(structAcron))
             {
                 uniqueStruct.push(structAcron);
