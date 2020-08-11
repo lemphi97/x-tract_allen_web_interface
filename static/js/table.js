@@ -44,6 +44,9 @@ var excludeContainsAcronFilter = false;
 var excludeContainsProdFilter = false;
 var excludeContainsLineFilter = false;
 
+// DOM parser
+var parser = new DOMParser();
+
 // switch between include and exclude filters
 function showIncludeFilters()
 {
@@ -81,8 +84,8 @@ function getRowColumn(datatableVar, rowIndex, columnIndex)
  */
 function getStructures(str)
 {
-    var innerHTML = parser.parseFromString(str, 'text/html');
-    var structures = innerHTML.getElementsByTagName('li');
+    var unorderedList = parser.parseFromString(str, 'text/html');
+    var structures = unorderedList.getElementsByTagName('li');
     var result = "";
     for (i = 0; i < structures.length; i++)
     {
@@ -94,7 +97,7 @@ function getStructures(str)
             {
                 result += ";";
             }
-
+        }
     }
 
     return result;
@@ -259,10 +262,10 @@ $.fn.dataTable.ext.search.push
             {
                 var experimentStruct = columnStruct.substring(startIndex, endIndex + 1);
 
-                structIsIncluded = validateText(includeNames, getStructure(experimentStruct)) ||
+                structIsIncluded = validateText(includeNames, getStructures(experimentStruct)) ||
                                    validateText(includeAcronyms, getAcronym(experimentStruct));
 
-                structIsExcluded = validateText(excludeNames, getStructure(experimentStruct)) ||
+                structIsExcluded = validateText(excludeNames, getStructures(experimentStruct)) ||
                                    validateText(excludeAcronyms, getAcronym(experimentStruct));
 
                 startIndex = endIndex + 1
