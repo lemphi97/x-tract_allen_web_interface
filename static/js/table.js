@@ -79,44 +79,23 @@ function getRowColumn(datatableVar, rowIndex, columnIndex)
 }
 
 /*
- * Gets structures without the acronym from a line in the datatable.
- * Returns string of structures
- */
-function getStructures(str)
-{
-    var unorderedList = parser.parseFromString(str, 'text/html');
-    var structures = unorderedList.getElementsByTagName('li');
-    var result = "";
-    for (i = 0; i < structures.length; i++)
-    {
-        var indexBeforeAcron = str.lastIndexOf("|");
-        if (indexBeforeAcron > 0)
-        {
-            result += str.substring(0, indexBeforeAcron).trim();
-            if (i + 1 < structures.length)
-            {
-                result += ";";
-            }
-        }
-    }
-
-    return result;
-}
-
-/*
  * Gets all the unique structures without the acronym from the column of the datatable
  */
 function getUniqueStructures(column)
 {
-    uniqueStruct = [];
+    var uniqueStruct = [];
     for (i = 0; i < column.length; i++)
     {
-        var structures = getStructures(column[i]).split(';');
+        var unorderedList = parser.parseFromString(column[i], 'text/html');
+        var structures = unorderedList.getElementsByTagName('li');
         for (j = 0; j < structures.length; j++)
         {
-            if (! uniqueStruct.includes(structures[j]))
+            var struct = structures[j].innerHTML;
+            var indexBeforeAcron = struct.indexOf("|");
+            var structName = struct.substring(0, indexBeforeAcron).trim();
+            if (indexBeforeAcron > 0 && ! uniqueStruct.includes(structName))
             {
-                uniqueStruct.push(structures[j]);
+                uniqueStruct.push(structName);
             }
         }
     }
@@ -125,40 +104,29 @@ function getUniqueStructures(column)
 }
 
 /*
- * Get the acronym from a line in the datatable
- */
-function getAcronym(str)
-{
-    var indexAcronStarts = str.lastIndexOf("(") + 1;
-    var indexAcronEnds = str.lastIndexOf(")");
-    if (indexAcronStarts <= indexAcronEnds)
-    {
-        return str.substring(indexAcronStarts, indexAcronEnds).trim();
-    }
-    return "";
-}
-
-/*
  * Gets all the unique acronym from the column of the datatable
  */
 function getUniqueAcronyms(column)
 {
-    var array = new Array(column.length);
+    var uniqueStruct = [];
     for (i = 0; i < column.length; i++)
     {
-        array[i] = getAcronym(column[i]);
+        var unorderedList = parser.parseFromString(column[i], 'text/html');
+        var structures = unorderedList.getElementsByTagName('li');
+        for (j = 0; j < structures.length; j++)
+        {
+            var struct = structures[j].innerHTML;
+            var structAcron = struct.match(/\|[^\|]*\|/);
+            // remove `|` chars from acronym
+            structAcron[0].substring(1, structAcron.length - 1);
+            if (structAcron.length > 0 && ! uniqueStruct.includes(structAcron))
+            {
+                uniqueStruct.push(structAcron);
+            }
+        }
     }
-    return array;
-}
 
-/*
- * Takes the values separated by ',' between parentheses and return it as an array
- */
-function parseParenthesesToArray(str)
-{
-    var noParentheses = str.substring(str.indexOf("(") + 1, str.indexOf(")"));
-    var trimWhiteSpace = noParentheses.replace(", ", ",");
-    return trimWhiteSpace.split(",");
+    return uniqueStruct;
 }
 
 /*
@@ -247,30 +215,29 @@ $.fn.dataTable.ext.search.push
         var x = parseInt(data[4]) || 0;
         var y = parseInt(data[5]) || 0;
         var z = parseInt(data[6]) || 0;
-        var columnline = data[7];
+        var columnLine = data[7];
         var columnSpecName = data[8];
         var columnGender = data[9];
         var columnCre = data[10];
 
         var structIsIncluded = false;
         var structIsExcluded = false;
-        var startIndex = 0;
-        var endIndex = 0;
-        while (endIndex < columnStruct.length && !structIsIncluded && !structIsExcluded)
+        var structArray = columnStruct.substring(0, columnStruct.lastIndexOf('|') - 1).split('|');
+
+        /**
+         * only check for structIsIncluded in case structure is also excluded,
+         * in which case include takes priority over exclude
+         */
+        for (i = 0; i < structArray && !structIsIncluded; i += 2)
         {
-            if (columnStruct[endIndex] == ')')
-            {
-                var experimentStruct = columnStruct.substring(startIndex, endIndex + 1);
+            var name = structArray[i];
+            var acronym = structArray[i + 1];
+            structIsIncluded = validateText(includeNames, name) ||
+                               validateText(includeAcronyms, acronym);
 
-                structIsIncluded = validateText(includeNames, getStructures(experimentStruct)) ||
-                                   validateText(includeAcronyms, getAcronym(experimentStruct));
-
-                structIsExcluded = validateText(excludeNames, getStructures(experimentStruct)) ||
-                                   validateText(excludeAcronyms, getAcronym(experimentStruct));
-
-                startIndex = endIndex + 1
-            }
-            endIndex++;
+            structIsExcluded = validateText(excludeNames, name) ||
+                               validateText(excludeAcronyms, acronym);
+            structArray
         }
 
         if (validateText(includeIds, columnExpId))
@@ -307,12 +274,12 @@ $.fn.dataTable.ext.search.push
                 &&
                 (
                     ! includeContainsLineFilter ||
-                    validateText(includeLines, columnline)
+                    validateText(includeLines, columnLine)
                 )
                 &&
                 (
                     ! excludeContainsLineFilter ||
-                    ! validateText(excludeLines, columnline)
+                    ! validateText(excludeLines, columnLine)
                 )
             )
         ){
