@@ -309,3 +309,5 @@ def about_website():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    #app.add_url_rule('/favicon.ico',
+    #                 redirect_to=flask.url_for('static', filename='img/ico/tmp_favicon.ico'))
