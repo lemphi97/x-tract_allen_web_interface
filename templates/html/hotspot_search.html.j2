@@ -1,0 +1,77 @@
+{% extends "html/base.html.j2" %}
+
+{% block title %}
+    Hotspot search
+{% endblock %}
+
+{% block dependencies %}
+<link rel="stylesheet" type="text/css"
+      href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
+{% endblock %}
+
+{% block content %}
+    {% if errors|length > 0 %}
+    <div class="content-bg">
+        <h2>Errors</h2>
+        <ul>
+            {% for error in errors %}
+            <li>Error: {{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <br/>
+    {% endif %}
+
+    <div class="content-bg" style="max-width: 600px;">
+        <div class="table-sm">
+            <table id="crossing-probabilities" class="datatable row-border" cellspacing="0" width="100%">
+                <thead>
+                    <th>structures</th>
+                    <th>probabilities</th>
+                </thead>
+
+                <tfoot>
+                    <th>structure</th>
+                    <th>probabilities</th>
+                </tfoot>
+
+                <tbody>
+                    {% for key, value in probabilities.items() %}
+                    <tr>
+                        <td>
+                            <a target="_blank" rel="noreferrer" href="#">
+                                {{ key }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ value }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <br/>
+
+    <div class="content-bg table-sm">
+        <div id="matrix-div"></div>
+    </div>
+{% endblock %}
+
+{% block dependenciesScripts %}
+{# datatable #}
+<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+{# plotly #}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+{# custom #}
+<script>
+var labels = {{ labels|safe }};
+var rows = {{ rows|safe }};
+var matrix = {{ matrix }};
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/hotspot_search.js') }}"></script>
+{% endblock %}

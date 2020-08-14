@@ -296,19 +296,22 @@ def hotspot_search(rows,                  # [Integer]
                                    projection_structure_ids=structures_id,
                                    parameter="projection_density")
 
-    projections_density = np.nan_to_num([i for i in pm['matrix']])
+    matrix = np.nan_to_num([i for i in pm['matrix']])
 
     # Normalize density
-    projections_probability = []
-    for density in projections_density:
-        projections_probability.append(density / density.sum())
+    projection_probability = []
+    for density in matrix:
+        projection_probability.append(density / density.sum())
 
-    projections_crossing = projections_probability[0]
-    for i in range(1, len(projections_probability)):
-        projections_crossing *= projections_probability[i]
+    projection_crossing = projection_probability[0]
+    for i in range(1, len(projection_probability)):
+        projection_crossing *= projection_probability[i]
 
     dict_proj_crossing = {}
-    for i in range(0, len(projections_crossing)):
-        projections_crossing[pm['columns'][i]['label']] = projections_crossing[i]
+    for i in range(0, len(projection_crossing)):
+        dict_proj_crossing[pm['columns'][i]['label']] = projection_crossing[i]
 
-    return dict_proj_crossing, projections_density, errors
+    # numpy array to list array (for templates uses)
+    matrix = [list(array) for array in matrix]
+
+    return dict_proj_crossing, matrix, list(pm['rows']), [c['label'] for c in pm['columns']], errors

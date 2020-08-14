@@ -5,14 +5,14 @@
 {% endblock %}
 
 {% block dependencies %}
-    <link rel="stylesheet" type="text/css"
-          href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
-    <link rel="stylesheet" type="text/css"
-          href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='css/autocomplete.css') }}"/>
-    <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='css/allen_brain_connectivity.css') }}"/>
+<link rel="stylesheet" type="text/css"
+      href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css"
+      href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='css/autocomplete.css') }}"/>
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='css/allen_brain_connectivity.css') }}"/>
 {% endblock %}
 
 {% block content %}
@@ -434,7 +434,7 @@
                 {% for i in range(0, all_exp|length) %}
                 <tr>
                     <td>
-                        <a target="_blank" rel="noopener noreferrer" href="/experiments/{{ all_exp.iloc[i]['id'] }}">
+                        <a target="_blank" rel="noreferrer" href="/experiments/{{ all_exp.iloc[i]['id'] }}">
                             {{ all_exp.iloc[i]['id'] }}
                         </a>
                     </td>
@@ -493,8 +493,9 @@
         </button>
         <div id="experiment-correlation-search" class="collapse">
             <hr/>
-            <form method="POST" action="{{ url_for('form_correlation') }}" target="_blank">
+            <form method="POST" action="{{ url_for('form_correlation') }}" target="_blank" rel="noreferrer">
                 {{ f_correlation.csrf_token }}
+                {{ f_correlation.hidden_tag() }}
                 <div class="form-group">
                     {{ f_correlation.row.label }}
                     {{ f_correlation.row(required='required') }}
@@ -542,8 +543,9 @@
         </button>
         <div id="experiment-injection-coordinate-search" class="collapse">
             <hr/>
-            <form method="POST" action="{{ url_for('form_injection_coord') }}" target="_blank">
+            <form method="POST" action="{{ url_for('form_injection_coord') }}" target="_blank" rel="noreferrer">
                 {{ f_inj_coord.csrf_token }}
+                {{ f_inj_coord.hidden_tag() }}
                 <div class="form-group">
                     {{ f_inj_coord.coord_x.label }}
                     {{ f_inj_coord.coord_x(required='required') }}
@@ -594,8 +596,9 @@
         </button>
         <div id="experiment-source-search" class="collapse">
             <hr/>
-            <form method="POST" action="{{ url_for('form_source') }}" target="_blank">
+            <form method="POST" action="{{ url_for('form_source') }}" target="_blank" rel="noreferrer">
                 {{ f_source.csrf_token }}
+                {{ f_source.hidden_tag() }}
                 <div class="form-group">
                     {{ f_source.injection_structures.label }}
                     {{ f_source.injection_structures(required='required') }}
@@ -647,8 +650,9 @@
         </button>
         <div id="experiment-hotspot" class="collapse">
             <hr/>
-            <form method="POST" action="{{ url_for('form_hotspot') }}" target="_blank">
+            <form method="POST" action="{{ url_for('form_hotspot') }}" target="_blank" rel="noreferrer">
                 {{ f_hotspot.csrf_token }}
+                {{ f_hotspot.hidden_tag() }}
                 <div class="form-group">
                     {{ f_hotspot.rows.label }}
                     {{ f_hotspot.rows(required='required') }}
@@ -669,11 +673,14 @@
 {% endblock %}
 
 {% block dependenciesScripts %}
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+{# sliders #}
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    {# datatable #}
-    <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    {# for page skip with datatable https://datatables.net/plug-ins/pagination/input #}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/table.js') }}"></script>
+{# datatable #}
+<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+{# for page skip with datatable https://datatables.net/plug-ins/pagination/input #}
+
+{# custom #}
+<script type="text/javascript" src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/table.js') }}"></script>
 {% endblock %}
