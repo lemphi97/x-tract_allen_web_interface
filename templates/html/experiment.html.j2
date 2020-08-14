@@ -56,7 +56,7 @@
                         </tr>
                         <tr>
                             <th>
-                                injection volume
+                                injection volume (mm3)
                             </th>
                             <td>
                                 {{ exp['injection_volume'] }}
@@ -160,7 +160,9 @@
             <div class="content-bg">
                 <h2>Grid data (nrrd)</h2>
                 <form>
-                    <label for="res-nrrd">resolution:</label>
+                    {# Volume resolution is in `μm`. See link: #}
+                    {# https://allensdk.readthedocs.io/en/latest/_static/examples/nb/mouse_connectivity.html#Manipulating-Grid-Data #}
+                    <label for="res-nrrd">resolution (microns):</label>
                     <select id="res-nrrd">
                         <option>100</option>
                         <option>50</option>
