@@ -314,7 +314,7 @@ $(document).ready(function ()
                 //return data.match(/\d*.\d{5}/);
                 return parseFloat(data).toFixed(5); // seems faster
             },
-            targets: [ 3 ]
+            targets: [3]
         }]
     });
 

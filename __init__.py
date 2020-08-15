@@ -35,11 +35,19 @@ st_dict = utils.get_struct_in_dict(all_exp)
 
 @app.before_first_request
 def render_templates():
+    # get current branch name
+    git_cmd = Popen(['git', 'branch', '--show-current'], stdout=PIPE, stderr=STDOUT)
+    branch_name, stderr_branch = git_cmd.communicate()
+    branch_name = "Branch: " + branch_name.decode("utf-8")
     # get HEAD commit log
     git_cmd = Popen(['git', 'log', '-1'], stdout=PIPE, stderr=STDOUT)
-    head_commit, stderr = git_cmd.communicate()
+    head_commit, stderr_log = git_cmd.communicate()
     head_commit = head_commit.decode("utf-8")
     head_commit = head_commit.split('\n')
+
+    head_commit[1] = head_commit[2]
+    head_commit = head_commit[:2] # only keep hash and date of change
+    head_commit.insert(0, branch_name)
 
     # home
     rendered_template = flask.render_template("html/index.html.j2",
