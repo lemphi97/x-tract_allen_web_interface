@@ -64,7 +64,7 @@ function getColumn(datatableVar, columnIndex)
 {
     array_column_data = [];
     var i;
-    for (i = 0; i < datatableVar.$('tr', {"filter":"applied"}).length; i++)
+    for (var i = 0; i < datatableVar.$('tr', {"filter":"applied"}).length; i++)
     {
         var value = datatableVar.$('tr', {"filter":"applied"})[i].cells[columnIndex].innerText;
         value = value.replace(/\n/g,'').trim();
@@ -84,11 +84,11 @@ function getRowColumn(datatableVar, rowIndex, columnIndex)
 function getUniqueStructures(column)
 {
     var uniqueStruct = [];
-    for (i = 0; i < column.length; i++)
+    for (var i = 0; i < column.length; i++)
     {
         var unorderedList = parser.parseFromString(column[i], 'text/html');
         var structures = unorderedList.getElementsByTagName('li');
-        for (j = 0; j < structures.length; j++)
+        for (var j = 0; j < structures.length; j++)
         {
             var struct = structures[j].innerHTML;
             var indexBeforeAcron = struct.indexOf("|");
@@ -109,11 +109,11 @@ function getUniqueStructures(column)
 function getUniqueAcronyms(column)
 {
     var uniqueStruct = [];
-    for (i = 0; i < column.length; i++)
+    for (var i = 0; i < column.length; i++)
     {
         var unorderedList = parser.parseFromString(column[i], 'text/html');
         var structures = unorderedList.getElementsByTagName('li');
-        for (j = 0; j < structures.length; j++)
+        for (var j = 0; j < structures.length; j++)
         {
             var struct = structures[j].innerHTML;
             var structAcron = struct.match(/\|[^\|]*\|/)[0];
@@ -135,7 +135,7 @@ function getUniqueAcronyms(column)
 function caseInsensitiveArrayInclude(array, str)
 {
     var included = false;
-    for (i = 0; i < array.length; i++)
+    for (var i = 0; i < array.length; i++)
     {
         var elem = array[i].trim();
         if (elem != "" && str.toUpperCase().includes(elem.toUpperCase()))
@@ -222,13 +222,13 @@ $.fn.dataTable.ext.search.push
 
         var structIsIncluded = false;
         var structIsExcluded = false;
-        var structArray = columnStruct.substring(0, columnStruct.lastIndexOf('|') - 1).split('|');
+        var structArray = columnStruct.substring(0, columnStruct.lastIndexOf('|')).split('|');
 
         /**
          * only check for structIsIncluded in case structure is also excluded,
          * in which case include takes priority over exclude
          */
-        for (i = 0; i < structArray && !structIsIncluded; i += 2)
+        for (var i = 0; i < structArray.length && !structIsIncluded; i += 2)
         {
             var name = structArray[i];
             var acronym = structArray[i + 1];
@@ -237,7 +237,6 @@ $.fn.dataTable.ext.search.push
 
             structIsExcluded = validateText(excludeNames, name) ||
                                validateText(excludeAcronyms, acronym);
-            structArray
         }
 
         if (validateText(includeIds, columnExpId))
@@ -671,7 +670,7 @@ $(document).ready(function ()
 
         includeNames = $('#include-name').val().split(";");
         includeContainsNameFilter = false;
-        for (i = 0; i < includeNames.length; i++)
+        for (var i = 0; i < includeNames.length; i++)
         {
             if (includeNames[i].trim() != "")
             {
@@ -682,7 +681,7 @@ $(document).ready(function ()
 
         includeAcronyms = $('#include-acron').val().split(";");
         includeContainsAcronFilter = false;
-        for (i = 0; i < includeAcronyms.length; i++)
+        for (var i = 0; i < includeAcronyms.length; i++)
         {
             if (includeAcronyms[i].trim() != "")
             {
@@ -693,7 +692,7 @@ $(document).ready(function ()
 
         includeProducts = $('#include-prod-id').val().split(";");
         includeContainsProdFilter = false;
-        for (i = 0; i < includeProducts.length; i++)
+        for (var i = 0; i < includeProducts.length; i++)
         {
             if (includeProducts[i].trim() != "")
             {
@@ -704,7 +703,7 @@ $(document).ready(function ()
 
         includeLines = $('#include-line').val().split(";");
         includeContainsLineFilter = false;
-        for (i = 0; i < includeLines.length; i++)
+        for (var i = 0; i < includeLines.length; i++)
         {
             if (includeLines[i].trim() != "")
             {
@@ -729,7 +728,7 @@ $(document).ready(function ()
 
         excludeNames = $('#exclude-name').val().split(";");
         excludeContainsNameFilter = false;
-        for (i = 0; i < excludeNames.length; i++)
+        for (var i = 0; i < excludeNames.length; i++)
         {
             if (excludeNames[i].trim() != "")
             {
@@ -740,7 +739,7 @@ $(document).ready(function ()
 
         excludeAcronyms = $('#exclude-acron').val().split(";");
         excludeContainsAcronFilter = false;
-        for (i = 0; i < excludeAcronyms.length; i++)
+        for (var i = 0; i < excludeAcronyms.length; i++)
         {
             if (excludeAcronyms[i].trim() != "")
             {
@@ -751,7 +750,7 @@ $(document).ready(function ()
 
         excludeProducts = $('#exclude-prod-id').val().split(";");
         excludeContainsProdFilter = false;
-        for (i = 0; i < excludeProducts.length; i++)
+        for (var i = 0; i < excludeProducts.length; i++)
         {
             if (excludeProducts[i].trim() != "")
             {
@@ -762,7 +761,7 @@ $(document).ready(function ()
 
         excludeLines = $('#exclude-line').val().split(";");
         excludeContainsLineFilter = false;
-        for (i = 0; i < excludeLines.length; i++)
+        for (var i = 0; i < excludeLines.length; i++)
         {
             if (excludeLines[i].trim() != "")
             {
