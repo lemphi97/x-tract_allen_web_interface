@@ -481,18 +481,32 @@
     <br/>
 
     <div class="content-bg">
+        <h2>Get filtered experiments</h2>
+        <form method="POST" action="{{ url_for('experiments_csv') }}" target="_blank" rel="noreferrer">
+            {{ f_get_csv.csrf_token }}
+            {{ f_get_csv.hidden_tag() }}
+            <div style="display: none;">
+                {{ f_get_csv.filtered_exp }}
+            </div>
+            {{ f_get_csv.submit_exp_csv(class_="btn btn-primary") }}
+        </form>
         <button id="copy-id-btn" class="btn btn-outline-primary">
             copy id(s)
         </button>
         <input type="text" id="copy-ids-input" class="copy-ids-group" value=""/>
         <label id="label-copy-ids" class="copy-ids-group" for="copy-ids-input">Click to copy</label>
-        <br class="copy-ids-group"/>
+    </div>
 
+    <br/>
+
+    <div class="content-bg">
+        <h2>Experiment search</h2>
         <button class="btn btn-outline-info" data-toggle="collapse" data-target="#experiment-correlation-search">
             correlation search
         </button>
         <div id="experiment-correlation-search" class="collapse">
             <hr/>
+            More info on <a href="http://help.brain-map.org/display/api/Connected+Services+and+Pipes#ConnectedServicesandPipes-service::mouse_connectivity_correlation">AllenSDK site</a>
             <form method="POST" action="{{ url_for('form_correlation') }}" target="_blank" rel="noreferrer">
                 {{ f_correlation.csrf_token }}
                 {{ f_correlation.hidden_tag() }}
@@ -543,6 +557,7 @@
         </button>
         <div id="experiment-injection-coordinate-search" class="collapse">
             <hr/>
+            More info on <a href="http://help.brain-map.org/display/api/Connected+Services+and+Pipes#ConnectedServicesandPipes-service::mouse_connectivity_injection_coordinate">AllenSDK site</a>
             <form method="POST" action="{{ url_for('form_injection_coord') }}" target="_blank" rel="noreferrer">
                 {{ f_inj_coord.csrf_token }}
                 {{ f_inj_coord.hidden_tag() }}
@@ -596,6 +611,7 @@
         </button>
         <div id="experiment-source-search" class="collapse">
             <hr/>
+            More info on <a href="https://alleninstitute.github.io/AllenSDK/allensdk.api.queries.mouse_connectivity_api.html#allensdk.api.queries.mouse_connectivity_api.MouseConnectivityApi.experiment_source_search">AllenSDK site</a>
             <form method="POST" action="{{ url_for('form_source') }}" target="_blank" rel="noreferrer">
                 {{ f_source.csrf_token }}
                 {{ f_source.hidden_tag() }}

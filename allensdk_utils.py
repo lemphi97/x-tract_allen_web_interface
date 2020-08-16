@@ -17,6 +17,7 @@ mcc = MouseConnectivityCache()
 mca = MouseConnectivityApi()
 st_tree = mcc.get_structure_tree()
 image_api = ImageDownloadApi()
+all_exp = None # is set later
 dict_struct_id = st_tree.get_name_map()
 dict_struct_acron = st_tree.get_id_acronym_map()
 dict_struct_name = {v: k for k, v in dict_struct_id.items()}
@@ -84,6 +85,9 @@ def get_all_exp():
     return pd.concat([cre_neg_exp, cre_pos_exp])
 
 
+all_exp = get_all_exp()
+
+
 def get_exp_img_sections_info(exp_id):
     # res and ranges don't seem to change from section to section.
     # To cut down on exec time, I'll assume they never do
@@ -105,6 +109,23 @@ def get_exp_img_sections_info(exp_id):
         sections_id.append(sections_dict[key])
 
     return sections_id, default_res, default_ranges
+
+
+def get_experiments_csv(experiments_id):
+    filter_dict = {}
+    errors = []
+
+    if experiments_id is not None:
+        for exp_id in experiments_id:
+            if exp_id in all_exp.index:
+                filter_dict[exp_id]=all_exp.loc[exp_id]
+            else:
+                errors.append(exp_id + " does not exist")
+
+    df = pd.DataFrame.from_dict(filter_dict, orient="index")
+    csv = df.to_csv()
+
+    return csv, errors
 
 
 def validate_structures(structures, errors, category):
@@ -268,25 +289,26 @@ def hotspot_search(rows,                  # [Integer]
             errors.append("experiment |" + str(row) + "| doesn't exist")
 
     structures_id = []
-    for struct in injection_structures:
-        structure_id = None
-        if struct in dict_struct_id:
-            structure_id = struct
-        elif struct in dict_struct_acron:
-            structure_id = dict_struct_acron[struct]
-        elif struct in dict_struct_name:
-            structure_id = dict_struct_name[struct]
-        else:
-            errors.append("structure |" + str(struct) + "| doesn't exist")
+    if injection_structures is not None:
+        for struct in injection_structures:
+            structure_id = None
+            if struct in dict_struct_id:
+                structure_id = struct
+            elif struct in dict_struct_acron:
+                structure_id = dict_struct_acron[struct]
+            elif struct in dict_struct_name:
+                structure_id = dict_struct_name[struct]
+            else:
+                errors.append("structure |" + str(struct) + "| doesn't exist")
 
-        if structure_id is not None and structure_id not in structures_id:
-            structures_id.append(structure_id)
-        if depth == 'child':
-            structure_childs = st_tree.child_ids([structure_id])[0]
-            structures_id.extend(struct for struct in structure_childs if struct not in structures_id)
-        elif depth == 'all':
-            structure_descendants = st_tree.descendant_ids([structure_id])[0]
-            structures_id.extend(struct for struct in structure_descendants if struct not in structures_id)
+            if structure_id is not None and structure_id not in structures_id:
+                structures_id.append(structure_id)
+            if depth == 'child':
+                structure_childs = st_tree.child_ids([structure_id])[0]
+                structures_id.extend(struct for struct in structure_childs if struct not in structures_id)
+            elif depth == 'all':
+                structure_descendants = st_tree.descendant_ids([structure_id])[0]
+                structures_id.extend(struct for struct in structure_descendants if struct not in structures_id)
 
     if len(structures_id) == 0:
         structures_id = None

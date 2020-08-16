@@ -23,10 +23,16 @@ def convert_array_str_to_int(strArray):
     return {int(string) for string in strArray}
 
 
+class FormExperimentsCSV(FlaskForm):
+    # (list of integers or strings) SectionDataSet.id to correlate against
+    filtered_exp = StringField("experiment ids: *")
+    # submit btn
+    submit_exp_csv = SubmitField("download csv")
+
 class form_correlation(FlaskForm):
     # https://allensdk.readthedocs.io/en/latest/allensdk.api.queries.mouse_connectivity_api.html#allensdk.api.queries.mouse_connectivity_api.MouseConnectivityApi.experiment_correlation_search
 
-    # (intger) SectionDataSet.id to correlate against
+    # (integer) SectionDataSet.id to correlate against
     row = IntegerField("experiment id: *")
     # (list of integers or strings, optional) Integer Structure.id or String Structure.acronym
     structures = StringField("list of structures name or acronym:")

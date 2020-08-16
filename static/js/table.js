@@ -4,6 +4,8 @@
 // table
 var table;
 
+var filteredIds = "";
+
 // include filters:
 var includeIds = [""];
 var includeNames = [""];
@@ -208,17 +210,17 @@ $.fn.dataTable.ext.search.push
     {
         var matchFilter = false;
 
-        var columnExpId = data[0];
+        var columnExpId = data[0].trim();
         var columnStruct = data[1].replace(/  /g,""); // remove as much whitespace as possible
-        var columnProduct = data[2];
+        var columnProduct = data[2].trim();
         var columnVolume = parseFloat(data[3]) || 0;
         var x = parseInt(data[4]) || 0;
         var y = parseInt(data[5]) || 0;
         var z = parseInt(data[6]) || 0;
-        var columnLine = data[7];
-        var columnSpecName = data[8];
-        var columnGender = data[9];
-        var columnCre = data[10];
+        var columnLine = data[7].trim();
+        var columnSpecName = data[8].trim();
+        var columnGender = data[9].trim();
+        var columnCre = data[10].trim();
 
         var structIsIncluded = false;
         var structIsExcluded = false;
@@ -242,6 +244,7 @@ $.fn.dataTable.ext.search.push
         if (validateText(includeIds, columnExpId))
         {
             matchFilter = true;
+            filteredIds = filteredIds + columnExpId + ";";
         }
         else if (! validateText(excludeIds, columnExpId) &&
             (
@@ -283,6 +286,7 @@ $.fn.dataTable.ext.search.push
             )
         ){
             matchFilter = true;
+            filteredIds = filteredIds + columnExpId + ";";
         }
         return matchFilter;
     }
@@ -665,6 +669,9 @@ $(document).ready(function ()
      */
     $('#apply').click(function()
     {
+        // reset ids
+        filteredIds = "";
+
         // get include filters
         includeIds = $('#include-id').val().split(";");
 
@@ -782,6 +789,10 @@ $(document).ready(function ()
 
         // redraw table
         table.draw();
+
+        // put filtered ids in fields that require it
+        $('#filtered_exp').val(filteredIds);
+        $('#copy-id-btn').val(filteredIds);
     });
 
     //
@@ -882,6 +893,7 @@ $(document).ready(function ()
     //
     $('#copy-id-btn').click(function()
     {
+        /*
         var arrayColumn = getColumn(table, 0);
         var strColumn = "";
         var i = 0
@@ -891,8 +903,7 @@ $(document).ready(function ()
             i++;
         }
         strColumn += arrayColumn[i];
-
-        $("#copy-ids-input").val(strColumn);
+        */
 
         $(".copy-ids-group").css("display", "inline"); // show input field
     });

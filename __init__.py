@@ -65,6 +65,7 @@ def render_templates():
     rendered_template = flask.render_template("html/allen_brain.html.j2",
                                               all_exp=all_exp,
                                               struct_dict=st_dict,
+                                              f_get_csv=forms.FormExperimentsCSV(),
                                               f_correlation=forms.form_correlation(),
                                               f_inj_coord=forms.form_injection_coord(),
                                               f_source=forms.form_source(),
@@ -124,6 +125,23 @@ def experiment_search(param):
     else:
         # For using pre-establish filters specified in the url
         return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
+
+
+@app.route("/experiments/forms/experiments_csv/", methods=['POST'])
+def experiments_csv():
+    f_get_csv = forms.FormExperimentsCSV()
+
+    if f_get_csv.validate_on_submit():
+        filtered_exp = forms.convert_array_str_to_int(forms.str_to_array(f_get_csv.filtered_exp.data))
+
+        result, errors = utils.get_experiments_csv(experiments_id=filtered_exp)
+
+        response = flask.make_response(result)
+        response.headers["Content-Disposition"] = "attachment; filename=experiments.csv"
+        response.headers["Content-Type"] = "text/csv"
+        return response
+
+    return "<h1>400 Bad Request</h1><p>Couldn't validate form submit</p>"
 
 
 @app.route("/experiments/forms/correlation_search/", methods=['POST'])
