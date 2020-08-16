@@ -29,7 +29,8 @@ class FormExperimentsCSV(FlaskForm):
     # submit btn
     submit_exp_csv = SubmitField("download csv")
 
-class form_correlation(FlaskForm):
+
+class FormCorrelation(FlaskForm):
     # https://allensdk.readthedocs.io/en/latest/allensdk.api.queries.mouse_connectivity_api.html#allensdk.api.queries.mouse_connectivity_api.MouseConnectivityApi.experiment_correlation_search
 
     # (integer) SectionDataSet.id to correlate against
@@ -54,7 +55,7 @@ class form_correlation(FlaskForm):
     submit_correlation = SubmitField("submit")
 
 
-class form_injection_coord(FlaskForm):
+class FormInjectionCoord(FlaskForm):
     # https://allensdk.readthedocs.io/en/latest/allensdk.api.queries.mouse_connectivity_api.html#allensdk.api.queries.mouse_connectivity_api.MouseConnectivityApi.experiment_injection_coordinate_search
 
     # (list of integers) The coordinates of a point in 3-D SectionDataSet space
@@ -77,7 +78,7 @@ class form_injection_coord(FlaskForm):
     submit_injection_coord = SubmitField("submit")
 
 
-class form_source(FlaskForm):
+class FormSource(FlaskForm):
     # https://allensdk.readthedocs.io/en/latest/allensdk.api.queries.mouse_connectivity_api.html#allensdk.api.queries.mouse_connectivity_api.MouseConnectivityApi.experiment_source_search
 
     # (list of integers or strings) Integer Structure.id or String Structure.acronym
@@ -104,7 +105,7 @@ class form_source(FlaskForm):
     submit_source = SubmitField("submit")
 
 
-class form_hotspot(FlaskForm):
+class FormHotspot(FlaskForm):
     # (list of integers or strings) SectionDataSet.id to correlate against
     rows = StringField("experiment ids: *")
     # (list of integers or strings, optional) Integer Structure.id or String Structure.acronym

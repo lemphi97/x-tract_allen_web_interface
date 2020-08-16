@@ -792,6 +792,7 @@ $(document).ready(function ()
 
         // put filtered ids in fields that require it
         $('#filtered_exp').val(filteredIds);
+        $(".copy-ids-group").css("display", "none"); // hide input field
         $('#copy-id-btn').val(filteredIds);
     });
 

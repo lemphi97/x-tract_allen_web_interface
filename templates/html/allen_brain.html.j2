@@ -482,7 +482,8 @@
 
     <div class="content-bg">
         <h2>Get filtered experiments</h2>
-        <form method="POST" action="{{ url_for('experiments_csv') }}" target="_blank" rel="noreferrer">
+        <form method="POST" action="{{ url_for('experiments_csv') }}" target="_blank" rel="noreferrer"
+                style="display: inline;">
             {{ f_get_csv.csrf_token }}
             {{ f_get_csv.hidden_tag() }}
             <div style="display: none;">

@@ -66,10 +66,10 @@ def render_templates():
                                               all_exp=all_exp,
                                               struct_dict=st_dict,
                                               f_get_csv=forms.FormExperimentsCSV(),
-                                              f_correlation=forms.form_correlation(),
-                                              f_inj_coord=forms.form_injection_coord(),
-                                              f_source=forms.form_source(),
-                                              f_hotspot=forms.form_hotspot(),
+                                              f_correlation=forms.FormCorrelation(),
+                                              f_inj_coord=forms.FormInjectionCoord(),
+                                              f_source=forms.FormSource(),
+                                              f_hotspot=forms.FormHotspot(),
                                               commit_info=head_commit)
     with open(app.static_folder + "/html/rendered_template/allen_brain.html", "w") as f:
         f.write(rendered_template)
@@ -146,7 +146,7 @@ def experiments_csv():
 
 @app.route("/experiments/forms/correlation_search/", methods=['POST'])
 def form_correlation():
-    f_correlation = forms.form_correlation()
+    f_correlation = forms.FormCorrelation()
 
     # error with form submit (validate_on_submit), don't know how to fix... TODO
     if f_correlation.validate_on_submit():
@@ -201,7 +201,7 @@ def form_correlation():
 
 @app.route("/experiments/forms/injection_coord_search/", methods=['POST'])
 def form_injection_coord():
-    f_inj_coord = forms.form_injection_coord()
+    f_inj_coord = forms.FormInjectionCoord()
 
     # error with form submit (validate_on_submit), don't know how to fix... TODO
     if f_inj_coord.validate_on_submit():
@@ -245,7 +245,7 @@ def form_injection_coord():
 
 @app.route("/experiments/forms/source/", methods=['POST'])
 def form_source():
-    f_source = forms.form_source()
+    f_source = forms.FormSource()
 
     # error with form submit (validate_on_submit), don't know how to fix... TODO
     if f_source.validate_on_submit():
@@ -302,7 +302,7 @@ def form_source():
 
 @app.route("/experiments/forms/hotspot/", methods=['POST'])
 def form_hotspot():
-    f_hotspot = forms.form_hotspot()
+    f_hotspot = forms.FormHotspot()
 
     if f_hotspot.validate_on_submit():
         rows = forms.convert_array_str_to_int(forms.str_to_array(f_hotspot.rows.data))
