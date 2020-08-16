@@ -89,7 +89,7 @@ function getUniqueStructures(column)
     for (var i = 0; i < column.length; i++)
     {
         var unorderedList = parser.parseFromString(column[i], 'text/html');
-        var structures = unorderedList.getElementsByTagName('li');
+        var structures = unorderedList.getElementsByTagName('a');
         for (var j = 0; j < structures.length; j++)
         {
             var struct = structures[j].innerHTML;

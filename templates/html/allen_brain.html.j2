@@ -441,7 +441,10 @@
                     <td>
                         <ol>
                         {% for j in range(0, all_exp.iloc[i]['injection_structures']|length) %}
-                            <li>{{ struct_dict[all_exp.iloc[i]['injection_structures'][j]] }}</li>
+                            <li>
+                                <a target="_blank" rel="noreferrer"
+                                    href="https://atlas.brain-map.org/atlas?atlas=1&structure={{ all_exp.iloc[i]['injection_structures'][j] }}">{{ struct_dict[all_exp.iloc[i]['injection_structures'][j]] }}</a>
+                            </li>
                         {% endfor %}
                         </ol>
                     </td>
