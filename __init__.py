@@ -29,8 +29,8 @@ app.config["SECRET_KEY"] = urandom(24).hex()
 #app.config['SERVER_NAME'] = 'xtract.com'
 
 # Global variables
-all_exp = utils.get_all_exp()
-st_dict = utils.get_struct_in_dict(all_exp)
+st_dict = utils.get_struct_in_dict(utils.all_exp)
+prod_dict = utils.get_product_dict()
 
 
 @app.before_first_request
@@ -63,8 +63,9 @@ def render_templates():
 
     # allen_brain
     rendered_template = flask.render_template("html/allen_brain.html.j2",
-                                              all_exp=all_exp,
+                                              all_exp=utils.all_exp,
                                               struct_dict=st_dict,
+                                              prod_dict=prod_dict,
                                               f_get_csv=forms.FormExperimentsCSV(),
                                               f_correlation=forms.FormCorrelation(),
                                               f_inj_coord=forms.FormInjectionCoord(),
@@ -111,7 +112,7 @@ def experiments():
 @app.route("/experiments/<param>/")
 def experiment_search(param):
     if (param.isdigit()):
-        exp = all_exp.loc[int(param)]
+        exp = utils.all_exp.loc[int(param)]
         struct = st_dict[exp['structure_id']]
         prim_inj_struct = st_dict[exp['primary_injection_structure']]
         sect_id, res, ranges = utils.get_exp_img_sections_info(param)

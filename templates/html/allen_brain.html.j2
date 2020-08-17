@@ -12,6 +12,8 @@
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='css/autocomplete.css') }}"/>
 <link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='css/tooltip.css') }}"/>
+<link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='css/allen_brain_connectivity.css') }}"/>
 {% endblock %}
 
@@ -449,7 +451,14 @@
                         </ol>
                     </td>
                     <td>
+                        <div class="tooltip">
                         {{ all_exp.iloc[i]['product_id'] }}
+                        <span class="tooltiptext">
+                            {{ prod_dict[all_exp.iloc[i]['product_id']]['name'] }}
+                            <hr/>
+                            {{ prod_dict[all_exp.iloc[i]['product_id']]['description'] }}
+                        </span>
+                        </div>
                     </td>
                     <td>
                         {{ all_exp.iloc[i]['injection_volume'] }}
@@ -511,6 +520,7 @@
         <div id="experiment-correlation-search" class="collapse">
             <hr/>
             More info on <a href="http://help.brain-map.org/display/api/Connected+Services+and+Pipes#ConnectedServicesandPipes-service::mouse_connectivity_correlation">AllenSDK site</a>
+            <br/>
             <form method="POST" action="{{ url_for('form_correlation') }}" target="_blank" rel="noreferrer">
                 {{ f_correlation.csrf_token }}
                 {{ f_correlation.hidden_tag() }}
@@ -562,6 +572,7 @@
         <div id="experiment-injection-coordinate-search" class="collapse">
             <hr/>
             More info on <a href="http://help.brain-map.org/display/api/Connected+Services+and+Pipes#ConnectedServicesandPipes-service::mouse_connectivity_injection_coordinate">AllenSDK site</a>
+            <br/>
             <form method="POST" action="{{ url_for('form_injection_coord') }}" target="_blank" rel="noreferrer">
                 {{ f_inj_coord.csrf_token }}
                 {{ f_inj_coord.hidden_tag() }}
@@ -616,6 +627,7 @@
         <div id="experiment-source-search" class="collapse">
             <hr/>
             More info on <a href="https://alleninstitute.github.io/AllenSDK/allensdk.api.queries.mouse_connectivity_api.html#allensdk.api.queries.mouse_connectivity_api.MouseConnectivityApi.experiment_source_search">AllenSDK site</a>
+            <br/>
             <form method="POST" action="{{ url_for('form_source') }}" target="_blank" rel="noreferrer">
                 {{ f_source.csrf_token }}
                 {{ f_source.hidden_tag() }}

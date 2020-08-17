@@ -49,6 +49,20 @@ var excludeContainsLineFilter = false;
 // DOM parser
 var parser = new DOMParser();
 
+/*
+// product dictionary (using python solution for now)
+var productDict = {};
+$.getJSON('http://api.brain-map.org/api/v2/data/query.json?criteria=model::Product', function(data) {
+    // JSON result in `data` variable
+    var productList = data['msg'];
+
+    productList.forEach(function(product)
+    {
+        productDict[product['id']] = product;
+    });
+});
+*/
+
 // switch between include and exclude filters
 function showIncludeFilters()
 {

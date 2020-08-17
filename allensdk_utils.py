@@ -11,7 +11,9 @@ from allensdk.api.queries.mouse_connectivity_api import MouseConnectivityApi
 import pandas as pd
 from allensdk.api.queries import grid_data_api
 import numpy as np
-import pathlib
+from pathlib import Path
+import urllib.request
+import json
 
 mcc = MouseConnectivityCache()
 mca = MouseConnectivityApi()
@@ -44,7 +46,7 @@ def exp_save_nrrd(exp_id, img=[], res=100, folder="."):
         files_path : list of string
             paths of downloaded nrrd file(s)
     '''
-    pathlib.Path(folder).mkdir(parents=True, exist_ok=True)
+    Path(folder).mkdir(parents=True, exist_ok=True)
     files_path = []
     gd_api = grid_data_api.GridDataApi(resolution=res)
     for img_type in img:
@@ -86,6 +88,18 @@ def get_all_exp():
 
 
 all_exp = get_all_exp()
+
+
+def get_product_dict():
+    product_list = {}
+    with urllib.request.urlopen("http://api.brain-map.org/api/v2/data/query.json?criteria=model::Product") as url:
+        product_list = json.loads(url.read().decode())['msg']
+
+    product_dict = {}
+    for product in product_list:
+        product_dict[product['id']] = product
+
+    return product_dict
 
 
 def get_exp_img_sections_info(exp_id):
