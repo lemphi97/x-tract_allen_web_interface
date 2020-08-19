@@ -451,14 +451,10 @@
                         </ol>
                     </td>
                     <td>
-                        <div class="tooltip">
-                        {{ all_exp.iloc[i]['product_id'] }}
-                        <span class="tooltiptext">
-                            {{ prod_dict[all_exp.iloc[i]['product_id']]['name'] }}
-                            <hr/>
-                            {{ prod_dict[all_exp.iloc[i]['product_id']]['description'] }}
-                        </span>
-                        </div>
+                        <abbr title="{{ prod_dict[all_exp.iloc[i]['product_id']]['name'] }}:
+{{ prod_dict[all_exp.iloc[i]['product_id']]['description'] }}">
+                            {{ prod_dict[all_exp.iloc[i]['product_id']]['abbreviation'] }}
+                        </abbr>
                     </td>
                     <td>
                         {{ all_exp.iloc[i]['injection_volume'] }}

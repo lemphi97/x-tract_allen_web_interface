@@ -25,7 +25,19 @@ dict_struct_acron = st_tree.get_id_acronym_map()
 dict_struct_name = {v: k for k, v in dict_struct_id.items()}
 
 
-# return all structure in a dict (key: id, value: name with acronym)
+def get_all_exp():
+    cre_neg_exp = mcc.get_experiments(dataframe=True, cre=False)
+    cre_neg_exp['cre'] = np.zeros((len(cre_neg_exp), 1), dtype=bool)
+
+    cre_pos_exp = mcc.get_experiments(dataframe=True, cre=True)
+    cre_pos_exp['cre'] = np.ones((len(cre_pos_exp), 1), dtype=bool)
+
+    return pd.concat([cre_neg_exp, cre_pos_exp])
+
+
+all_exp = get_all_exp()
+
+
 def exp_save_nrrd(exp_id, img=[], res=100, folder="."):
     '''
     Download in NRRD format.
@@ -62,6 +74,7 @@ def exp_save_nrrd(exp_id, img=[], res=100, folder="."):
     return files_path
 
 
+# returns all structure in a dict (key: id, value: name with acronym)
 def get_struct_in_dict(experiences):
     st_dict = {}
 
@@ -77,19 +90,7 @@ def get_struct_in_dict(experiences):
     return st_dict
 
 
-def get_all_exp():
-    cre_neg_exp = mcc.get_experiments(dataframe=True, cre=False)
-    cre_neg_exp['cre'] = np.zeros((len(cre_neg_exp), 1), dtype=bool)
-
-    cre_pos_exp = mcc.get_experiments(dataframe=True, cre=True)
-    cre_pos_exp['cre'] = np.ones((len(cre_pos_exp), 1), dtype=bool)
-
-    return pd.concat([cre_neg_exp, cre_pos_exp])
-
-
-all_exp = get_all_exp()
-
-
+# returns product dictionary (key: id, value: dict about product)
 def get_product_dict():
     product_list = {}
     with urllib.request.urlopen("http://api.brain-map.org/api/v2/data/query.json?criteria=model::Product") as url:
