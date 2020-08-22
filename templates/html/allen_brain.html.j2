@@ -12,8 +12,6 @@
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='css/autocomplete.css') }}"/>
 <link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='css/tooltip.css') }}"/>
-<link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='css/allen_brain_connectivity.css') }}"/>
 {% endblock %}
 
@@ -489,7 +487,7 @@
     <br/>
 
     <div class="content-bg">
-        <h2>Get filtered experiments</h2>
+        <h2>Filtered experiments</h2>
         <form method="POST" action="{{ url_for('experiments_csv') }}" target="_blank" rel="noreferrer"
                 style="display: inline;">
             {{ f_get_csv.csrf_token }}

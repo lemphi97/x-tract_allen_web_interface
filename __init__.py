@@ -49,18 +49,6 @@ def render_templates():
     head_commit = head_commit[:2] # only keep hash and date of change
     head_commit.insert(0, branch_name)
 
-    # home
-    rendered_template = flask.render_template("html/index.html.j2",
-                                              commit_info=head_commit)
-    with open(app.static_folder + "/html/rendered_template/index.html", "w") as f:
-        f.write(rendered_template)
-
-    # interface
-    rendered_template = flask.render_template("html/interface.html.j2",
-                                              commit_info=head_commit)
-    with open(app.static_folder + "/html/rendered_template/interface.html", "w") as f:
-        f.write(rendered_template)
-
     # allen_brain
     rendered_template = flask.render_template("html/allen_brain.html.j2",
                                               all_exp=utils.all_exp,
@@ -73,12 +61,6 @@ def render_templates():
                                               f_hotspot=forms.FormHotspot(),
                                               commit_info=head_commit)
     with open(app.static_folder + "/html/rendered_template/allen_brain.html", "w") as f:
-        f.write(rendered_template)
-
-    # volume_viewer
-    rendered_template = flask.render_template("html/volume_viewer.html.j2",
-                                              commit_info=head_commit)
-    with open(app.static_folder + "/html/rendered_template/volume_viewer.html", "w") as f:
         f.write(rendered_template)
 
     # about_website
@@ -95,13 +77,7 @@ def default():
 
 @app.route("/home/")
 def home():
-    # https://stackoverflow.com/questions/24578330/flask-how-to-serve-static-html
-    return flask.current_app.send_static_file('html/rendered_template/index.html')
-
-
-@app.route("/interface/")
-def interface():
-    return flask.current_app.send_static_file('html/rendered_template/interface.html')
+    return flask.redirect(flask.url_for("experiments"))
 
 
 @app.route("/experiments/")
@@ -326,11 +302,6 @@ def form_hotspot():
                                      errors=errors)
 
     return "<h1>400 Bad Request</h1><p>Couldn't validate form submit</p>"
-
-
-@app.route("/volume_viewer/")
-def volume_viewer():
-    return flask.current_app.send_static_file('html/rendered_template/volume_viewer.html')
 
 
 @app.route("/about_website/")
