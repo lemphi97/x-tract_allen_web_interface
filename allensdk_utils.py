@@ -24,6 +24,10 @@ dict_struct_id = st_tree.get_name_map()
 dict_struct_acron = st_tree.get_id_acronym_map()
 dict_struct_name = {v: k for k, v in dict_struct_id.items()}
 
+# paths
+model_path = "static/models"
+tmp_path = "static/tmp"
+
 
 def get_all_exp():
     cre_neg_exp = mcc.get_experiments(dataframe=True, cre=False)
@@ -126,12 +130,12 @@ def get_exp_img_sections_info(exp_id):
     return sections_id, default_res, default_ranges
 
 
-def get_experiments_csv(experiments_id):
+def get_experiments_csv(experiment_ids):
     filter_dict = {}
     errors = []
 
-    if experiments_id is not None:
-        for exp_id in experiments_id:
+    if experiment_ids is not None:
+        for exp_id in experiment_ids:
             if exp_id in all_exp.index:
                 filter_dict[exp_id]=all_exp.loc[exp_id]
             else:
@@ -141,6 +145,28 @@ def get_experiments_csv(experiments_id):
     csv = df.to_csv()
 
     return csv, errors
+
+
+def get_average_projection_density(experiment_ids, resolution):
+    mcc.resolution = resolution # [10. 25. 50. 100]
+    errors = []
+
+    template = mcc.get_template_volume(file_name=model_path + "/average_template_" + str(mcc.resolution) + ".nrrd")[0]
+
+    vol_list = []
+    if experiment_ids is not None:
+        for exp_id in experiment_ids:
+            if exp_id in all_exp.index:
+                vol_list.append(mcc.get_projection_density(experiment_id=exp_id,
+                                                           file_name=model_path + "/" + str(exp_id) + "_projection_density_" + str(mcc.resolution) + ".nrrd")[0])
+            else:
+                errors.append(exp_id + " does not exist")
+
+    vol_avg = np.zeros_like(template)
+    for vol in vol_list:
+        vol_avg += vol / len(vol_list)
+
+    return vol_avg, errors
 
 
 def validate_structures(structures, errors, category):
