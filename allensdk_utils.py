@@ -1,5 +1,6 @@
 # This file is for handling Interactions with allensdk
 
+import logging
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -154,6 +155,7 @@ def get_experiments_csv(experiment_ids):
 
 
 def get_average_projection_density(experiment_ids, resolution):
+    logging.info(str(experiment_ids))
     mcc.resolution = resolution # [10. 25. 50. 100]
     errors = []
 

@@ -936,18 +936,18 @@ $(document).ready(function ()
             },
             xhrFields:
             {
-                        responseType: 'blob'
+                responseType: 'blob'
             },
             success: function(data)
             {
                 var a = document.createElement('a');
                 var url = window.URL.createObjectURL(data);
-                            a.href = url;
-                            a.download = 'average_template.nrrd';
-                            document.body.append(a);
-                            a.click();
-                            a.remove();
-                            window.URL.revokeObjectURL(url);
+                a.href = url;
+                a.download = 'average_template.nrrd';
+                document.body.append(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
             }
         });
     });

@@ -20,7 +20,7 @@ def str_to_array(str):
 def convert_array_str_to_int(strArray):
     if strArray is None:
         return None
-    return {int(string) for string in strArray}
+    return [int(string) for string in strArray]
 
 
 class FormExperimentsCSV(FlaskForm):

@@ -15,6 +15,9 @@ from subprocess import Popen, PIPE, STDOUT
 # Generate secret key and deleting files
 from os import urandom, remove
 
+# Application log
+import logging
+
 # Custom files
 import allensdk_utils as utils
 validate_import('allensdk_utils')
@@ -123,7 +126,10 @@ def experiments_csv():
 
 @app.route("/experiments/forms/average_volume/", methods=['POST'])
 def average_volume():
-    volume_name, errors = utils.get_average_projection_density(experiment_ids=[100141214], resolution=25)
+    experiments_ids = forms.convert_array_str_to_int(forms.str_to_array(flask.request.form.get('experiments')))
+    res = int(flask.request.form.get('resolution'))
+
+    volume_name, errors = utils.get_average_projection_density(experiment_ids=experiments_ids, resolution=res)
 
     # Inspired from:
     # https://stackoverflow.com/questions/24612366/delete-an-uploaded-file-after-downloading-it-from-flask
@@ -334,6 +340,6 @@ def about_website():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename='app.log', level=logging.DEBUG)
+
     app.run(debug=True)
-    #app.add_url_rule('/favicon.ico',
-    #                 redirect_to=flask.url_for('static', filename='img/ico/tmp_favicon.ico'))
