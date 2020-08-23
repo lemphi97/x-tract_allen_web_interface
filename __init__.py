@@ -12,8 +12,8 @@ import flask
 # for executing terminal cmd (git)
 from subprocess import Popen, PIPE, STDOUT
 
-# Generate secret key
-from os import urandom
+# Generate secret key and deleting files
+from os import urandom, remove
 
 # Custom files
 import allensdk_utils as utils
@@ -124,13 +124,22 @@ def experiments_csv():
 @app.route("/experiments/forms/average_volume/", methods=['POST'])
 def average_volume():
     volume_name, errors = utils.get_average_projection_density(experiment_ids=[100141214], resolution=25)
+    file_path = app.static_folder + "/tmp/" + volume_name
+    file_handle = open(file_path, 'r')
 
-    response = flask.make_response(volume_name)
-    response.headers["Content-Type"] = "text/plain"
-    return response
+    def stream_and_remove_file():
+        yield from file_handle
+        file_handle.close()
+        remove(file_path)
 
-    # TODO revisited how we handle file path here
-    #return flask.current_app.send_static_file('tmp/' + volume_name)
+    return flask.current_app.response_class(
+        stream_and_remove_file(),
+        headers={'Content-Disposition': 'attachment',
+                 'Content-Type': 'application/octet-stream',
+                 'filename': 'average_template.nrrd'}
+    )
+
+    #return flask.send_file(file_handle, mimetype='application/octet-stream')
 
 
 @app.route("/experiments/forms/correlation_search/", methods=['POST'])

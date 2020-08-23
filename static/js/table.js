@@ -925,18 +925,29 @@ $(document).ready(function ()
 
     $('#average-volume-btn').click(function()
     {
-        // AJAX TODO
         $.ajax(
         {
             type: 'POST',
             url: "/experiments/forms/average_volume/",
-            data: {
+            data:
+            {
                 experiments: filteredIds,
                 resolution: 25,
             },
+            xhrFields:
+            {
+                        responseType: 'blob'
+            },
             success: function(data)
             {
-                window.location = '/static/tmp/' + data;
+                var a = document.createElement('a');
+                var url = window.URL.createObjectURL(data);
+                            a.href = url;
+                            a.download = 'average_template.nrrd';
+                            document.body.append(a);
+                            a.click();
+                            a.remove();
+                            window.URL.revokeObjectURL(url);
             }
         });
     });
