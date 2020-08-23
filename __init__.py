@@ -36,7 +36,7 @@ prod_dict = utils.get_product_dict()
 @app.before_first_request
 def render_templates():
     # get current branch name
-    git_cmd = Popen(['git', 'branch', '--show-current'], stdout=PIPE, stderr=STDOUT)
+    git_cmd = Popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], stdout=PIPE, stderr=STDOUT)
     branch_name, stderr_branch = git_cmd.communicate()
     branch_name = "Branch: " + branch_name.decode("utf-8")
     # get HEAD commit log
