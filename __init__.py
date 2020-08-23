@@ -124,11 +124,14 @@ def experiments_csv():
 @app.route("/experiments/forms/average_volume/", methods=['POST'])
 def average_volume():
     volume_name, errors = utils.get_average_projection_density(experiment_ids=[100141214], resolution=25)
+
+    # Inspired from:
+    # https://stackoverflow.com/questions/24612366/delete-an-uploaded-file-after-downloading-it-from-flask
     file_path = app.static_folder + "/tmp/" + volume_name
     file_handle = open(file_path, 'r')
 
     def stream_and_remove_file():
-        yield from file_handle
+        #yield from file_handle # TODO I don't get why we use `yield from`
         file_handle.close()
         remove(file_path)
 
