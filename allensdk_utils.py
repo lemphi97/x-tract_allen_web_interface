@@ -1,5 +1,14 @@
 # This file is for handling Interactions with allensdk
 
+import pandas as pd
+import numpy as np
+from pathlib import Path
+import uuid
+import urllib.request
+import json
+import nrrd
+import nibabel as nib
+
 # Get experiments data
 from allensdk.core.mouse_connectivity_cache import MouseConnectivityCache
 # Download experiment nrrd and png files
@@ -7,13 +16,8 @@ from allensdk.api.queries.image_download_api import ImageDownloadApi
 from allensdk.api.queries.ontologies_api import OntologiesApi
 # Search functions for experiments
 from allensdk.api.queries.mouse_connectivity_api import MouseConnectivityApi
-
-import pandas as pd
+# Download experiment volume
 from allensdk.api.queries import grid_data_api
-import numpy as np
-from pathlib import Path
-import urllib.request
-import json
 
 mcc = MouseConnectivityCache()
 mca = MouseConnectivityApi()
@@ -25,8 +29,8 @@ dict_struct_acron = st_tree.get_id_acronym_map()
 dict_struct_name = {v: k for k, v in dict_struct_id.items()}
 
 # paths
-model_path = "static/models"
-tmp_path = "static/tmp"
+model_path = "web/static/models"
+tmp_path = "web/static/tmp"
 
 
 def get_all_exp():
@@ -65,6 +69,7 @@ def exp_save_nrrd(exp_id, img=[], res=100, folder="."):
     Path(folder).mkdir(parents=True, exist_ok=True)
     files_path = []
     gd_api = grid_data_api.GridDataApi(resolution=res)
+
     for img_type in img:
         # download nrrd files
         save_file_path = f"{folder}/{exp_id}_{img_type}_{res}.nrrd"
@@ -75,6 +80,7 @@ def exp_save_nrrd(exp_id, img=[], res=100, folder="."):
             save_file_path=save_file_path
         )
         files_path.append(save_file_path)
+
     return files_path
 
 
@@ -157,16 +163,21 @@ def get_average_projection_density(experiment_ids, resolution):
     if experiment_ids is not None:
         for exp_id in experiment_ids:
             if exp_id in all_exp.index:
-                vol_list.append(mcc.get_projection_density(experiment_id=exp_id,
-                                                           file_name=model_path + "/" + str(exp_id) + "_projection_density_" + str(mcc.resolution) + ".nrrd")[0])
+                volume = mcc.get_projection_density(experiment_id=exp_id,
+                                                    file_name=tmp_path + "/" + str(exp_id) + "_projection_density_" + str(mcc.resolution) + ".nrrd")[0]
+                vol_list.append(volume)
             else:
                 errors.append(exp_id + " does not exist")
 
-    vol_avg = np.zeros_like(template)
+    vol_avg = np.zeros_like(template, dtype='float32')
     for vol in vol_list:
         vol_avg += vol / len(vol_list)
 
-    return vol_avg, errors
+    filename = "average_volume" + uuid.uuid4().hex + ".nrrd"
+
+    nrrd.write(tmp_path + '/' + filename, vol_avg, index_order='C')
+
+    return filename, errors
 
 
 def validate_structures(structures, errors, category):

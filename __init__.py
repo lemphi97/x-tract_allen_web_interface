@@ -111,7 +111,7 @@ def experiments_csv():
     if f_get_csv.validate_on_submit():
         filtered_exp = forms.convert_array_str_to_int(forms.str_to_array(f_get_csv.filtered_exp.data))
 
-        result, errors = utils.get_experiments_csv(experiments_id=filtered_exp)
+        result, errors = utils.get_experiments_csv(experiment_ids=filtered_exp)
 
         response = flask.make_response(result)
         response.headers["Content-Disposition"] = "attachment; filename=experiments.csv"
@@ -119,6 +119,18 @@ def experiments_csv():
         return response
 
     return "<h1>400 Bad Request</h1><p>Couldn't validate form submit</p>"
+
+
+@app.route("/experiments/forms/average_volume/", methods=['POST'])
+def average_volume():
+    volume_name, errors = utils.get_average_projection_density(experiment_ids=[100141214], resolution=25)
+
+    response = flask.make_response(volume_name)
+    response.headers["Content-Type"] = "text/plain"
+    return response
+
+    # TODO revisited how we handle file path here
+    #return flask.current_app.send_static_file('tmp/' + volume_name)
 
 
 @app.route("/experiments/forms/correlation_search/", methods=['POST'])

@@ -850,7 +850,7 @@ $(document).ready(function ()
                      addSliderToUrl("include-slider-range-height", "include-higher", "include-lower") +
                      addSliderToUrl("exclude-slider-range-height", "exclude-higher", "exclude-lower") +
                      addSliderToUrl("include-slider-range-width", "include-left", "include-right") +
-                     addSliderToUrl("exclude-slider-range-width", "exclude-left", "exclude-right");
+                     addSliderToUrl("exclude-slider-range-width", "exclude-left", "exclude-right") + '/';
 
         console.log("Generated url: " + searchUrl);
         $("#filter-url").val(searchUrl);
@@ -921,6 +921,24 @@ $(document).ready(function ()
         */
 
         $(".copy-ids-group").css("display", "inline"); // show input field
+    });
+
+    $('#average-volume-btn').click(function()
+    {
+        // AJAX TODO
+        $.ajax(
+        {
+            type: 'POST',
+            url: "/experiments/forms/average_volume/",
+            data: {
+                experiments: filteredIds,
+                resolution: 25,
+            },
+            success: function(data)
+            {
+                window.location = '/static/tmp/' + data;
+            }
+        });
     });
 
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Interact_with_the_clipboard

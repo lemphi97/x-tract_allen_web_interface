@@ -6,7 +6,7 @@
 
 {% block dependencies %}
 <link rel="stylesheet" type="text/css"
-      href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
+      href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"/>
 <link rel="stylesheet" type="text/css"
       href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" type="text/css"
@@ -497,6 +497,9 @@
             </div>
             {{ f_get_csv.submit_exp_csv(class_="btn btn-primary") }}
         </form>
+        <button id="average-volume-btn" class="btn btn-primary">
+            download average volume
+        </button>
         <button id="copy-id-btn" class="btn btn-outline-primary">
             copy id(s)
         </button>
@@ -703,7 +706,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 {# datatable #}
-<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 {# for page skip with datatable https://datatables.net/plug-ins/pagination/input #}
 
 {# custom #}
