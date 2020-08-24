@@ -434,7 +434,7 @@
                 {% for i in range(0, all_exp|length) %}
                 <tr>
                     <td>
-                        <a target="_blank" rel="noreferrer" href="/experiments/{{ all_exp.iloc[i]['id'] }}">
+                        <a href="/experiments/{{ all_exp.iloc[i]['id'] }}" target="_blank" rel="noreferrer">
                             {{ all_exp.iloc[i]['id'] }}
                         </a>
                     </td>
@@ -442,8 +442,8 @@
                         <ol>
                         {% for j in range(0, all_exp.iloc[i]['injection_structures']|length) %}
                             <li>
-                                <a target="_blank" rel="noreferrer"
-                                    href="https://atlas.brain-map.org/atlas?atlas=1&structure={{ all_exp.iloc[i]['injection_structures'][j] }}">{{ struct_dict[all_exp.iloc[i]['injection_structures'][j]] }}</a>
+                                <a href="https://atlas.brain-map.org/atlas?atlas=1&structure={{ all_exp.iloc[i]['injection_structures'][j] }}"
+                                    target="_blank" rel="noreferrer">{{ struct_dict[all_exp.iloc[i]['injection_structures'][j]] }}</a>
                             </li>
                         {% endfor %}
                         </ol>
@@ -458,13 +458,19 @@
                         {{ all_exp.iloc[i]['injection_volume'] }}
                     </td>
                     <td>
-                        {{ all_exp.iloc[i]['injection_x'] }}
+                        <a href="http://mouse.brain-map.org/agea?seed=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}&map1=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}" target="_blank" rel="noreferrer">
+                            {{ all_exp.iloc[i]['injection_x'] }}
+                        </a>
                     </td>
                     <td>
-                        {{ all_exp.iloc[i]['injection_y'] }}
+                        <a href="http://mouse.brain-map.org/agea?seed=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}&map1=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}" target="_blank" rel="noreferrer">
+                            {{ all_exp.iloc[i]['injection_y'] }}
+                        </a>
                     </td>
                     <td>
-                        {{ all_exp.iloc[i]['injection_z'] }}
+                        <a href="http://mouse.brain-map.org/agea?seed=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}&map1=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}" target="_blank" rel="noreferrer">
+                            {{ all_exp.iloc[i]['injection_z'] }}
+                        </a>
                     </td>
                     <td>
                         {{ all_exp.iloc[i]['transgenic_line'] }}
@@ -518,6 +524,7 @@
             <hr/>
             More info on <a href="http://help.brain-map.org/display/api/Connected+Services+and+Pipes#ConnectedServicesandPipes-service::mouse_connectivity_correlation">AllenSDK site</a>
             <br/>
+            <br/>
             <form method="POST" action="{{ url_for('form_correlation') }}" target="_blank" rel="noreferrer">
                 {{ f_correlation.csrf_token }}
                 {{ f_correlation.hidden_tag() }}
@@ -569,6 +576,7 @@
         <div id="experiment-injection-coordinate-search" class="collapse">
             <hr/>
             More info on <a href="http://help.brain-map.org/display/api/Connected+Services+and+Pipes#ConnectedServicesandPipes-service::mouse_connectivity_injection_coordinate">AllenSDK site</a>
+            <br/>
             <br/>
             <form method="POST" action="{{ url_for('form_injection_coord') }}" target="_blank" rel="noreferrer">
                 {{ f_inj_coord.csrf_token }}
@@ -624,6 +632,7 @@
         <div id="experiment-source-search" class="collapse">
             <hr/>
             More info on <a href="https://alleninstitute.github.io/AllenSDK/allensdk.api.queries.mouse_connectivity_api.html#allensdk.api.queries.mouse_connectivity_api.MouseConnectivityApi.experiment_source_search">AllenSDK site</a>
+            <br/>
             <br/>
             <form method="POST" action="{{ url_for('form_source') }}" target="_blank" rel="noreferrer">
                 {{ f_source.csrf_token }}
