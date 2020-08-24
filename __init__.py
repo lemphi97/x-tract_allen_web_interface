@@ -107,6 +107,24 @@ def experiment_search(param):
         return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
 
 
+@app.route("/experiments/forms/structures_childs/", methods=['POST'])
+def structures_childs():
+    acronyms = flask.request.form.getlist('acronyms[]')
+    logging.info('acronyms: ' + str(acronyms))
+    names = flask.request.form.getlist('names[]')
+
+    result = utils.get_structures_childs(acronyms=acronyms, names=names)
+
+    text_array = ''
+    for i in range(0, len(result)):
+        text_array += result[i]
+        if i < len(result) - 1:
+            text_array += ';'
+
+    response = flask.make_response(text_array)
+    response.headers["Content-Type"] = "text/plain"
+    return response
+
 @app.route("/experiments/forms/experiments_csv/", methods=['POST'])
 def experiments_csv():
     f_get_csv = forms.FormExperimentsCSV()

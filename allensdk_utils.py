@@ -25,9 +25,10 @@ mca = MouseConnectivityApi()
 st_tree = mcc.get_structure_tree()
 image_api = ImageDownloadApi()
 all_exp = None # is set later
-dict_struct_id = st_tree.get_name_map()
-dict_struct_acron = st_tree.get_id_acronym_map()
-dict_struct_name = {v: k for k, v in dict_struct_id.items()}
+dict_struct_name_id = st_tree.get_name_map()
+dict_struct_name = {v.upper(): k for k, v in dict_struct_name_id.items()}
+dict_struct_acron = {k.upper(): v for k, v in st_tree.get_id_acronym_map().items()}
+dict_struct_acron_id = {v: k for k, v in dict_struct_acron.items()}
 
 # paths
 model_path = "web/static/models"
@@ -137,6 +138,50 @@ def get_exp_img_sections_info(exp_id):
     return sections_id, default_res, default_ranges
 
 
+def get_structures_childs(acronyms, names):
+    '''
+    Get valid structures childs in a list.
+
+        Parameters
+        ----------
+        acronyms : list of strings
+            Structures acronyms.
+        names : list of strings
+            Structures names.
+
+        Return
+        ------
+        structures_childs : list of string
+            Child structures from acronyms and names. Each element is an acronym.
+    '''
+    structures_childs_id = []
+
+    if acronyms is not None:
+        for struct in acronyms:
+            struct_uppercase = struct.upper().strip(" ")
+            if struct_uppercase in dict_struct_acron:
+                structure_childs = st_tree.descendant_ids([dict_struct_acron[struct_uppercase]])[0]
+                structures_childs_id.extend(child_id for child_id in structure_childs
+                                            if child_id not in structures_childs_id and
+                                            child_id != dict_struct_acron[struct_uppercase])
+
+    if names is not None:
+        for struct in names:
+            struct_uppercase = struct.upper().strip(" ")
+            if struct_uppercase in dict_struct_name:
+                structure_childs = st_tree.descendant_ids([dict_struct_name[struct_uppercase]])[0]
+                structures_childs_id.extend(child_id for child_id in structure_childs
+                                            if child_id not in structures_childs_id and
+                                            child_id != dict_struct_name[struct_uppercase])
+
+    # structure ids to acronyms
+    structures_childs = []
+    for struct_id in structures_childs_id:
+        structures_childs.append(dict_struct_acron_id[struct_id])
+
+    return structures_childs
+
+
 def get_experiments_csv(experiment_ids):
     filter_dict = {}
     errors = []
@@ -155,7 +200,6 @@ def get_experiments_csv(experiment_ids):
 
 
 def get_average_projection_density(experiment_ids, resolution):
-    logging.info(str(experiment_ids))
     mcc.resolution = resolution # [10. 25. 50. 100]
     errors = []
 
@@ -190,7 +234,7 @@ def validate_structures(structures, errors, category):
             if struct.isdigit():
                 struct = int(struct)
                 structures[i] = struct
-                if struct not in dict_struct_id:
+                if struct not in dict_struct_name_id:
                     exist = False
             elif struct in dict_struct_name:
                 structures[i] = dict_struct_name[struct]
@@ -346,7 +390,7 @@ def hotspot_search(rows,                  # [Integer]
     if injection_structures is not None:
         for struct in injection_structures:
             structure_id = None
-            if struct in dict_struct_id:
+            if struct in dict_struct_name_id:
                 structure_id = struct
             elif struct in dict_struct_acron:
                 structure_id = dict_struct_acron[struct]

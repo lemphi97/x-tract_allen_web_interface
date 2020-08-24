@@ -217,6 +217,29 @@ function validateSelect(value, allowedValue)
     return false;
 }
 
+function queryDescendantStructures(acronyms, names)
+{
+    var structDescendants = [];
+
+    $.ajax(
+    {
+        url: "/experiments/forms/structures_childs/",
+        type: 'POST',
+        async: false,
+        data:
+        {
+            'acronyms': includeAcronyms,
+            'names': includeNames
+        },
+        success: function(data)
+        {
+            structDescendants = data.split(";");
+        }
+    });
+
+    return structDescendants;
+}
+
 /* Custom filtering function which will validate each lines */
 $.fn.dataTable.ext.search.push
 (
@@ -701,6 +724,8 @@ $(document).ready(function ()
         }
 
         includeAcronyms = $('#include-acron').val().split(";");
+        // get included structures childs
+        includeAcronyms = includeAcronyms.concat(queryDescendantStructures(includeAcronyms, includeNames));
         includeContainsAcronFilter = false;
         for (var i = 0; i < includeAcronyms.length; i++)
         {
@@ -759,6 +784,8 @@ $(document).ready(function ()
         }
 
         excludeAcronyms = $('#exclude-acron').val().split(";");
+        // get excluded structures childs
+        excludeAcronyms = excludeAcronyms.concat(queryDescendantStructures(excludeAcronyms, excludeNames));
         excludeContainsAcronFilter = false;
         for (var i = 0; i < excludeAcronyms.length; i++)
         {
@@ -931,8 +958,8 @@ $(document).ready(function ()
             url: "/experiments/forms/average_volume/",
             data:
             {
-                experiments: filteredIds,
-                resolution: 25,
+                'experiments': filteredIds,
+                'resolution': 25,
             },
             xhrFields:
             {
