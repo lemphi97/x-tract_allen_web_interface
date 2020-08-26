@@ -48,12 +48,13 @@
                 </button>
                 <div id="include-filters-id" class="collapse">
                     <hr/>
-                    <label class="form-check-label" for="include-id">
-                        <strong>experiment(s) id: </strong>
-                    </label>
-                    <input id="include-id" type="text" name="include-id"
-                           placeholder="id_1; id_2; ..." autocomplete="off"/>
-                    <br/>
+                    <div class="form-group">
+                        <label class="form-check-label" for="include-id">
+                            <strong>experiment(s) id: </strong>
+                        </label>
+                        <input id="include-id" type="text" name="include-id"
+                               placeholder="id_1; id_2; ..." autocomplete="off"/>
+                    </div>
                     <hr/>
                 </div>
                 <button class="btn btn-outline-info" data-toggle="collapse" data-target="#include-filters-structure">
@@ -61,20 +62,23 @@
                 </button>
                 <div id="include-filters-structure" class="collapse">
                     <hr/>
-                    <div class="autocomplete">
-                        <label class="form-check-label" for="include-name">
-                            <strong>name(s): </strong>
-                        </label>
-                        <input type="text" id="include-name" name="include-name"
-                            placeholder="name_1; name_2; ..." autocomplete="off"/>
+                    <div class="form-group">
+                        <div class="autocomplete">
+                            <label class="form-check-label" for="include-name">
+                                <strong>name(s): </strong>
+                            </label>
+                            <input type="text" id="include-name" name="include-name"
+                                placeholder="name_1; name_2; ..." autocomplete="off"/>
+                        </div>
                     </div>
-                    <br/>
-                    <div class="autocomplete">
-                        <label class="form-check-label" for="include-acron">
-                            <strong>acronym(s): </strong>
-                        </label>
-                        <input id="include-acron" type="text" name="include-acron"
-                               placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
+                    <div class="form-group">
+                        <div class="autocomplete">
+                            <label class="form-check-label" for="include-acron">
+                                <strong>acronym(s): </strong>
+                            </label>
+                            <input id="include-acron" type="text" name="include-acron"
+                                   placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
+                        </div>
                     </div>
                     <hr/>
                 </div>
@@ -83,20 +87,22 @@
                 </button>
                 <div id="include-filters-injection" class="collapse">
                     <hr/>
-                    <label class="form-check-label" for="include-prod-id">
-                        <strong>product(s) id: </strong>
-                    </label>
-                    <input id="include-prod-id" type="text" name="include-prod-id"
-                           placeholder="id_1; id_2; ..." autocomplete="off"/>
-                    <br/>
-                    <strong>volume: </strong>
-                    <label class="form-check-label" for="include-min-vol">min</label>
-                    <input type="text" id="include-min-vol" name="include-min-vol"
-                           placeholder="0.0" autocomplete="off"/>
-                    <label class="form-check-label" for="include-max-vol">max</label>
-                    <input type="text" id="include-max-vol" name="include-max-vol"
-                           placeholder="0.0" autocomplete="off"/>
-                    <br/>
+                    <div class="form-group">
+                        <label class="form-check-label" for="include-prod-id">
+                            <strong>product(s) id: </strong>
+                        </label>
+                        <input id="include-prod-id" type="text" name="include-prod-id"
+                               placeholder="id_1; id_2; ..." autocomplete="off"/>
+                    </div>
+                    <div class="form-group">
+                        <strong>volume: </strong>
+                        <label class="form-check-label" for="include-min-vol">min</label>
+                        <input type="text" id="include-min-vol" name="include-min-vol"
+                               placeholder="0.0" autocomplete="off"/>
+                        <label class="form-check-label" for="include-max-vol">max</label>
+                        <input type="text" id="include-max-vol" name="include-max-vol"
+                               placeholder="0.0" autocomplete="off"/>
+                    </div>
                     <div class="sliders">
                         <div class="flex-container">
                             <div class="slider-tag">
@@ -168,31 +174,35 @@
                 </button>
                 <div id="include-filters-specimen" class="collapse">
                     <hr/>
-                    <div class="autocomplete">
-                        <label class="form-check-label" for="include-line">
-                            <strong>line(s): </strong>
-                        </label>
-                        <input type="text" id="include-line" name="include-line"
-                            placeholder="line_1; line_2; ..." autocomplete="off"/>
+                    <div class="form-group">
+                        <div class="autocomplete">
+                            <label class="form-check-label" for="include-line">
+                                <strong>line(s): </strong>
+                            </label>
+                            <input type="text" id="include-line" name="include-line"
+                                placeholder="line_1; line_2; ..." autocomplete="off"/>
+                        </div>
                     </div>
-                    <br/>
-                    <label class="form-check-label" for="include-gender-select">
-                        <strong>gender: </strong>
-                    </label>
-                    <select id="include-gender-select" name="include-gender-select" autocomplete="off">
-                        <option value="any">ANY</option>
-                        <option value="m">M</option>
-                        <option value="f">F</option>
-                    </select>
-                    <br/>
-                    <label class="form-check-label" for="include-cre-select">
-                        <strong>cre: </strong>
-                    </label>
-                    <select id="include-cre-select" name="cre-select" autocomplete="off">
-                        <option value="any">ANY</option>
-                        <option value="false">FALSE</option>
-                        <option value="true">TRUE</option>
-                    </select>
+                    <div class="form-group">
+                        <label class="form-check-label" for="include-gender-select">
+                            <strong>gender: </strong>
+                        </label>
+                        <select id="include-gender-select" name="include-gender-select" autocomplete="off">
+                            <option value="any">ANY</option>
+                            <option value="m">M</option>
+                            <option value="f">F</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-check-label" for="include-cre-select">
+                            <strong>cre: </strong>
+                        </label>
+                        <select id="include-cre-select" name="cre-select" autocomplete="off">
+                            <option value="any">ANY</option>
+                            <option value="false">FALSE</option>
+                            <option value="true">TRUE</option>
+                        </select>
+                    </div>
                     <hr/>
                 </div>
             </div>
@@ -202,12 +212,13 @@
                 </button>
                 <div id="exclude-filter-id" class="collapse">
                     <hr/>
-                    <label class="form-check-label" for="exclude-id">
-                        <strong>experiment(s) id: </strong>
-                    </label>
-                    <input id="exclude-id" type="text" name="exclude-id"
-                           placeholder="id_1; id_2; ..." autocomplete="off"/>
-                    <br/>
+                    <div class="form-group">
+                        <label class="form-check-label" for="exclude-id">
+                            <strong>experiment(s) id: </strong>
+                        </label>
+                        <input id="exclude-id" type="text" name="exclude-id"
+                               placeholder="id_1; id_2; ..." autocomplete="off"/>
+                    </div>
                     <hr/>
                 </div>
                 <button class="btn btn-outline-info" data-toggle="collapse" data-target="#exclude-filters-structure">
@@ -215,42 +226,46 @@
                 </button>
                 <div id="exclude-filters-structure" class="collapse">
                     <hr/>
-                    <div class="autocomplete">
-                        <label class="form-check-label" for="exclude-name">
-                            <strong>name(s): </strong>
-                        </label>
-                        <input type="text" id="exclude-name" name="exclude-name"
-                            placeholder="name_1; name_2; ..." autocomplete="off"/>
+                    <div class="form-group">
+                        <div class="autocomplete">
+                            <label class="form-check-label" for="exclude-name">
+                                <strong>name(s): </strong>
+                            </label>
+                            <input type="text" id="exclude-name" name="exclude-name"
+                                placeholder="name_1; name_2; ..." autocomplete="off"/>
+                        </div>
                     </div>
-                    <br/>
-                    <div class="autocomplete">
-                        <label class="form-check-label" for="exclude-acron">
-                            <strong>acronym(s): </strong>
-                        </label>
-                        <input id="exclude-acron" type="text" name="exclude-acron"
-                               placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
+                    <div class="form-group">
+                        <div class="autocomplete">
+                            <label class="form-check-label" for="exclude-acron">
+                                <strong>acronym(s): </strong>
+                            </label>
+                            <input id="exclude-acron" type="text" name="exclude-acron"
+                                   placeholder="acronym_1; acronym_2; ..." autocomplete="off"/>
+                        </div>
                     </div>
-                    <hr/>
                 </div>
                 <button class="btn btn-outline-info" data-toggle="collapse" data-target="#exclude-filters-injection">
                     injection
                 </button>
                 <div id="exclude-filters-injection" class="collapse">
                     <hr/>
-                    <label class="form-check-label" for="exclude-prod-id">
-                        <strong>product(s) id: </strong>
-                    </label>
-                    <input id="exclude-prod-id" type="text" name="exclude-prod-id"
-                           placeholder="id_1; id_2; ..." autocomplete="off"/>
-                    <br/>
-                    <strong>volume: </strong>
-                    <label class="form-check-label" for="exclude-min-vol">min</label>
-                    <input type="text" id="exclude-min-vol" name="exclude-min-vol"
-                           placeholder="0.0" autocomplete="off"/>
-                    <label class="form-check-label" for="exclude-max-vol">max</label>
-                    <input type="text" id="exclude-max-vol" name="exclude-max-vol"
-                           placeholder="0.0" autocomplete="off"/>
-                    <br/>
+                    <div class="form-group">
+                        <label class="form-check-label" for="exclude-prod-id">
+                            <strong>product(s) id: </strong>
+                        </label>
+                        <input id="exclude-prod-id" type="text" name="exclude-prod-id"
+                               placeholder="id_1; id_2; ..." autocomplete="off"/>
+                    </div>
+                    <div class="form-group">
+                        <strong>volume: </strong>
+                        <label class="form-check-label" for="exclude-min-vol">min</label>
+                        <input type="text" id="exclude-min-vol" name="exclude-min-vol"
+                               placeholder="0.0" autocomplete="off"/>
+                        <label class="form-check-label" for="exclude-max-vol">max</label>
+                        <input type="text" id="exclude-max-vol" name="exclude-max-vol"
+                               placeholder="0.0" autocomplete="off"/>
+                    </div>
                     <div class="sliders">
                         <div class="flex-container">
                             <div class="slider-tag">
@@ -321,12 +336,14 @@
                 </button>
                 <div id="exclude-filters-specimen" class="collapse">
                     <hr/>
-                    <div class="autocomplete">
-                        <label class="form-check-label" for="exclude-line">
-                            <strong>line(s): </strong>
-                        </label>
-                        <input type="text" id="exclude-line" name="exclude-line"
-                            placeholder="line_1; line_2; ..." autocomplete="off"/>
+                    <div class="form-group">
+                        <div class="autocomplete">
+                            <label class="form-check-label" for="exclude-line">
+                                <strong>line(s): </strong>
+                            </label>
+                            <input type="text" id="exclude-line" name="exclude-line"
+                                placeholder="line_1; line_2; ..." autocomplete="off"/>
+                        </div>
                     </div>
                     <hr/>
                 </div>
