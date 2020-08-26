@@ -1,9 +1,6 @@
 /**
  * Global variables
  */
-// table
-var table;
-
 var filteredIds = "";
 
 // include filters:
@@ -62,19 +59,6 @@ $.getJSON('http://api.brain-map.org/api/v2/data/query.json?criteria=model::Produ
     });
 });
 */
-
-// switch between include and exclude filters
-function showIncludeFilters()
-{
-    $("#exclude-filters").css("display", "none");
-    $("#include-filters").css("display", "block");
-}
-
-function showExcludeFilters()
-{
-    $("#include-filters").css("display", "none");
-    $("#exclude-filters").css("display", "block");
-}
 
 function getColumn(datatableVar, columnIndex)
 {
@@ -342,13 +326,6 @@ $(document).ready(function ()
     var mouseBrainImg = document.getElementById("mouse-brain-img");
     includeCanvas.drawImage(mouseBrainImg, 0, 0, 600, 200);
     excludeCanvas.drawImage(mouseBrainImg, 0, 0, 600, 200);
-
-    // activate datatable
-    table = $('#experiments').DataTable(
-    {
-        "scrollX": true,
-        lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]]
-    });
 
     //
     // Sliders
