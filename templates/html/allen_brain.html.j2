@@ -4,11 +4,18 @@
     Allen Brain
 {% endblock %}
 
-{% block dependencies %}
+{% block dependencies_header %}
+{# datatable #}
 <link rel="stylesheet" type="text/css"
       href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"/>
+<script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+{# for page skip with datatable https://datatables.net/plug-ins/pagination/input #}
+
+{# sliders #}
 <link rel="stylesheet" type="text/css"
       href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 <link rel="stylesheet" type="text/css"
       href="{{ url_for('static', filename='css/autocomplete.css') }}"/>
 <link rel="stylesheet" type="text/css"
@@ -324,7 +331,6 @@
                     <hr/>
                 </div>
             </div>
-
         </div>
 
         <div id="filter-option">
@@ -729,14 +735,8 @@
     </div>
 {% endblock %}
 
-{% block dependenciesScripts %}
-{# sliders #}
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
+{% block dependencies_scripts %}
 {# datatable #}
-<script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-{# for page skip with datatable https://datatables.net/plug-ins/pagination/input #}
-
 {# custom #}
 <script type="text/javascript" src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/table.js') }}"></script>

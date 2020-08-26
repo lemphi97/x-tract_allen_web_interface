@@ -42,7 +42,7 @@ def get_all_exp():
     cre_pos_exp = mcc.get_experiments(dataframe=True, cre=True)
     cre_pos_exp['cre'] = np.ones((len(cre_pos_exp), 1), dtype=bool)
 
-    return pd.concat([cre_neg_exp, cre_pos_exp])
+    return pd.concat([cre_neg_exp, cre_pos_exp]).round(5)
 
 
 all_exp = get_all_exp()
