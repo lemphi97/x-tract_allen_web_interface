@@ -347,15 +347,7 @@ $(document).ready(function ()
     table = $('#experiments').DataTable(
     {
         "scrollX": true,
-        lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]],
-        columnDefs: [{
-            render: function ( data, type, row )
-            {
-                //return data.match(/\d*.\d{5}/);
-                return parseFloat(data).toFixed(5); // seems faster
-            },
-            targets: [3]
-        }]
+        lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]]
     });
 
     //
@@ -959,7 +951,7 @@ $(document).ready(function ()
             data:
             {
                 'experiments': filteredIds,
-                'resolution': 25,
+                'resolution': $('#res-nrrd').val(),
             },
             xhrFields:
             {

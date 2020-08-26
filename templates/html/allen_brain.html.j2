@@ -443,7 +443,7 @@
                         {% for j in range(0, all_exp.iloc[i]['injection_structures']|length) %}
                             <li>
                                 <a href="https://atlas.brain-map.org/atlas?atlas=1&structure={{ all_exp.iloc[i]['injection_structures'][j] }}"
-                                    target="_blank" rel="noreferrer">{{ struct_dict[all_exp.iloc[i]['injection_structures'][j]] }}</a>
+                                target="_blank" rel="noreferrer">{{ struct_dict[all_exp.iloc[i]['injection_structures'][j]] }}</a>
                             </li>
                         {% endfor %}
                         </ol>
@@ -458,17 +458,20 @@
                         {{ all_exp.iloc[i]['injection_volume'] }}
                     </td>
                     <td>
-                        <a href="http://mouse.brain-map.org/agea?seed=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}&map1=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}" target="_blank" rel="noreferrer">
+                        <a target="_blank" rel="noreferrer"
+                        href="http://mouse.brain-map.org/agea?seed=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}&map1=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}">
                             {{ all_exp.iloc[i]['injection_x'] }}
                         </a>
                     </td>
                     <td>
-                        <a href="http://mouse.brain-map.org/agea?seed=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}&map1=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}" target="_blank" rel="noreferrer">
+                        <a target="_blank" rel="noreferrer"
+                        href="http://mouse.brain-map.org/agea?seed=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}&map1=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}">
                             {{ all_exp.iloc[i]['injection_y'] }}
                         </a>
                     </td>
                     <td>
-                        <a href="http://mouse.brain-map.org/agea?seed=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}&map1=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}" target="_blank" rel="noreferrer">
+                        <a target="_blank" rel="noreferrer"
+                        href="http://mouse.brain-map.org/agea?seed=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}&map1=P56,{{ all_exp.iloc[i]['injection_x'] }},{{ all_exp.iloc[i]['injection_y'] }},{{ all_exp.iloc[i]['injection_z'] }}">
                             {{ all_exp.iloc[i]['injection_z'] }}
                         </a>
                     </td>
@@ -503,9 +506,25 @@
             </div>
             {{ f_get_csv.submit_exp_csv(class_="btn btn-primary") }}
         </form>
-        <button id="average-volume-btn" class="btn btn-primary">
+        <button class="btn btn-primary" data-toggle="collapse" data-target="#average-volume">
             download average volume
         </button>
+        <div id="average-volume" class="collapse">
+            <hr/>
+            <div class="form-group">
+                <label for="res-nrrd">resolution (microns):</label>
+                <select id="res-nrrd">
+                    <option>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                    <option>100</option>
+                </select>
+            </div>
+            <button id="average-volume-btn" class="btn btn-success">
+                download
+            </button>
+            <hr/>
+        </div>
         <button id="copy-id-btn" class="btn btn-outline-primary">
             copy id(s)
         </button>

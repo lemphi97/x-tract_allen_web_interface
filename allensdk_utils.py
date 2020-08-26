@@ -57,7 +57,12 @@ def exp_save_nrrd(exp_id, img=[], res=100, folder="."):
         exp_id : integer
             What to download.
         img : list of strings, optional
-            Image volume. 'projection_density', 'projection_energy', 'injection_fraction', 'injection_density', 'injection_energy', 'data_mask'.
+            Image volume. 'projection_density',
+                          'projection_energy',
+                          'injection_fraction',
+                          'injection_density',
+                          'injection_energy',
+                          'data_mask'.
         res : integer, optional
             in microns. 10, 25, 50, or 100 (default).
         folder : string, optional
@@ -203,14 +208,17 @@ def get_average_projection_density(experiment_ids, resolution):
     mcc.resolution = resolution # [10. 25. 50. 100]
     errors = []
 
-    template = mcc.get_template_volume(file_name=model_path + "/average_template_" + str(mcc.resolution) + ".nrrd")[0]
+    template = mcc.get_template_volume(file_name=model_path + "/average_template_" +
+                                                 str(mcc.resolution) + ".nrrd")[0]
 
     vol_list = []
     if experiment_ids is not None:
         for exp_id in experiment_ids:
             if exp_id in all_exp.index:
                 volume = mcc.get_projection_density(experiment_id=exp_id,
-                                                    file_name=tmp_path + "/" + str(exp_id) + "_projection_density_" + str(mcc.resolution) + ".nrrd")[0]
+                                                    file_name=tmp_path + "/" + str(exp_id) +
+                                                              "_projection_density_" +
+                                                              str(mcc.resolution) + ".nrrd")[0]
                 vol_list.append(volume)
             else:
                 errors.append(exp_id + " does not exist")
@@ -267,11 +275,17 @@ def correlation_search(row,                          # Integer
     if row not in mcc.get_experiments(dataframe=True)['id']:
         errors.append("experiment |" + str(row) + "| doesn't exist")
 
-    validate_structures(structures=structures, errors=errors, category="structure")
+    validate_structures(structures=structures,
+                        errors=errors,
+                        category="structure")
 
-    validate_structures(structures=injection_structures, errors=errors, category="injection structures")
+    validate_structures(structures=injection_structures,
+                        errors=errors,
+                        category="injection structures")
 
-    validate_hemisphere(hemisphere=hemisphere, errors=errors, category="hemisphere")
+    validate_hemisphere(hemisphere=hemisphere,
+                        errors=errors,
+                        category="hemisphere")
 
     # I don't know how to validate product id beforehand
     # I don't know how to validate transgenic line beforehand
@@ -311,7 +325,9 @@ def injection_correlation_search(seed_point,                   # [Integer]
                           " (0, " + coord_maximums[i] +
                           ") is out of bound |" + seed_point[i] + "|")
 
-    validate_structures(structures=injection_structures, errors=errors, category="injection structures")
+    validate_structures(structures=injection_structures,
+                        errors=errors,
+                        category="injection structures")
 
     # I don't know how to validate product id beforehand
     # I don't know how to validate transgenic line beforehand
@@ -344,15 +360,25 @@ def source_search(injection_structures,         # [String], None
                   num_rows=None):               # Integer, None
     errors = []
 
-    validate_structures(structures=injection_structures, errors=errors, category="injection structures")
+    validate_structures(structures=injection_structures,
+                        errors=errors,
+                        category="injection structures")
 
-    validate_structures(structures=target_domain, errors=errors, category="target domain")
+    validate_structures(structures=target_domain,
+                        errors=errors,
+                        category="target domain")
 
-    validate_structures(structures=injection_domain, errors=errors, category="injection domain")
+    validate_structures(structures=injection_domain,
+                        errors=errors,
+                        category="injection domain")
 
-    validate_hemisphere(hemisphere=injection_hemisphere, errors=errors, category="injection hemisphere")
+    validate_hemisphere(hemisphere=injection_hemisphere,
+                        errors=errors,
+                        category="injection hemisphere")
 
-    validate_hemisphere(hemisphere=target_hemisphere, errors=errors, category="target hemisphere")
+    validate_hemisphere(hemisphere=target_hemisphere,
+                        errors=errors,
+                        category="target hemisphere")
 
     # I don't know how to validate product id beforehand
     # I don't know how to validate transgenic line beforehand
@@ -403,10 +429,12 @@ def hotspot_search(rows,                  # [Integer]
                 structures_id.append(structure_id)
             if depth == 'child':
                 structure_childs = st_tree.child_ids([structure_id])[0]
-                structures_id.extend(struct for struct in structure_childs if struct not in structures_id)
+                structures_id.extend(struct for struct in structure_childs
+                                     if struct not in structures_id)
             elif depth == 'all':
                 structure_descendants = st_tree.descendant_ids([structure_id])[0]
-                structures_id.extend(struct for struct in structure_descendants if struct not in structures_id)
+                structures_id.extend(struct for struct in structure_descendants
+                                     if struct not in structures_id)
 
     if len(structures_id) == 0:
         structures_id = None
@@ -434,4 +462,8 @@ def hotspot_search(rows,                  # [Integer]
     # numpy array to list array (for templates uses)
     matrix = [list(array) for array in matrix]
 
-    return dict_proj_crossing, matrix, list(pm['rows']), [c['label'] for c in pm['columns']], errors
+    return dict_proj_crossing,\
+           matrix,\
+           list(pm['rows']),\
+           [c['label'] for c in pm['columns']],\
+           errors
