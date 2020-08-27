@@ -92,13 +92,11 @@ def experiments():
 def experiment_search(param):
     if (param.isdigit()):
         exp = utils.all_exp.loc[int(param)]
-        struct = st_dict[exp['structure_id']]
-        prim_inj_struct = st_dict[exp['primary_injection_structure']]
         sect_id, res, ranges = utils.get_exp_img_sections_info(param)
         return flask.render_template("html/experiment.html.j2",
                                      exp=exp,
-                                     struct=struct,
-                                     prim_inj_struct=prim_inj_struct,
+                                     struct_dict=st_dict,
+                                     prod_dict=prod_dict,
                                      sect_id=sect_id,
                                      sect_res=res,
                                      sect_ranges=ranges)

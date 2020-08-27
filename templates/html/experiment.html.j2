@@ -32,18 +32,17 @@
                         </tr>
                         <tr>
                             <th>
-                                structure
+                                injection structures
                             </th>
                             <td>
-                                {{ struct }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                primary injection structure
-                            </th>
-                            <td>
-                                {{ prim_inj_struct }}
+                                <ol>
+                                    {% for j in range(0, exp['injection_structures']|length) %}
+                                    <li>
+                                        <a href="https://atlas.brain-map.org/atlas?atlas=1&structure={{ exp['injection_structures'][j] }}"
+                                        target="_blank" rel="noreferrer">{{ struct_dict[exp['injection_structures'][j]] }}</a>
+                                    </li>
+                                    {% endfor %}
+                                </ol>
                             </td>
                         </tr>
                         <tr>
@@ -51,7 +50,10 @@
                                 product
                             </th>
                             <td>
-                                {{ exp['product_id'] }}
+                                <abbr title="{{ prod_dict[exp['product_id']]['name'] }}:
+{{ prod_dict[exp['product_id']]['description'] }}">
+                                    {{ prod_dict[exp['product_id']]['abbreviation'] }}
+                                </abbr>
                             </td>
                         </tr>
                         <tr>
@@ -67,9 +69,12 @@
                                 injection (x, y, z)
                             </th>
                             <td>
-                                ({{ exp['injection_x'] }},
-                                {{ exp['injection_y'] }},
-                                {{ exp['injection_z'] }})
+                                <a target="_blank" rel="noreferrer"
+                                href="http://mouse.brain-map.org/agea?seed=P56,{{ exp['injection_x'] }},{{ exp['injection_y'] }},{{ exp['injection_z'] }}&map1=P56,{{ exp['injection_x'] }},{{ exp['injection_y'] }},{{ exp['injection_z'] }}">
+                                    ({{ exp['injection_x'] }},
+                                    {{ exp['injection_y'] }},
+                                    {{ exp['injection_z'] }})
+                                </a>
                             </td>
                         </tr>
                         <tr>
