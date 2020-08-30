@@ -948,6 +948,34 @@ $(document).ready(function ()
         });
     });
 
+    $('#streamlines-btn').click(function()
+    {
+        $.ajax(
+        {
+            type: 'POST',
+            url: "/experiments/forms/streamlines/",
+            data:
+            {
+                'experiments': filteredIds
+            },
+            xhrFields:
+            {
+                responseType: 'blob'
+            },
+            success: function(data)
+            {
+                var a = document.createElement('a');
+                var url = window.URL.createObjectURL(data);
+                a.href = url;
+                a.download = 'streamlines.trk';
+                document.body.append(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            }
+        });
+    });
+
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Interact_with_the_clipboard
     function copyAllIds() {
         var elemToCopy = document.querySelector("#copy-ids-input");

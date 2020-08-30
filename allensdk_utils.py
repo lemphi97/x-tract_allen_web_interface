@@ -1,6 +1,5 @@
 # This file is for handling Interactions with allensdk
 
-import logging
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -19,6 +18,12 @@ from allensdk.api.queries.ontologies_api import OntologiesApi
 from allensdk.api.queries.mouse_connectivity_api import MouseConnectivityApi
 # Download experiment volume
 from allensdk.api.queries import grid_data_api
+# Download tractography
+import streamlines
+
+# paths
+model_path = "web/static/models"
+tmp_path = "web/static/tmp"
 
 mcc = MouseConnectivityCache()
 mca = MouseConnectivityApi()
@@ -29,10 +34,6 @@ dict_struct_name_id = st_tree.get_name_map()
 dict_struct_name = {v.upper(): k for k, v in dict_struct_name_id.items()}
 dict_struct_acron = {k.upper(): v for k, v in st_tree.get_id_acronym_map().items()}
 dict_struct_acron_id = {v: k for k, v in dict_struct_acron.items()}
-
-# paths
-model_path = "web/static/models"
-tmp_path = "web/static/tmp"
 
 
 def get_all_exp():
@@ -227,11 +228,41 @@ def get_average_projection_density(experiment_ids, resolution):
     for vol in vol_list:
         vol_avg += vol / len(vol_list)
 
-    filename = "average_volume" + uuid.uuid4().hex + ".nrrd"
+    filename = tmp_path + "/average_volume" + uuid.uuid4().hex + ".nrrd"
 
-    nrrd.write(tmp_path + '/' + filename, vol_avg, index_order='C')
+    nrrd.write(filename, vol_avg, index_order='C')
 
     return filename, errors
+
+
+def get_streamlines(experiment_ids):
+    sapi = streamlines.StreamLines(directory=tmp_path)
+    tractogram_filename = None
+    errors = []
+
+    if experiment_ids:
+        # Check if we have valid experiments
+        for exp_id in experiment_ids:
+            if exp_id not in mcc.get_experiments(dataframe=True)['id']:
+                errors.append("experiment |" + str(exp_id) + "| doesn't exist")
+            else:
+                sapi.download(experiment_ids)
+
+    if len(sapi.data) > 0:
+        # Preparing the affine matrix
+        affine = np.zeros((4, 4))
+        affine[0, 2] = 1e-3
+        affine[1, 0] = -1e-3
+        affine[2, 1] = -1e-3
+        affine[3, 3] = 1
+
+        # Saving the tractogram
+        tractogram_filename = tmp_path + "/streamlines" + uuid.uuid4().hex + ".trk"
+        sapi.save_tractogram(tractogram_filename, affine)
+    else:
+        errors.append('no experiment(s) given')
+
+    return tractogram_filename, errors
 
 
 def validate_structures(structures, errors, category):
@@ -467,3 +498,15 @@ def hotspot_search(rows,                  # [Integer]
            list(pm['rows']),\
            [c['label'] for c in pm['columns']],\
            errors
+
+def nrrd_to_nifti(res):
+    affine = np.zeros((4,4))
+    affine[0,2] = res * 1e-3
+    affine[1,0] = -res * 1e-3
+    affine[2,1] = -res * 1e-3
+    affine[3,3] = 1
+
+    #img = nib.Nifti1Image(template_nrrd_ndarray, affine)
+    #nib.save(img, str(nifti_file_template_name))
+
+    return

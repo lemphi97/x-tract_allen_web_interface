@@ -108,7 +108,6 @@ def experiment_search(param):
 @app.route("/experiments/forms/structures_childs/", methods=['POST'])
 def structures_childs():
     acronyms = flask.request.form.getlist('acronyms[]')
-    logging.info('acronyms: ' + str(acronyms))
     names = flask.request.form.getlist('names[]')
 
     result = utils.get_structures_childs(acronyms=acronyms, names=names)
@@ -142,14 +141,14 @@ def experiments_csv():
 
 @app.route("/experiments/forms/average_volume/", methods=['POST'])
 def average_volume():
-    experiments_ids = forms.convert_array_str_to_int(forms.str_to_array(flask.request.form.get('experiments')))
+    experiment_ids = forms.convert_array_str_to_int(forms.str_to_array(flask.request.form.get('experiments')))
     res = int(flask.request.form.get('resolution'))
 
-    volume_name, errors = utils.get_average_projection_density(experiment_ids=experiments_ids, resolution=res)
+    volume_name, errors = utils.get_average_projection_density(experiment_ids=experiment_ids, resolution=res)
 
     # Inspired from:
     # https://stackoverflow.com/questions/24612366/delete-an-uploaded-file-after-downloading-it-from-flask
-    file_path = app.static_folder + "/tmp/" + volume_name
+    file_path = volume_name
     file_handle = open(file_path, 'r')
 
     def stream_and_remove_file():
@@ -164,7 +163,28 @@ def average_volume():
                  'filename': 'average_template.nrrd'}
     )
 
-    #return flask.send_file(file_handle, mimetype='application/octet-stream')
+
+@app.route("/experiments/forms/streamlines/", methods=['POST'])
+def streamlines():
+    experiment_ids = forms.convert_array_str_to_int(forms.str_to_array(flask.request.form.get('experiments')))
+    streamlines_name, errors = utils.get_streamlines(experiment_ids)
+
+    if streamlines_name:
+        file_path = streamlines_name
+        file_handle = open(file_path, 'r')
+
+        def stream_and_remove_file():
+            #yield from file_handle # TODO I don't get why we use `yield from`
+            file_handle.close()
+            remove(file_path)
+
+        return flask.current_app.response_class(
+            stream_and_remove_file(),
+            headers={'Content-Disposition': 'attachment',
+                     'Content-Type': 'application/octet-stream',
+                     'filename': 'streamlines.trk'}
+        )
+    return '400 Bad Request', 400
 
 
 @app.route("/experiments/forms/correlation_search/", methods=['POST'])
@@ -356,6 +376,7 @@ def about_website():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='app.log', level=logging.DEBUG)
+    # For logging
+    #logging.basicConfig(filename='app.log', level=logging.DEBUG)
 
     app.run(debug=True)
