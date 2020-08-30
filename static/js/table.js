@@ -803,7 +803,7 @@ $(document).ready(function ()
         // put filtered ids in fields that require it
         $('#filtered_exp').val(filteredIds);
         $(".copy-ids-group").css("display", "none"); // hide input field
-        $('#copy-id-btn').val(filteredIds);
+        $('#copy-ids-input').val(filteredIds);
     });
 
     //
@@ -921,6 +921,7 @@ $(document).ready(function ()
 
     $('#average-volume-btn').click(function()
     {
+        var resolution = $('#res-nrrd').val();
         $.ajax(
         {
             type: 'POST',
@@ -928,7 +929,7 @@ $(document).ready(function ()
             data:
             {
                 'experiments': filteredIds,
-                'resolution': $('#res-nrrd').val(),
+                'resolution': resolution
             },
             xhrFields:
             {
@@ -939,7 +940,7 @@ $(document).ready(function ()
                 var a = document.createElement('a');
                 var url = window.URL.createObjectURL(data);
                 a.href = url;
-                a.download = 'average_template.nrrd';
+                a.download = 'average_template_' + resolution + '.nrrd';
                 document.body.append(a);
                 a.click();
                 a.remove();
@@ -984,7 +985,7 @@ $(document).ready(function ()
         elemToCopy.setSelectionRange(0, 99999); // For mobile devices
         if (document.execCommand("copy"))
         {
-            document.getElementById("label-copy-ids").innerHTML = "link copied";
+            document.getElementById("label-copy-ids").innerHTML = "ids copied";
         }
         else
         {
@@ -993,6 +994,35 @@ $(document).ready(function ()
     }
 
     document.querySelector("#copy-ids-input").addEventListener("click", copyAllIds);
+
+    $('#average-template-btn').click(function()
+    {
+        var resolution = $('#res-template').val();
+        $.ajax(
+        {
+            type: 'POST',
+            url: "/experiments/forms/average_template/",
+            data:
+            {
+                'resolution': resolution
+            },
+            xhrFields:
+            {
+                responseType: 'blob'
+            },
+            success: function(data)
+            {
+                var a = document.createElement('a');
+                var url = window.URL.createObjectURL(data);
+                a.href = url;
+                a.download = 'template_' + resolution + '.nrrd';
+                document.body.append(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            }
+        });
+    });
 
     //
     // Apply filters based on url

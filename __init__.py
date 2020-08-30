@@ -144,11 +144,10 @@ def average_volume():
     experiment_ids = forms.convert_array_str_to_int(forms.str_to_array(flask.request.form.get('experiments')))
     res = int(flask.request.form.get('resolution'))
 
-    volume_name, errors = utils.get_average_projection_density(experiment_ids=experiment_ids, resolution=res)
+    file_path, errors = utils.get_average_projection_density(experiment_ids=experiment_ids, resolution=res)
 
     # Inspired from:
     # https://stackoverflow.com/questions/24612366/delete-an-uploaded-file-after-downloading-it-from-flask
-    file_path = volume_name
     file_handle = open(file_path, 'r')
 
     def stream_and_remove_file():
@@ -156,21 +155,19 @@ def average_volume():
         file_handle.close()
         remove(file_path)
 
-    return flask.current_app.response_class(
-        stream_and_remove_file(),
-        headers={'Content-Disposition': 'attachment',
-                 'Content-Type': 'application/octet-stream',
-                 'filename': 'average_template.nrrd'}
-    )
+    return flask.current_app.response_class(stream_and_remove_file(),
+                                            headers={'Content-Disposition': 'attachment',
+                                                     'Content-Type': 'application/octet-stream',
+                                                     'filename': 'average_template.nrrd'})
 
 
 @app.route("/experiments/forms/streamlines/", methods=['POST'])
 def streamlines():
     experiment_ids = forms.convert_array_str_to_int(forms.str_to_array(flask.request.form.get('experiments')))
-    streamlines_name, errors = utils.get_streamlines(experiment_ids)
 
-    if streamlines_name:
-        file_path = streamlines_name
+    file_path, errors = utils.get_streamlines(experiment_ids)
+
+    if file_path:
         file_handle = open(file_path, 'r')
 
         def stream_and_remove_file():
@@ -178,12 +175,31 @@ def streamlines():
             file_handle.close()
             remove(file_path)
 
-        return flask.current_app.response_class(
-            stream_and_remove_file(),
-            headers={'Content-Disposition': 'attachment',
-                     'Content-Type': 'application/octet-stream',
-                     'filename': 'streamlines.trk'}
-        )
+        return flask.current_app.response_class(stream_and_remove_file(),
+                                                headers={'Content-Disposition': 'attachment',
+                                                         'Content-Type': 'application/octet-stream',
+                                                         'filename': 'streamlines.trk'})
+    return '400 Bad Request', 400
+
+
+@app.route("/experiments/forms/average_template/", methods=['POST'])
+def average_template():
+    res = int(flask.request.form.get('resolution'))
+
+    file_path, errors = utils.get_template(resolution=res)
+
+    if file_path:
+        file_handle = open(file_path, 'r')
+
+        def stream_and_remove_file():
+            #yield from file_handle # TODO I don't get why we use `yield from`
+            file_handle.close()
+            remove(file_path)
+
+        return flask.current_app.response_class(stream_and_remove_file(),
+                                                headers={'Content-Disposition': 'attachment',
+                                                         'Content-Type': 'application/octet-stream',
+                                                         'filename': 'average_template' + str(res) + '.nii'})
     return '400 Bad Request', 400
 
 
