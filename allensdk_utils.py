@@ -242,9 +242,7 @@ def get_average_projection_density(experiment_ids, resolution):
     for vol in vol_list:
         vol_avg += vol / len(vol_list)
 
-    file_path = tmp_path + "/average_volume_" + uuid.uuid4().hex + ".nrrd"
-
-    nrrd.write(file_path, vol_avg, index_order='C')
+    file_path = nrrd_to_nifti(vol_avg, mcc.resolution)
 
     return file_path, errors
 

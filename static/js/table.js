@@ -921,7 +921,7 @@ $(document).ready(function ()
 
     $('#average-volume-btn').click(function()
     {
-        var resolution = $('#res-nrrd').val();
+        var resolution = $('#res-average-volume').val();
         $.ajax(
         {
             type: 'POST',
@@ -940,7 +940,7 @@ $(document).ready(function ()
                 var a = document.createElement('a');
                 var url = window.URL.createObjectURL(data);
                 a.href = url;
-                a.download = 'average_template_' + resolution + '.nrrd';
+                a.download = 'average_projection_density_volume_' + resolution + '.nii';
                 document.body.append(a);
                 a.click();
                 a.remove();
