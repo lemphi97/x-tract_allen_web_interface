@@ -12,8 +12,11 @@ import flask
 # for executing terminal cmd (git)
 from subprocess import Popen, PIPE, STDOUT
 
-# Generate secret key and deleting files
+# Generate secret key, deleting files
 from os import urandom, remove
+
+# Get filename from path
+from os.path import basename
 
 # Application log
 import logging
@@ -122,6 +125,7 @@ def structures_childs():
     response.headers["Content-Type"] = "text/plain"
     return response
 
+
 @app.route("/experiments/forms/experiments_csv/", methods=['POST'])
 def experiments_csv():
     f_get_csv = forms.FormExperimentsCSV()
@@ -146,19 +150,7 @@ def average_volume():
 
     file_path, errors = utils.get_average_projection_density(experiment_ids=experiment_ids, resolution=res)
 
-    # Inspired from:
-    # https://stackoverflow.com/questions/24612366/delete-an-uploaded-file-after-downloading-it-from-flask
-    file_handle = open(file_path, 'r')
-
-    def stream_and_remove_file():
-        #yield from file_handle # TODO I don't get why we use `yield from`
-        file_handle.close()
-        remove(file_path)
-
-    return flask.current_app.response_class(stream_and_remove_file(),
-                                            headers={'Content-Disposition': 'attachment',
-                                                     'Content-Type': 'application/octet-stream',
-                                                     'filename': 'average_template.nrrd'})
+    return flask.current_app.send_static_file("tmp/" + basename(file_path))
 
 
 @app.route("/experiments/forms/streamlines/", methods=['POST'])
@@ -168,17 +160,7 @@ def streamlines():
     file_path, errors = utils.get_streamlines(experiment_ids)
 
     if file_path:
-        file_handle = open(file_path, 'r')
-
-        def stream_and_remove_file():
-            #yield from file_handle # TODO I don't get why we use `yield from`
-            file_handle.close()
-            remove(file_path)
-
-        return flask.current_app.response_class(stream_and_remove_file(),
-                                                headers={'Content-Disposition': 'attachment',
-                                                         'Content-Type': 'application/octet-stream',
-                                                         'filename': 'streamlines.trk'})
+        return flask.current_app.send_static_file("tmp/" + basename(file_path))
     return '400 Bad Request', 400
 
 
@@ -189,17 +171,7 @@ def average_template():
     file_path, errors = utils.get_template(resolution=res)
 
     if file_path:
-        file_handle = open(file_path, 'r')
-
-        def stream_and_remove_file():
-            #yield from file_handle # TODO I don't get why we use `yield from`
-            file_handle.close()
-            remove(file_path)
-
-        return flask.current_app.response_class(stream_and_remove_file(),
-                                                headers={'Content-Disposition': 'attachment',
-                                                         'Content-Type': 'application/octet-stream',
-                                                         'filename': 'average_template' + str(res) + '.nii'})
+        return flask.current_app.send_static_file("tmp/" + basename(file_path))
     return '400 Bad Request', 400
 
 
