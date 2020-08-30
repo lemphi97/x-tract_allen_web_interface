@@ -92,6 +92,20 @@ def exp_save_nrrd(exp_id, img=[], res=100, folder="."):
     return files_path
 
 
+def nrrd_to_nifti(nrrd_array, res):
+    affine = np.zeros((4,4))
+    affine[0,2] = res * 1e-3
+    affine[1,0] = -res * 1e-3
+    affine[2,1] = -res * 1e-3
+    affine[3,3] = 1
+
+    nifti_volume = nib.Nifti1Image(nrrd_array, affine)
+    file_path = tmp_path + "/" + "nifti_volume_" + str(res) + "_" + uuid.uuid4().hex + ".nii"
+    nib.save(nifti_volume, file_path)
+
+    return file_path
+
+
 # returns all structure in a dict (key: id, value: name with acronym)
 def get_struct_in_dict(experiences):
     st_dict = {}
@@ -228,16 +242,16 @@ def get_average_projection_density(experiment_ids, resolution):
     for vol in vol_list:
         vol_avg += vol / len(vol_list)
 
-    filename = tmp_path + "/average_volume" + uuid.uuid4().hex + ".nrrd"
+    file_path = tmp_path + "/average_volume_" + uuid.uuid4().hex + ".nrrd"
 
-    nrrd.write(filename, vol_avg, index_order='C')
+    nrrd.write(file_path, vol_avg, index_order='C')
 
-    return filename, errors
+    return file_path, errors
 
 
 def get_streamlines(experiment_ids):
     sapi = streamlines.StreamLines(directory=tmp_path)
-    tractogram_filename = None
+    tractogram_path = None
     errors = []
 
     if experiment_ids:
@@ -257,12 +271,21 @@ def get_streamlines(experiment_ids):
         affine[3, 3] = 1
 
         # Saving the tractogram
-        tractogram_filename = tmp_path + "/streamlines" + uuid.uuid4().hex + ".trk"
-        sapi.save_tractogram(tractogram_filename, affine)
+        tractogram_path = tmp_path + "/streamlines" + uuid.uuid4().hex + ".trk"
+        sapi.save_tractogram(tractogram_path, affine)
     else:
         errors.append('no experiment(s) given')
 
-    return tractogram_filename, errors
+    return tractogram_path, errors
+
+
+def get_template(resolution):
+    mcc.resolution = resolution # [10. 25. 50. 100]
+
+    template = mcc.get_template_volume(file_name=model_path + "/average_template_" +
+                                       str(mcc.resolution) + ".nrrd")[0]
+
+    return nrrd_to_nifti(template, mcc.resolution)
 
 
 def validate_structures(structures, errors, category):
@@ -498,15 +521,3 @@ def hotspot_search(rows,                  # [Integer]
            list(pm['rows']),\
            [c['label'] for c in pm['columns']],\
            errors
-
-def nrrd_to_nifti(res):
-    affine = np.zeros((4,4))
-    affine[0,2] = res * 1e-3
-    affine[1,0] = -res * 1e-3
-    affine[2,1] = -res * 1e-3
-    affine[3,3] = 1
-
-    #img = nib.Nifti1Image(template_nrrd_ndarray, affine)
-    #nib.save(img, str(nifti_file_template_name))
-
-    return

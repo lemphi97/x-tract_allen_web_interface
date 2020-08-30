@@ -1015,7 +1015,7 @@ $(document).ready(function ()
                 var a = document.createElement('a');
                 var url = window.URL.createObjectURL(data);
                 a.href = url;
-                a.download = 'template_' + resolution + '.nrrd';
+                a.download = 'average_template_volume_' + resolution + '.nii';
                 document.body.append(a);
                 a.click();
                 a.remove();

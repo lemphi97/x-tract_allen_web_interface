@@ -168,7 +168,7 @@ def streamlines():
 def average_template():
     res = int(flask.request.form.get('resolution'))
 
-    file_path, errors = utils.get_template(resolution=res)
+    file_path = utils.get_template(resolution=res)
 
     if file_path:
         return flask.current_app.send_static_file("tmp/" + basename(file_path))
