@@ -116,7 +116,7 @@
 
         <div class="download">
             <div class="content-bg">
-                <h2>Other png</h2>
+                <h2>Projection image</h2>
                 <div class="img-menu flex-container">
                     <div class="current-img center">
                         <div id="div-img">
@@ -163,25 +163,23 @@
             </div>
             <br/>
             <div class="content-bg">
-                <h2>Grid data (nrrd)</h2>
-                <form>
-                    {# Volume resolution is in `μm`. See link: #}
-                    {# https://allensdk.readthedocs.io/en/latest/_static/examples/nb/mouse_connectivity.html#Manipulating-Grid-Data #}
-                    <label for="res-nrrd">resolution (microns):</label>
-                    <select id="res-nrrd">
-                        <option>10</option>
-                        <option>25</option>
-                        <option>50</option>
-                        <option>100</option>
-                    </select>
-                    <h3>Download links</h3>
-                    <button type="submit" class="btn btn-link" onClick="download_projection_density();">projection density</button>
-                    <button type="submit" class="btn btn-link" onClick="download_projection_energy();">projection energy</button>
-                    <button type="submit" class="btn btn-link" onClick="download_injection_fraction();">injection fraction</button>
-                    <button type="submit" class="btn btn-link" onClick="download_injection_density();">injection density</button>
-                    <button type="submit" class="btn btn-link" onClick="download_injection_energy();">injection energy</button>
-                    <button type="submit" class="btn btn-link" onClick="download_data_mask();">data mask</button>
-                </form>
+                <h2>Grid data (nifti)</h2>
+                {# Volume resolution is in `μm`. See link: #}
+                {# https://allensdk.readthedocs.io/en/latest/_static/examples/nb/mouse_connectivity.html#Manipulating-Grid-Data #}
+                <label for="res-proj">resolution (microns):</label>
+                <select id="res-proj">
+                    <option>100</option>
+                    <option>50</option>
+                    <option>25</option>
+                    <option>10</option>
+                </select>
+                <h3>Download links</h3>
+                <button type="submit" class="btn btn-link volume" value="projection_density">projection density</button>
+                <button type="submit" class="btn btn-link volume" value="projection_energy">projection energy</button>
+                <button type="submit" class="btn btn-link volume" value="injection_fraction">injection fraction</button>
+                <button type="submit" class="btn btn-link volume" value="injection_density">injection density</button>
+                <button type="submit" class="btn btn-link volume" value="injection_energy">injection energy</button>
+                <button type="submit" class="btn btn-link volume" value="data_mask">data mask</button>
             </div>
         </div>
     </div>

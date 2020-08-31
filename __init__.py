@@ -143,6 +143,20 @@ def experiments_csv():
     return "<h1>400 Bad Request</h1><p>Couldn't validate form submit</p>"
 
 
+@app.route("/experiments/forms/experiment_volume/", methods=['POST'])
+def experiment_volume():
+    experiment_id = int(flask.request.form.get('experiment'))
+    img_type = flask.request.form.get('volume_type')
+    res = int(flask.request.form.get('resolution'))
+
+    file_path, errors = utils.get_experiment_volume(experiment_id=experiment_id,
+                                                    img_type=img_type,
+                                                    resolution=res)
+    if file_path:
+        return flask.current_app.send_static_file("tmp/" + basename(file_path))
+    return '400 Bad Request', 400
+
+
 @app.route("/experiments/forms/average_volume/", methods=['POST'])
 def average_volume():
     experiment_ids = forms.convert_array_str_to_int(forms.str_to_array(flask.request.form.get('experiments')))

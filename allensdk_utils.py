@@ -219,8 +219,56 @@ def get_experiments_csv(experiment_ids):
     return csv, errors
 
 
+def get_experiment_volume(experiment_id, img_type, resolution):
+    '''
+    Download in nifti format.
+
+        Parameters
+        ----------
+        experiment_id : integer
+            What to download.
+        img_type : a strings
+            Image volume. 'projection_density',
+                          'projection_energy',
+                          'injection_fraction',
+                          'injection_density',
+                          'injection_energy',
+                          'data_mask'.
+        resolution : integer, optional
+            in microns. 10, 25, 50, or 100 (default).
+
+        Return
+        ------
+        file_path : string
+            path of created nifti file
+    '''
+    allowed_img_types = ['projection_density',
+                         'projection_energy',
+                         'injection_fraction',
+                         'injection_density',
+                         'injection_energy',
+                         'data_mask']
+    errors = []
+    if img_type in allowed_img_types:
+        gd_api = grid_data_api.GridDataApi(resolution=resolution)
+
+        # download nrrd files
+        save_file_path = tmp_path + f"/{experiment_id}_{img_type}_{resolution}.nrrd"
+        gd_api.download_projection_grid_data(
+            experiment_id,
+            image=[img_type],
+            resolution=resolution,
+            save_file_path=save_file_path
+        )
+
+        return nrrd_to_nifti(nrrd.read(save_file_path)[0], resolution), errors
+    else:
+        errors.append(img_type + " image type doesn't exist")
+    return None, errors
+
+
 def get_average_projection_density(experiment_ids, resolution):
-    mcc.resolution = resolution # [10. 25. 50. 100]
+    mcc.resolution = resolution  # [10. 25. 50. 100]
     errors = []
 
     template = mcc.get_template_volume(file_name=model_path + "/average_template_" +

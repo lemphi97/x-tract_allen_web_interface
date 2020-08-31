@@ -178,4 +178,37 @@ $(document).ready(function ()
     })
 
     $("#index").trigger("input");
+
+    // download volumes
+    $(".volume").on('click', function()
+    {
+        var volumeType = this.value;
+        var resolution = $('#res-proj').val();
+        $.ajax(
+        {
+            type: 'POST',
+            url: "/experiments/forms/experiment_volume/",
+            data:
+            {
+                'experiment': exp_id,
+                'volume_type': volumeType,
+                'resolution': resolution
+            },
+            xhrFields:
+            {
+                responseType: 'blob'
+            },
+            success: function(data)
+            {
+                var a = document.createElement('a');
+                var url = window.URL.createObjectURL(data);
+                a.href = url;
+                a.download = exp_id + '_' + volumeType + '_' + resolution + '.nii';
+                document.body.append(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            }
+        });
+    });
 });
