@@ -225,22 +225,24 @@ def get_average_projection_density(experiment_ids, resolution):
 
     template = mcc.get_template_volume(file_name=model_path + "/average_template_" +
                                                  str(mcc.resolution) + ".nrrd")[0]
+    vol_avg = np.zeros_like(template, dtype='float32')
 
-    vol_list = []
+    valid_experiment_ids = []
     if experiment_ids is not None:
         for exp_id in experiment_ids:
             if exp_id in all_exp.index:
-                volume = mcc.get_projection_density(experiment_id=exp_id,
-                                                    file_name=tmp_path + "/" + str(exp_id) +
-                                                              "_projection_density_" +
-                                                              str(mcc.resolution) + ".nrrd")[0]
-                vol_list.append(volume)
+                valid_experiment_ids.append(exp_id)
             else:
                 errors.append(exp_id + " does not exist")
 
-    vol_avg = np.zeros_like(template, dtype='float32')
-    for vol in vol_list:
-        vol_avg += vol / len(vol_list)
+    if valid_experiment_ids is not None:
+        for exp_id in valid_experiment_ids:
+            vol_avg += mcc.get_projection_density(
+                experiment_id=exp_id,
+                file_name=tmp_path + "/" + str(exp_id) +
+                          "_projection_density_" +
+                          str(mcc.resolution) + ".nrrd"
+            )[0] / len(valid_experiment_ids)
 
     file_path = nrrd_to_nifti(vol_avg, mcc.resolution)
 
