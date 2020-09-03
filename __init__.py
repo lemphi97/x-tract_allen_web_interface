@@ -56,7 +56,11 @@ def render_templates():
     head_commit.insert(0, branch_name)
 
     # allen_brain
+    struct_names = [k for k, v in utils.dict_struct_name.items()]
+    struct_acronyms = [k for k, v in utils.dict_struct_acron.items()]
     rendered_template = flask.render_template("html/allen_brain.html.j2",
+                                              struct_names=struct_names,
+                                              struct_acronyms=struct_acronyms,
                                               all_exp=utils.all_exp,
                                               struct_dict=st_dict,
                                               prod_dict=prod_dict,

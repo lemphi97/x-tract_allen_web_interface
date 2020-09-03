@@ -43,92 +43,6 @@ var excludeContainsAcronFilter = false;
 var excludeContainsProdFilter = false;
 var excludeContainsLineFilter = false;
 
-// DOM parser
-var parser = new DOMParser();
-
-/*
-// product dictionary (using python solution for now)
-var productDict = {};
-$.getJSON('http://api.brain-map.org/api/v2/data/query.json?criteria=model::Product', function(data) {
-    // JSON result in `data` variable
-    var productList = data['msg'];
-
-    productList.forEach(function(product)
-    {
-        productDict[product['id']] = product;
-    });
-});
-*/
-
-function getColumn(datatableVar, columnIndex)
-{
-    array_column_data = [];
-    var i;
-    for (var i = 0; i < datatableVar.$('tr', {"filter":"applied"}).length; i++)
-    {
-        var value = datatableVar.$('tr', {"filter":"applied"})[i].cells[columnIndex].innerText;
-        value = value.replace(/\n/g,'').trim();
-        array_column_data.push(value);
-    }
-    return array_column_data;
-}
-
-function getRowColumn(datatableVar, rowIndex, columnIndex)
-{
-    return datatableVar.$('tr', {"filter":"applied"})[rowIndex].cells[columnIndex].innerText;
-}
-
-/*
- * Gets all the unique structures without the acronym from the column of the datatable
- */
-function getUniqueStructures(column)
-{
-    var uniqueStruct = [];
-    for (var i = 0; i < column.length; i++)
-    {
-        var unorderedList = parser.parseFromString(column[i], 'text/html');
-        var structures = unorderedList.getElementsByTagName('a');
-        for (var j = 0; j < structures.length; j++)
-        {
-            var struct = structures[j].innerHTML;
-            var indexBeforeAcron = struct.indexOf("|");
-            var structName = struct.substring(0, indexBeforeAcron).trim();
-            if (indexBeforeAcron > 0 && ! uniqueStruct.includes(structName))
-            {
-                uniqueStruct.push(structName);
-            }
-        }
-    }
-
-    return uniqueStruct;
-}
-
-/*
- * Gets all the unique acronym from the column of the datatable
- */
-function getUniqueAcronyms(column)
-{
-    var uniqueStruct = [];
-    for (var i = 0; i < column.length; i++)
-    {
-        var unorderedList = parser.parseFromString(column[i], 'text/html');
-        var structures = unorderedList.getElementsByTagName('li');
-        for (var j = 0; j < structures.length; j++)
-        {
-            var struct = structures[j].innerHTML;
-            var structAcron = struct.match(/\|[^\|]*\|/)[0];
-            // remove `|` chars from acronym
-            structAcron = structAcron.substring(1, structAcron.length - 1);
-            if (structAcron.length > 0 && ! uniqueStruct.includes(structAcron))
-            {
-                uniqueStruct.push(structAcron);
-            }
-        }
-    }
-
-    return uniqueStruct;
-}
-
 /*
  * Check if array contains str without considering cases
  */
@@ -887,16 +801,14 @@ $(document).ready(function ()
     //
     // Configure autocomplete
     //
-    var structures = getUniqueStructures(table.column(1).data());
-    var structuresAcronyms = getUniqueAcronyms(table.column(1).data());
     var specimenLines = table.column(7).data().unique();
     var specimenNames = table.column(8).data().unique();
 
-    autocomplete(document.getElementById("include-name"), structures);
-    autocomplete(document.getElementById("include-acron"), structuresAcronyms);
+    autocomplete(document.getElementById("include-name"), structNames);
+    autocomplete(document.getElementById("include-acron"), structAcronyms);
     autocomplete(document.getElementById("include-line"), specimenLines);
-    autocomplete(document.getElementById("exclude-name"), structures);
-    autocomplete(document.getElementById("exclude-acron"), structuresAcronyms);
+    autocomplete(document.getElementById("exclude-name"), structNames);
+    autocomplete(document.getElementById("exclude-acron"), structAcronyms);
     autocomplete(document.getElementById("exclude-line"), specimenLines);
 
     //
@@ -904,18 +816,6 @@ $(document).ready(function ()
     //
     $('#copy-id-btn').click(function()
     {
-        /*
-        var arrayColumn = getColumn(table, 0);
-        var strColumn = "";
-        var i = 0
-        while(i < arrayColumn.length - 1)
-        {
-            strColumn += arrayColumn[i] + ';';
-            i++;
-        }
-        strColumn += arrayColumn[i];
-        */
-
         $(".copy-ids-group").css("display", "inline"); // show input field
     });
 

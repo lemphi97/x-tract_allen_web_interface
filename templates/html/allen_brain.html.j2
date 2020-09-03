@@ -794,8 +794,10 @@
 {% endblock %}
 
 {% block dependencies_scripts %}
-{# datatable #}
-{# custom #}
+<script>
+    var structNames = {{ struct_names }};
+    var structAcronyms = {{ struct_acronyms }};
+</script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/table.js') }}"></script>
 {% endblock %}
