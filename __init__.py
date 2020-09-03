@@ -35,7 +35,7 @@ app.config["SECRET_KEY"] = urandom(24).hex()
 #app.config['SERVER_NAME'] = 'xtract.com'
 
 # Global variables
-st_dict = utils.get_struct_in_dict(utils.all_exp)
+st_dict = utils.get_struct_in_dict()
 prod_dict = utils.get_product_dict()
 
 
@@ -56,8 +56,7 @@ def render_templates():
     head_commit.insert(0, branch_name)
 
     # allen_brain
-    struct_names = [k for k, v in utils.dict_struct_name.items()]
-    struct_acronyms = [k for k, v in utils.dict_struct_acron.items()]
+    struct_names, struct_acronyms = utils.get_node_list()
     rendered_template = flask.render_template("html/allen_brain.html.j2",
                                               struct_names=struct_names,
                                               struct_acronyms=struct_acronyms,

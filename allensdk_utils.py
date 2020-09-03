@@ -49,49 +49,6 @@ def get_all_exp():
 all_exp = get_all_exp()
 
 
-def exp_save_nrrd(exp_id, img=[], res=100, folder="."):
-    '''
-    Download in NRRD format.
-
-        Parameters
-        ----------
-        exp_id : integer
-            What to download.
-        img : list of strings, optional
-            Image volume. 'projection_density',
-                          'projection_energy',
-                          'injection_fraction',
-                          'injection_density',
-                          'injection_energy',
-                          'data_mask'.
-        res : integer, optional
-            in microns. 10, 25, 50, or 100 (default).
-        folder : string, optional
-            Folder name to save file(s) into.
-
-        Return
-        ------
-        files_path : list of string
-            paths of downloaded nrrd file(s)
-    '''
-    Path(folder).mkdir(parents=True, exist_ok=True)
-    files_path = []
-    gd_api = grid_data_api.GridDataApi(resolution=res)
-
-    for img_type in img:
-        # download nrrd files
-        save_file_path = f"{folder}/{exp_id}_{img_type}_{res}.nrrd"
-        gd_api.download_projection_grid_data(
-            exp_id,
-            image=[img_type],
-            resolution=res,
-            save_file_path=save_file_path
-        )
-        files_path.append(save_file_path)
-
-    return files_path
-
-
 def nrrd_to_nifti(nrrd_array, res):
     affine = np.zeros((4,4))
     affine[0,2] = res * 1e-3
@@ -106,20 +63,56 @@ def nrrd_to_nifti(nrrd_array, res):
     return file_path
 
 
-# returns all structure in a dict (key: id, value: name with acronym)
-def get_struct_in_dict(experiences):
+# get all structures in a dict (key: id, value: name with acronym)
+def get_struct_in_dict():
     st_dict = {}
 
-    for i in range(0, len(experiences)):
-        index_val = experiences.iloc[i]
-        struct_id_array = index_val['injection_structures']
+    for i in range(0, len(all_exp)):
+        index_val = all_exp.iloc[i]
+        struct_ids = index_val['injection_structures']
 
-        for struct_id in struct_id_array:
+        for struct_id in struct_ids:
             if struct_id not in st_dict:
                 struct_dict = st_tree.get_structures_by_id([struct_id])[0]
                 st_dict[struct_id] = struct_dict['name'] + " |" + struct_dict['acronym'] + "|"
 
     return st_dict
+
+
+# get the minimum of nodes/structures in 2 lists (names, acron).
+# Meant for the autocomplete options on client side.
+def get_node_list():
+    node_list = set()
+
+    for i in range(0, len(all_exp)):
+        index_val = all_exp.iloc[i]
+
+        struct_ids = index_val['injection_structures']
+        for struct_id in struct_ids:
+            # check if node as already been done to save time on ancestor search
+            if struct_id not in node_list:
+                node_list.add(struct_id)
+                ancestor_ids_list = st_tree.ancestor_ids([struct_id])
+
+                # Concatenate lists in ancestor_ids
+                ancestor_ids = set()
+                for list in ancestor_ids_list:
+                    for elem in list:
+                        ancestor_ids.add(elem)
+
+                for ancestor_id in ancestor_ids:
+                    if ancestor_id not in node_list:
+                        node_list.add(ancestor_id)
+
+    node_dictionaries = st_tree.nodes(node_list)
+
+    name_list = []
+    acronym_list = []
+    for node_dict in node_dictionaries:
+        name_list.append(node_dict['name'])
+        acronym_list.append(node_dict['acronym'])
+
+    return name_list, acronym_list
 
 
 # returns product dictionary (key: id, value: dict about product)

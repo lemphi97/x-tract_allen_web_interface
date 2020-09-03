@@ -49,7 +49,7 @@ function autocomplete(inp, arr)
                 b.addEventListener("click", function(e)
                 {
                     /*insert the value for the autocomplete text field:*/
-                    var addedVal = this.getElementsByTagName("input")[0].value;
+                    var addedVal = this.getElementsByTagName("input")[0].value + ';';
                     var lastSeparation = val.lastIndexOf(";");
                     if (lastSeparation < 0)
                     {
