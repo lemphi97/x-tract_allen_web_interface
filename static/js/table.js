@@ -119,6 +119,7 @@ function queryDescendantStructures(acronyms, names)
 {
     var structDescendants = [];
 
+    newRequest();
     $.ajax(
     {
         url: "/experiments/forms/structures_childs/",
@@ -132,6 +133,10 @@ function queryDescendantStructures(acronyms, names)
         success: function(data)
         {
             structDescendants = data.split(";");
+        },
+        complete: function()
+        {
+            requestOver();
         }
     });
 
@@ -821,6 +826,7 @@ $(document).ready(function ()
 
     $('#average-volume-btn').click(function()
     {
+        newRequest();
         var resolution = $('#res-average-volume').val();
         $.ajax(
         {
@@ -845,12 +851,17 @@ $(document).ready(function ()
                 a.click();
                 a.remove();
                 window.URL.revokeObjectURL(url);
+            },
+            complete: function()
+            {
+                requestOver();
             }
         });
     });
 
     $('#streamlines-btn').click(function()
     {
+        newRequest();
         $.ajax(
         {
             type: 'POST',
@@ -873,6 +884,10 @@ $(document).ready(function ()
                 a.click();
                 a.remove();
                 window.URL.revokeObjectURL(url);
+            },
+            complete: function()
+            {
+                requestOver();
             }
         });
     });
@@ -897,6 +912,7 @@ $(document).ready(function ()
 
     $('#average-template-btn').click(function()
     {
+        newRequest();
         var resolution = $('#res-template').val();
         $.ajax(
         {
@@ -920,6 +936,10 @@ $(document).ready(function ()
                 a.click();
                 a.remove();
                 window.URL.revokeObjectURL(url);
+            },
+            complete: function()
+            {
+                requestOver();
             }
         });
     });

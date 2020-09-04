@@ -1,57 +1,5 @@
 "use_strict";
 
-exp_id = 0;
-
-function download_grid_data(id, img, res)
-{
-    var url = "http://api.brain-map.org/grid_data/download_file/" + id + "?image=" + img + "&resolution=" + res;
-    let a = document.createElement('a');
-    a.href = url;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-/*
-available :
-    - projection_density
-    - projection_energy
-    - injection_fraction
-    - injection_density
-    - injection_energy
-    - data_mask
-*/
-
-function download_projection_density()
-{
-    download_grid_data(exp_id, "projection_density", $('#res-nrrd').val());
-}
-
-function download_projection_energy()
-{
-    download_grid_data(exp_id, "projection_energy", $('#res-nrrd').val());
-}
-
-function download_injection_fraction()
-{
-    download_grid_data(exp_id, "injection_fraction", $('#res-nrrd').val());
-}
-
-function download_injection_density()
-{
-    download_grid_data(exp_id, "injection_density", $('#res-nrrd').val());
-}
-
-function download_injection_energy()
-{
-    download_grid_data(exp_id, "injection_energy", $('#res-nrrd').val());
-}
-
-function download_data_mask()
-{
-    download_grid_data(exp_id, "data_mask", $('#res-nrrd').val());
-}
-
 function download_img()
 {
     var url = $("#img").attr("src");
@@ -64,7 +12,7 @@ function download_img()
 
 $(document).ready(function ()
 {
-    exp_id = $('#exp-id').html().trim();
+    var exp_id = $('#exp-id').html().trim();
     var shown_index = 1;
     //$('#index').val(shown_index);
 
@@ -182,7 +130,8 @@ $(document).ready(function ()
     // download volumes
     $(".volume").on('click', function()
     {
-        var volumeType = this.value;
+        newRequest();
+        var volume_type = this.value;
         var resolution = $('#res-proj').val();
         $.ajax(
         {
@@ -191,7 +140,7 @@ $(document).ready(function ()
             data:
             {
                 'experiment': exp_id,
-                'volume_type': volumeType,
+                'volume_type': volume_type,
                 'resolution': resolution
             },
             xhrFields:
@@ -203,11 +152,15 @@ $(document).ready(function ()
                 var a = document.createElement('a');
                 var url = window.URL.createObjectURL(data);
                 a.href = url;
-                a.download = exp_id + '_' + volumeType + '_' + resolution + '.nii';
+                a.download = exp_id + '_' + volume_type + '_' + resolution + '.nii';
                 document.body.append(a);
                 a.click();
                 a.remove();
                 window.URL.revokeObjectURL(url);
+            },
+            complete: function()
+            {
+                requestOver()
             }
         });
     });
