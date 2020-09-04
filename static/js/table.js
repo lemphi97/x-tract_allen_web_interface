@@ -143,6 +143,23 @@ function queryDescendantStructures(acronyms, names)
     return structDescendants;
 }
 
+/* Number with HTML in datatable column
+ * https://datatables.net/plug-ins/sorting/num-html */
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+    "num-html-pre": function ( a ) {
+        var x = String(a).replace( /<[\s\S]*?>/g, "" );
+        return parseFloat( x );
+    },
+
+    "num-html-asc": function ( a, b ) {
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    },
+
+    "num-html-desc": function ( a, b ) {
+        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    }
+} );
+
 /* Custom filtering function which will validate each lines */
 $.fn.dataTable.ext.search.push
 (

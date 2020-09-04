@@ -442,7 +442,7 @@
             <thead>
                 <th>experiment id</th>
                 <th>injection structures</th>
-                <th>product</th>
+                <th>product id</th>
                 <th>inj. vol. (mm3)</th>
                 <th>inj. x</th>
                 <th>inj. y</th>
@@ -456,7 +456,7 @@
             <tfoot>
                 <th>experiment id</th>
                 <th>injection structures</th>
-                <th>product</th>
+                <th>product id</th>
                 <th>inj. vol. (mm3)</th>
                 <th>inj. x</th>
                 <th>inj. y</th>
@@ -488,7 +488,7 @@
                     <td>
                         <abbr title="{{ prod_dict[all_exp.iloc[i]['product_id']]['name'] }}:
 {{ prod_dict[all_exp.iloc[i]['product_id']]['description'] }}">
-                            {{ prod_dict[all_exp.iloc[i]['product_id']]['abbreviation'] }}
+                            {{ all_exp.iloc[i]['product_id'] }}
                         </abbr>
                     </td>
                     <td>
@@ -534,7 +534,10 @@
             table = $('#experiments').DataTable(
             {
                 "scrollX": true,
-                lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]]
+                lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]],
+                "columnDefs": [
+                    { "type": "num-html", "targets": 2 }
+                ]
             });
         </script>
     </div>

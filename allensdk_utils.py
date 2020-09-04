@@ -312,7 +312,7 @@ def get_streamlines(experiment_ids):
         affine[3, 3] = 1
 
         # Saving the tractogram
-        tractogram_path = tmp_path + "/streamlines" + uuid.uuid4().hex + ".trk"
+        tractogram_path = tmp_path + "/streamlines_" + uuid.uuid4().hex + ".trk"
         sapi.save_tractogram(tractogram_path, affine)
     else:
         errors.append('no experiment(s) given')
