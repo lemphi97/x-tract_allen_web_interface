@@ -1,4 +1,23 @@
+# Validate imported modules
 from sys import modules, stderr
+# Framework
+import flask
+# for executing terminal cmd (git)
+from subprocess import Popen, PIPE, STDOUT
+# Generate secret key and basic file operations
+from os import urandom, path
+# Get filename from path
+from os.path import basename
+# Application log
+import logging
+# Custom files
+import config
+import allensdk_utils as utils
+import forms
+import cleaner_daemon as cleaner
+
+
+# Validate custom files import
 def validate_import(module_name):
     valid = True
     if module_name not in modules:
@@ -6,26 +25,15 @@ def validate_import(module_name):
         valid = False
     return valid
 
-# Framework
-import flask
 
-# for executing terminal cmd (git)
-from subprocess import Popen, PIPE, STDOUT
-
-# Generate secret key, deleting files
-from os import urandom, remove
-
-# Get filename from path
-from os.path import basename
-
-# Application log
-import logging
-
-# Custom files
-import allensdk_utils as utils
+validate_import('config')
 validate_import('allensdk_utils')
-import forms
 validate_import('forms')
+validate_import('cleaner_daemon')
+
+# Global variables
+st_dict = utils.get_struct_in_dict()
+prod_dict = utils.get_product_dict()
 
 # Init website
 app = flask.Flask(__name__)
@@ -34,9 +42,11 @@ app.template_folder = 'templates'
 app.config["SECRET_KEY"] = urandom(24).hex()
 #app.config['SERVER_NAME'] = 'xtract.com'
 
-# Global variables
-st_dict = utils.get_struct_in_dict()
-prod_dict = utils.get_product_dict()
+# Start daemon to cleanup tmp folder
+daemon = cleaner.CleanupDaemon(directory=app.static_folder + path.sep + "tmp",
+                               interval=config.interval,
+                               dir_size=config.max_dir_size)
+daemon.start()
 
 
 @app.before_first_request
@@ -69,13 +79,17 @@ def render_templates():
                                               f_source=forms.FormSource(),
                                               f_hotspot=forms.FormHotspot(),
                                               commit_info=head_commit)
-    with open(app.static_folder + "/html/rendered_template/allen_brain.html", "w") as f:
+    with open(app.static_folder + path.sep +
+              "html" + path.sep +
+              "rendered_template" + path.sep +
+              "allen_brain.html", "w") as f:
         f.write(rendered_template)
 
     # about_website
     rendered_template = flask.render_template("html/about_website.html.j2",
                                               commit_info=head_commit)
-    with open(app.static_folder + "/html/rendered_template/about_website.html", "w") as f:
+    with open(app.static_folder + path.sep + "html" + path.sep +
+              "rendered_template" + path.sep + "about_website.html", "w") as f:
         f.write(rendered_template)
 
 
@@ -91,7 +105,7 @@ def home():
 
 @app.route("/experiments/")
 def experiments():
-    return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
+    return flask.current_app.send_static_file("html/rendered_template/allen_brain.html")
 
 
 @app.route("/experiments/<param>/")
@@ -108,7 +122,7 @@ def experiment_search(param):
                                      sect_ranges=ranges)
     else:
         # For using pre-establish filters specified in the url
-        return flask.current_app.send_static_file('html/rendered_template/allen_brain.html')
+        return flask.current_app.send_static_file("html/rendered_template/allen_brain.html")
 
 
 @app.route("/experiments/forms/structures_childs/", methods=['POST'])
@@ -233,7 +247,9 @@ def form_correlation():
                                               num_rows=num_rows)
 
     if len(errors) == 0 and isinstance(result, list):
-        rendered_template = flask.render_template("xml/experiment_search.xml.j2", elem="experiment", values=result)
+        rendered_template = flask.render_template("xml/experiment_search.xml.j2",
+                                                  elem="experiment",
+                                                  values=result)
         # For test
         #with open(app.static_folder + "/html/rendered_template/text1.xml", "w") as f:
         #    f.write(rendered_template)
@@ -280,7 +296,9 @@ def form_injection_coord():
                                                         num_rows=num_rows)
 
     if len(errors) == 0 and isinstance(result, list):
-        rendered_template = flask.render_template("xml/experiment_search.xml.j2", elem="experiment", values=result)
+        rendered_template = flask.render_template("xml/experiment_search.xml.j2",
+                                                  elem="experiment",
+                                                  values=result)
         response = flask.make_response(rendered_template)
         response.headers['Content-Type'] = 'application/xml'
         return response
@@ -337,7 +355,9 @@ def form_source():
                                          num_rows=num_rows)
 
     if len(errors) == 0 and isinstance(result, list):
-        rendered_template = flask.render_template("xml/experiment_search.xml.j2", elem="experiment", values=result)
+        rendered_template = flask.render_template("xml/experiment_search.xml.j2",
+                                                  elem="experiment",
+                                                  values=result)
         response = flask.make_response(rendered_template)
         response.headers['Content-Type'] = 'application/xml'
         return response
@@ -377,11 +397,11 @@ def form_hotspot():
 
 @app.route("/about_website/")
 def about_website():
-    return flask.current_app.send_static_file('html/rendered_template/about_website.html')
+    return flask.current_app.send_static_file("html/rendered_template/about_website.html")
 
 
 if __name__ == "__main__":
     # For logging
     #logging.basicConfig(filename='app.log', level=logging.DEBUG)
 
-    app.run(debug=True)
+    app.run(host=config.address, port=config.port, debug=config.debug)
