@@ -261,11 +261,12 @@ def get_experiment_volume(experiment_id, img_type, resolution):
 
 
 def get_average_projection_density(experiment_ids, resolution):
-    mcc.resolution = resolution  # [10. 25. 50. 100]
+    p_mcc = MouseConnectivityCache()
+    p_mcc.resolution = resolution  # [10. 25. 50. 100]
     errors = []
 
-    template = mcc.get_template_volume(file_name=model_path + "/average_template_" +
-                                                 str(mcc.resolution) + ".nrrd")[0]
+    template = p_mcc.get_template_volume(file_name=model_path + "/average_template_" +
+                                                   str(p_mcc.resolution) + ".nrrd")[0]
     vol_avg = np.zeros_like(template, dtype='float32')
 
     valid_experiment_ids = []
@@ -278,14 +279,14 @@ def get_average_projection_density(experiment_ids, resolution):
 
     if valid_experiment_ids is not None:
         for exp_id in valid_experiment_ids:
-            vol_avg += mcc.get_projection_density(
+            vol_avg += p_mcc.get_projection_density(
                 experiment_id=exp_id,
                 file_name=tmp_path + "/" + str(exp_id) +
                           "_projection_density_" +
-                          str(mcc.resolution) + ".nrrd"
+                          str(p_mcc.resolution) + ".nrrd"
             )[0] / len(valid_experiment_ids)
 
-    file_path = nrrd_to_nifti(vol_avg, mcc.resolution)
+    file_path = nrrd_to_nifti(vol_avg, p_mcc.resolution)
 
     return file_path, errors
 
@@ -321,12 +322,13 @@ def get_streamlines(experiment_ids):
 
 
 def get_template(resolution):
-    mcc.resolution = resolution # [10. 25. 50. 100]
+    p_mcc = MouseConnectivityCache()
+    p_mcc.resolution = resolution  # [10. 25. 50. 100]
 
-    template = mcc.get_template_volume(file_name=model_path + "/average_template_" +
-                                       str(mcc.resolution) + ".nrrd")[0]
+    template = p_mcc.get_template_volume(file_name=model_path + "/average_template_" +
+                                       str(p_mcc.resolution) + ".nrrd")[0]
 
-    return nrrd_to_nifti(template, mcc.resolution)
+    return nrrd_to_nifti(template, p_mcc.resolution)
 
 
 def validate_structures(structures, errors, category):
