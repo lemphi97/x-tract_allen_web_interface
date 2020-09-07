@@ -12,7 +12,7 @@ from os.path import basename
 import logging
 # Custom files
 import config
-import allensdk_utils as utils
+import allensdk_utils
 import forms
 import cleaner_daemon as cleaner
 
@@ -31,10 +31,6 @@ validate_import('allensdk_utils')
 validate_import('forms')
 validate_import('cleaner_daemon')
 
-# Global variables
-st_dict = utils.get_struct_in_dict()
-prod_dict = utils.get_product_dict()
-
 # Init website
 app = flask.Flask(__name__)
 app.static_folder = 'static'
@@ -48,6 +44,11 @@ daemon = cleaner.CleanupDaemon(directory=app.static_folder + path.sep + "tmp",
                                dir_size=config.max_dir_size)
 daemon.start()
 
+# Global variables
+utils = allensdk_utils.Utils(models_path=app.static_folder + path.sep + "models",
+                             tmp_path=app.static_folder + path.sep + "tmp")
+st_dict = utils.get_struct_in_dict()
+prod_dict = utils.get_product_dict()
 
 @app.before_first_request
 def render_templates():
