@@ -148,17 +148,15 @@ def structures_childs():
 def experiments_csv():
     f_get_csv = forms.FormExperimentsCSV()
 
-    if f_get_csv.validate_on_submit():
-        filtered_exp = forms.convert_array_str_to_int(forms.str_to_array(f_get_csv.filtered_exp.data))
+    # TODO validate form
 
-        result, errors = utils.get_experiments_csv(experiment_ids=filtered_exp)
+    filtered_exp = forms.convert_array_str_to_int(forms.str_to_array(f_get_csv.filtered_exp.data))
+    result, errors = utils.get_experiments_csv(experiment_ids=filtered_exp)
 
-        response = flask.make_response(result)
-        response.headers["Content-Disposition"] = "attachment; filename=experiments.csv"
-        response.headers["Content-Type"] = "text/csv"
-        return response
-
-    return "<h1>400 Bad Request</h1><p>Couldn't validate form submit</p>"
+    response = flask.make_response(result)
+    response.headers["Content-Disposition"] = "attachment; filename=experiments.csv"
+    response.headers["Content-Type"] = "text/csv"
+    return response
 
 
 @app.route("/experiments/forms/experiment_volume/", methods=['POST'])
@@ -211,9 +209,7 @@ def average_template():
 def form_correlation():
     f_correlation = forms.FormCorrelation()
 
-    # error with form submit (validate_on_submit), don't know how to fix... TODO
-    if f_correlation.validate_on_submit():
-        return "You're a wizard Harry"
+    # TODO validate form
 
     row = f_correlation.row.data
 
@@ -268,9 +264,7 @@ def form_correlation():
 def form_injection_coord():
     f_inj_coord = forms.FormInjectionCoord()
 
-    # error with form submit (validate_on_submit), don't know how to fix... TODO
-    if f_inj_coord.validate_on_submit():
-        return "You're a wizard Harry"
+    # TODO validate form
 
     seed_point = [f_inj_coord.coord_x.data, f_inj_coord.coord_y.data, f_inj_coord.coord_z.data]
 
@@ -314,9 +308,7 @@ def form_injection_coord():
 def form_source():
     f_source = forms.FormSource()
 
-    # error with form submit (validate_on_submit), don't know how to fix... TODO
-    if f_source.validate_on_submit():
-        return "You're a wizard Harry"
+    # TODO validate form
 
     injection_structures = forms.str_to_array(f_source.injection_structures.data)
 
@@ -373,27 +365,24 @@ def form_source():
 def form_hotspot():
     f_hotspot = forms.FormHotspot()
 
-    if f_hotspot.validate_on_submit():
-        rows = forms.convert_array_str_to_int(forms.str_to_array(f_hotspot.rows.data))
+    rows = forms.convert_array_str_to_int(forms.str_to_array(f_hotspot.rows.data))
 
-        injection_structures = forms.str_to_array(f_hotspot.injection_structures.data)
+    injection_structures = forms.str_to_array(f_hotspot.injection_structures.data)
 
-        depth = f_hotspot.depth.data
-        if depth.upper() == "NONE":
-            depth = None
+    depth = f_hotspot.depth.data
+    if depth.upper() == "NONE":
+        depth = None
 
-        probabilities, matrix, rows, labels, errors = utils.hotspot_search(rows=rows,
-                                                                           injection_structures=injection_structures,
-                                                                           depth=depth)
+    probabilities, matrix, rows, labels, errors = utils.hotspot_search(rows=rows,
+                                                                       injection_structures=injection_structures,
+                                                                       depth=depth)
 
-        return flask.render_template("html/hotspot_search.html.j2",
-                                     probabilities=probabilities,
-                                     matrix=matrix,
-                                     rows=rows,
-                                     labels=labels,
-                                     errors=errors)
-
-    return "<h1>400 Bad Request</h1><p>Couldn't validate form submit</p>"
+    return flask.render_template("html/hotspot_search.html.j2",
+                                 probabilities=probabilities,
+                                 matrix=matrix,
+                                 rows=rows,
+                                 labels=labels,
+                                 errors=errors)
 
 
 @app.route("/about_website/")
