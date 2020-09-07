@@ -1,0 +1,22 @@
+name: xtract
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - pip
+  - setuptools
+  - numpy
+  - pandas
+  - scipy
+  - matplotlib
+  - scikit-image
+  - jupyter
+  - tqdm
+  - h5py
+  - opencv
+  - seaborn
+  - pynrrd
+  - nibabel
+  - pynrrd
+  - pytest
+  - coverage
