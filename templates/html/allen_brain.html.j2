@@ -774,6 +774,13 @@
         </button>
         <div id="experiment-hotspot" class="collapse">
             <hr/>
+            Normalize the projection density matrix of the given experiment(s) to find the structures with
+            the highest overall projection density. More info about
+            <a href="https://alleninstitute.github.io/AllenSDK/_static/examples/nb/mouse_connectivity.html#Generating-a-Projection-Matrix">
+                projection matrix
+            </a>
+            <br/>
+            <br/>
             <form method="POST" action="{{ url_for('form_hotspot') }}" target="_blank" rel="noreferrer">
                 {{ f_hotspot.csrf_token }}
                 {{ f_hotspot.hidden_tag() }}
