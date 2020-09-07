@@ -5,8 +5,13 @@
 {% endblock %}
 
 {% block dependencies_header %}
+{# datatable #}
 <link rel="stylesheet" type="text/css"
       href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
+<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+{# plotly #}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -51,27 +56,65 @@
                 </tbody>
             </table>
         </div>
+        <script>
+            // activate datatable
+            var table = $('#crossing-probabilities').DataTable(
+            {
+                "scrollX": true,
+                lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]],
+                "order": [[ 1, 'desc' ]]
+            });
+        </script>
     </div>
 
     <br/>
 
     <div class="content-bg table-sm">
         <div id="matrix-div"></div>
+        <script>
+            var labels = {{ labels|safe }};
+            var rows = {{ rows|safe }};
+            var matrix = {{ matrix }};
+
+            // Plotly doc: https://plotly.com/javascript/reference/
+            var data = [
+              {
+                x: labels,
+                y: rows,
+                z: matrix,
+                type: 'heatmap',
+                hoverongaps: false
+              }
+            ];
+
+            var layout = {
+                title: 'Projection matrix',
+                //margin: {t:0,r:0,b:0,l:20},
+                automargin: true,
+                xaxis: {
+                    categoryorder: "category ascending",
+                    automargin: true,
+                    tickangle: 0,
+                    title: {
+                        text: "Structures",
+                        standoff: 20
+                    }
+                },
+                yaxis: {
+                    type: "category",
+                    automargin: true,
+                    tickangle: 0,
+                    title: {
+                        text: "Experiments",
+                        standoff: 40
+                    }
+                }
+            };
+
+            Plotly.newPlot('matrix-div', data, layout);
+        </script>
     </div>
 {% endblock %}
 
 {% block dependencies_scripts %}
-{# datatable #}
-<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-
-{# plotly #}
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
-{# custom #}
-<script>
-var labels = {{ labels|safe }};
-var rows = {{ rows|safe }};
-var matrix = {{ matrix }};
-</script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/hotspot_search.js') }}"></script>
 {% endblock %}
