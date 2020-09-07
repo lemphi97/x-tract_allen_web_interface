@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 """Adapted from : https://github.com/BrancoLab/BrainRender"""
+# @Author:  Joël Lefebvre
 
 import numpy as np
 from tqdm import tqdm

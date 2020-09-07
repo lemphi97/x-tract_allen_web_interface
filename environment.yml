@@ -4,19 +4,18 @@ channels:
   - conda-forge
 dependencies:
   - pip
-  - setuptools
+  - os
+  - subprocess
+  - uuid
+  - urllib
+  - json
+  - tqdm
   - numpy
   - pandas
-  - scipy
-  - matplotlib
-  - scikit-image
-  - jupyter
-  - tqdm
-  - h5py
-  - opencv
-  - seaborn
   - pynrrd
   - nibabel
   - pynrrd
-  - pytest
-  - coverage
+  - apscheduler
+  - flask
+  - flask_wtf
+  - wtforms
