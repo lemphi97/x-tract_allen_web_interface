@@ -21,7 +21,10 @@ and helps identifying region of interest (ROI) for fiber crossing in the brain.
 ```
 conda env create -f environment.yml
 ```
-* Activate your virtual environment with: `conda activate xtract`
+* Activate your virtual environment with: 
+```
+conda activate xtract
+```
 * Install the missing dependecies with 
 ```
 pip install -r requirements.txt
