@@ -1,4 +1,4 @@
-# Allen web interface
+# X-Tract Allen web interface
 A web interface to query experiment data from the [Allen SDK](https://allensdk.readthedocs.io/en/latest/) mouse connectivity project 
 and helps identifying region of interest (ROI) for fiber crossing in the brain. 
 
