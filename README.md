@@ -4,8 +4,8 @@ and helps identifying region of interest (ROI) for fiber crossing in the brain.
 
 ![interface](/web/static/img/interface_pic.PNG "Interface home page")
 
-This application was developed with the help of my supervisor 
-[Joël Lefebvre](https://github.com/joe-from-mtl) for my internship during summer 2020.
+> This application was developed with the help of my supervisor 
+> [Joël Lefebvre](https://github.com/joe-from-mtl) for my internship during summer 2020.
 
 ## Dependencies
 * [Anaconda 3](https://www.anaconda.com/distribution/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html)
@@ -54,8 +54,6 @@ conda env update -f environment.yml
     * Access the application by opening your browser of choice at the address and port in `config.py` (ex: [127.0.0.1:5000](127.0.0.1:5000) or [localhost:5000](localhost:5000))
 
 ## Contributors
-
-> Or Contributors/People
 
 | <a href="https://github.com/lemphi97" target="_blank">**Developer**</a> | <a href="https://github.com/joe-from-mtl" target="_blank">**Supervisor / Developer**</a> |
 | :---: |:---:|
