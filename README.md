@@ -2,7 +2,7 @@
 A web interface to query experiment data from the [Allen SDK](https://allensdk.readthedocs.io/en/latest/) mouse connectivity project 
 and helps identifying region of interest (ROI) for fiber crossing in the brain. 
 
-<img src="https://raw.githubusercontent.com/lemphi97/Allen_web_interface/2020-stage-philippe/web/static/img/interface_pic.PNG?token=AJMPLDBW4XLQ6KNESQKJFTC7K3GIG">
+![interface](/web/static/img/interface_pic.PNG "Interface home page")
 
 This application was developed with the help of my supervisor 
 [Joël Lefebvre](https://github.com/joe-from-mtl) for my internship during summer 2020.
