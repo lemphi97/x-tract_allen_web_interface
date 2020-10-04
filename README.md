@@ -65,6 +65,4 @@ conda env update -f environment.yml
 
 ## License
 
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
-
-- **[MIT license](http://opensource.org/licenses/mit-license.php)**
+- **[Allen Institute Software License](https://github.com/AllenInstitute/AllenSDK/blob/master/LICENSE.txt)**
