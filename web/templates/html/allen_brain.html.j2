@@ -486,8 +486,12 @@
                         </ol>
                     </td>
                     <td>
+						{% if all_exp.iloc[i]['product_id'] in prod_dict %}
                         <abbr title="{{ prod_dict[all_exp.iloc[i]['product_id']]['name'] }}:
 {{ prod_dict[all_exp.iloc[i]['product_id']]['description'] }}">
+						{% else %}
+						<abbr title="Unknown">
+						{% endif %}
                             {{ all_exp.iloc[i]['product_id'] }}
                         </abbr>
                     </td>

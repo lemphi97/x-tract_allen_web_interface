@@ -4,6 +4,7 @@ channels:
   - conda-forge
 dependencies:
   - pip
+  - allensdk
   - os
   - subprocess
   - uuid
@@ -14,7 +15,6 @@ dependencies:
   - pandas
   - pynrrd
   - nibabel
-  - pynrrd
   - apscheduler
   - flask
   - flask_wtf
